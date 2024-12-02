@@ -16,13 +16,15 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Telegram Message</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Daftar User</h1>
+                    <a href="{{ route('register.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                            class="fas fa-plus fa-sm text-white-50"></i> Create User</a>
                 </div>
                 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Data Message Telegram</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Data User</h6>
                     </div>
                     <div class="card-body">
                         @if ($message = Session::get('success'))
@@ -57,34 +59,27 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Chat ID</th>
-                                        <th>Send To</th>
-                                        <th>Message</th>
-                                        <th>Type</th>
-                                        <th>URL</th>
+                                        <th>Name</th>
+                                        <th>Role</th>
+                                        <th>Email</th>
                                         <th>Created At</th>
-                                        <th>Send By</th>
-                                        <th>Status</th>
+                                        <th>Updated At</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($messages as $message)
+                                    @foreach($users as $user)
                                     <tr>
-                                        <td>{{ $message->ID }}</td>
-                                        <td>{{ $message->CHATID }}</td>
-                                        <td>{{ $message->NAME }}</td>
-                                        <td>{{ $message->MESSAGE }}</td>
-                                        <td>{{ $message->TYPE }}</td>
-                                        <td>{{ $message->FILE_URL }}</td>
-                                        <td>{{ $message->CREATED_AT }}</td>
-                                        <td>{{ $message->SEND_BY }}</td>
+                                        <td>{{ $user->id }}</td>
+                                        <td>{{ $user->name }}</td>
+                                        <td>{{ $user->role }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ $user->created_at }}</td>
+                                        <td>{{ $user->updated_at }}</td>
                                         <td align="center">
-                                            <a class="btn btn-success btn-circle btn-sm">
-                                                <i class="fas fa-check"></i>
+                                            <a href="/user/detail/{{ $user->id }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-info"></i>
                                             </a>
-                                        </td>
-                                        <td align="center">
                                             <a class="btn btn-danger btn-circle btn-sm" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>
@@ -118,7 +113,7 @@
                 <div class="modal-body">Apakah Yakin Ingin Menghapus Record ini?</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="delete/{{ $message->ID }}">Delete</a>
+                    <a class="btn btn-primary" href="/user/delete/{{ $user->id }}">Delete</a>
                 </div>
             </div>
         </div>

@@ -5,13 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
-    public function create()
+    public function index()
     {
         return view('auth.register');
+    }
+
+    public function create()
+    {
+        return view('auth.registration');
     }
 
     public function store(Request $request)
@@ -19,11 +25,13 @@ class RegisterController extends Controller
         $this->validate($request, [
             'email' => ['required','email', 'unique:users,email'],
             'password' => ['required', 'min:8'],
+            'role' => 'required'
         ]);
 
        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'role' => $request->role,
             'password' => Hash::make($request->password),
         ]);
 
@@ -32,5 +40,23 @@ class RegisterController extends Controller
 
             return redirect()->intended('home')->with(['success' => 'Registrasi Berhasil!']);
         }
+    }
+
+    public function storeAuth(Request $request)
+    {
+        $this->validate($request, [
+            'email' => ['required','email', 'unique:users,email'],
+            'password' => ['required', 'min:8'],
+            'role' => 'required'
+        ]);
+
+       $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->intended('listuser')->with(['success' => 'Registrasi Berhasil!']);
     }
 }

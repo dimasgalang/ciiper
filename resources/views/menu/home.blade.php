@@ -154,6 +154,33 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-xl-4 col-lg-7">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Latest User Registered</h6>
+                            </div>
+                            @foreach($users as $user)
+                            <div class="card-body">
+                                <div class="col-xl-12">
+                                    <div class="card border-left-primary">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col">
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $user->name }}</div>
+                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                        {{ $user->role }}</div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <img src="{{ asset('img/undraw_profile.svg') }}" style="width: 40px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Content Row -->

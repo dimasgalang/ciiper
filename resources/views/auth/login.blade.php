@@ -3,8 +3,11 @@
 @include('layout.header')
 <body class="bg-gradient-primary">
 
-    <div class="container">
-
+    <div class="container container-center">
+        <div class="text-center">
+            <img src="{{ asset('img/chutex.svg') }}" style="width: 150px;">
+            <h1 class="h4 text-white mb-4"><b>PT. Chutex International Indonesia</b></h1>
+        </div>
         <div class="card o-hidden border-0 shadow-lg my-5">
             <div class="card-body p-0">
                 <!-- Nested Row within Card Body -->

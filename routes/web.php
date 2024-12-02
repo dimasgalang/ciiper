@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\TemplateController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 //Auth
 Route::group(['middleware' => 'guest'], function () {
-    Route::get('/register', [RegisterController::class, 'create'])->name('register');
+    Route::get('/register', [RegisterController::class, 'index'])->name('register');
     Route::post('/register', [RegisterController::class, 'store'])->name('register');
     
     Route::get('/login', [LoginController::class, 'login'])->name('login');
@@ -28,8 +29,18 @@ Route::group(['middleware' => 'guest'], function () {
 });
 
 Route::group(['middleware' => 'auth'], function () {
+    //Auth
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/listuser', [HomeController::class, 'listuser'])->name('listuser');
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::get('/register/create', [RegisterController::class, 'create'])->name('register.create');
+    Route::post('/register', [RegisterController::class, 'storeAuth'])->name('register');
+
+    //User
+    Route::get('/user/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
+    Route::get('/user/detail/{id}', [UserController::class, 'detail'])->name('user.detail');
+    Route::post('/user/update', [UserController::class, 'update'])->name('user.update');
+    
 
     //Telegram
     Route::get('/telegram/index', [TelegramController::class, 'index'])->name('telegram.index');

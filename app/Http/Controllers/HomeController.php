@@ -30,6 +30,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $users = User::paginate(4)->sortDesc();
         $data = DB::connection('sqlsrv')->table('REKAP')->select('*')
         ->where('TAHUN', '>=', date('Y'))
         ->orderBy('TAHUN', 'ASC')
@@ -100,6 +101,11 @@ class HomeController extends Controller
         ->leftJoin('DEPT', 'BIODATA.ID_DEPT', '=', 'DEPT.ID_DEPT')
         ->where('DEPARTEMENT', 'LIKE', '%MAGANG%')->get();
         
-        return view('menu.home', ['employee' => $employee, 'intern' => $intern], compact('chart'));
+        return view('menu.home', ['employee' => $employee, 'intern' => $intern, 'users' => $users], compact('chart'));
+    }
+
+    public function listuser() {
+        $users   = User::all();
+        return view('auth.list-user', compact('users'));
     }
 }

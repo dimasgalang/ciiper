@@ -17,7 +17,7 @@ class TemplateController extends Controller
         $pegawais = DB::connection('sqlsrv')->table('TELEGRAM')->select('*')->get();
 
         for($i = 0; $i < count($pegawais); $i++) {
-            $pdf = PDF::loadview('template.slipgaji',['index' => $i, 'pegawai' => $pegawais])->save(public_path('Slip Gaji/Slip Gaji - '.$pegawais[$i]->CHATID.'.pdf'));
+            $pdf = PDF::loadview('template.slipgaji',['index' => $i, 'pegawai' => $pegawais])->save(public_path('slip-gaji/slip-gaji-'.$pegawais[$i]->CHATID.'.pdf'));
         }
         
         return redirect('home')->with(['success' => 'Generate Slip Gaji Berhasil!']);

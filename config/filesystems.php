@@ -35,7 +35,14 @@ return [
             'root' => storage_path('app'),
             'throw' => false,
         ],
-
+        'modul_uploads' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/modul',
+        ],
+        'slip_uploads' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/slip-gaji',
+        ],
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

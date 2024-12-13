@@ -9,6 +9,8 @@ use IcehouseVentures\LaravelChartjs\Facades\Chartjs;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use DateTime;
+use GuzzleHttp\Client;
+use GuzzleHttp\Message\Response;
 use Illuminate\Support\Collection;
 
 class HomeController extends Controller
@@ -30,6 +32,11 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $client = new Client();
+        $apiUrl = "https://zenquotes.io/api/quotes/";
+        $response = $client->get($apiUrl);
+        $quote = json_decode($response->getBody(), true);
+
         $users = User::paginate(4)->sortDesc();
         $data = DB::connection('sqlsrv')->table('REKAP')->select('*')
         ->where('TAHUN', '>=', date('Y'))
@@ -101,7 +108,7 @@ class HomeController extends Controller
         ->leftJoin('DEPT', 'BIODATA.ID_DEPT', '=', 'DEPT.ID_DEPT')
         ->where('DEPARTEMENT', 'LIKE', '%MAGANG%')->get();
         
-        return view('menu.home', ['employee' => $employee, 'intern' => $intern, 'users' => $users], compact('chart'));
+        return view('menu.home', ['employee' => $employee, 'intern' => $intern, 'users' => $users, 'quotes' => $quote], compact('chart'));
     }
 
     public function listuser() {

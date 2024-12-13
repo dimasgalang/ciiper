@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ModulController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\TemplateController;
@@ -22,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 //Auth
 Route::group(['middleware' => 'guest'], function () {
     Route::get('/register', [RegisterController::class, 'index'])->name('register');
-    Route::post('/register', [RegisterController::class, 'store'])->name('register');
+    Route::post('/register/guest', [RegisterController::class, 'store'])->name('register.guest');
     
     Route::get('/login', [LoginController::class, 'login'])->name('login');
     Route::post('/login', [LoginController::class, 'authenticate'])->name('login');
@@ -41,7 +42,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/user/detail/{id}', [UserController::class, 'detail'])->name('user.detail');
     Route::post('/user/update', [UserController::class, 'update'])->name('user.update');
     
-
     //Telegram
     Route::get('/telegram/index', [TelegramController::class, 'index'])->name('telegram.index');
     Route::get('/telegram/indexblast', [TelegramController::class, 'indexblast'])->name('telegram.indexblast');
@@ -53,6 +53,12 @@ Route::group(['middleware' => 'auth'], function () {
     //Template
     Route::get('/template/slipgaji', [TemplateController::class, 'slipgaji'])->name('template.slipgaji');
     Route::get('/template/generateslip', [TemplateController::class, 'generateslip'])->name('template.generateslip');
+
+    //Modul
+    Route::get('/modul/daftar', [ModulController::class, 'index'])->name('modul.daftar');
+    Route::get('/modul/delete/{id}', [ModulController::class, 'delete'])->name('modul.delete');
+    Route::get('/modul/create', [ModulController::class, 'create'])->name('modul.create');
+    Route::post('/modul/store', [ModulController::class, 'store'])->name('modul.store');
 
 });
 

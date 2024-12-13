@@ -11,7 +11,7 @@ class UserController extends Controller
     public function delete($id) {
         $users = User::find($id);    
         $users->delete();
-        return redirect('listuser')->with(['error' => 'Record Berhasil Dihapus!']);
+        return redirect()->intended('listuser')->with(['error' => 'Record Berhasil Dihapus!']);
     }
 
     public function detail($id) {

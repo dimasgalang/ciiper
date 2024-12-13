@@ -17,7 +17,7 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
-                            <form class="user" action="{{ route('register') }}" method="post">
+                            <form class="user" action="{{ route('register.guest') }}" method="post">
                                 @csrf
                                 @if ($message = Session::get('success'))
                                 <div class="alert alert-success alert-block">
@@ -68,6 +68,16 @@
                                     <input type="password" class="form-control form-control-user @error('password') is-invalid @enderror" id="password" name="password"
                                         placeholder="Password">
                                     @error('name')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-user @error('role') is-invalid @enderror" id="role" name="role"
+                                        placeholder="Role">
+                                    @error('role')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>

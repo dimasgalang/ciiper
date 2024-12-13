@@ -63,11 +63,11 @@ class TelegramController extends Controller
         foreach($telegrams as $telegram) {
             Telegram::sendDocument([
                 'chat_id' => $telegram->CHATID,
-                'document' => new InputFile(public_path('Slip Gaji/Slip Gaji - '.$telegram->CHATID.'.pdf')),
+                'document' => new InputFile(public_path('slip-gaji/slip-gaji-'.$telegram->CHATID.'.pdf')),
                 'caption' => $message . ' ' . $telegram->NAME,
             ]);
             DB::connection('sqlsrv')->table('TELEGRAM_MESSAGE')->insert([
-                ['chatid' => $telegram->CHATID, 'message' => $message, 'type' => 'Document', 'file_url' => public_path('Slip Gaji/Slip Gaji - '.$telegram->CHATID.'.pdf'), 'created_at' => $storeTime->toDateTimeString(), 'send_by' => $username],
+                ['chatid' => $telegram->CHATID, 'message' => $message, 'type' => 'Document', 'file_url' => 'slip-gaji-'.$telegram->CHATID.'.pdf', 'created_at' => $storeTime->toDateTimeString(), 'send_by' => $username],
             ]);
         }
         return redirect('telegram/indexblast')->with(['success' => 'Telegram Blast Berhasil Terkirim!']);

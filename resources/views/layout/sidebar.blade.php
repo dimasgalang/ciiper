@@ -34,29 +34,53 @@
         </div>
     </li>
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHRD"
-            aria-expanded="true" aria-controls="collapseHRD">
-            <i class="fas fa-fw fa-cog"></i>
-            <span>HRD Personalia</span>
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTelegram"
+            aria-expanded="true" aria-controls="collapseTelegram">
+            <i class="fas fa-fw fa-address-book"></i>
+            <span>Telegram</span>
         </a>
-        <div id="collapseHRD" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseTelegram" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('telegram.message') }}">Telegram Message</a>
-                <a class="collapse-item" href="{{ route('telegram.index') }}">Telegram Send</a>
-                <a class="collapse-item" href="{{ route('telegram.indexblast') }}">Telegram Blast</a>
+                <a class="collapse-item" href="{{ route('telegram.message') }}">Message History</a>
+                <a class="collapse-item" href="{{ route('telegram.index') }}">Send Message</a>
+                <a class="collapse-item" href="{{ route('telegram.indexblast') }}">Send Blast</a>
             </div>
         </div>
     </li>
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTemplate"
             aria-expanded="true" aria-controls="collapseTemplate">
-            <i class="fas fa-fw fa-cog"></i>
+            <i class="fas fa-fw fa-file-code"></i>
             <span>Template</span>
         </a>
         <div id="collapseTemplate" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('template.slipgaji') }}">Slip Gaji</a>
-                <a class="collapse-item" href="{{ route('template.generateslip') }}">Export Slip Gaji</a>
+            </div>
+        </div>
+    </li>
+    
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseExport"
+            aria-expanded="true" aria-controls="collapseExport">
+            <i class="fas fa-fw fa-upload"></i>
+            <span>Export</span>
+        </a>
+        <div id="collapseExport" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('template.generateslip') }}">Slip Gaji</a>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseModul"
+            aria-expanded="true" aria-controls="collapseModul">
+            <i class="fas fa-fw fa-file-pdf"></i>
+            <span>Dokumen</span>
+        </a>
+        <div id="collapseModul" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('modul.daftar') }}">Modul</a>
             </div>
         </div>
     </li>

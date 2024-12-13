@@ -85,7 +85,10 @@
                                             </a>
                                         </td>
                                         <td align="center">
-                                            <a class="btn btn-danger btn-circle btn-sm" data-toggle="modal" data-target="#deleteModal">
+                                            <a class="btn btn-primary btn-circle btn-sm btn-show-pdf" data-show-link="{{ $message->FILE_URL }}" data-show-title="{{ $message->FILE_URL }}" data-toggle="modal" data-target="#pdfModal">
+                                                <i class="fas fa-file-pdf"></i>
+                                            </a>
+                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $message->ID }}" data-delete-name="{{ $message->MESSAGE }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>
@@ -103,26 +106,41 @@
 
         </div>
         <!-- End of Main Content -->
-
-        <!-- Logout Modal-->
-        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Apakah Yakin Ingin Menghapus Record ini?</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="delete/{{ $message->ID }}">Delete</a>
+         
+        <!-- Modal -->
+        <div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="pdf-title" class="modal-title" id="exampleModalLabel">Document Name</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"><iframe id="pdf-src" src ="" width="100%" height="480px"></iframe></div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="delete-title" class="modal-title" id="exampleModalLabel">Delete Record</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"><p id="modal-text-record"></p></div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
+                        <a id="btn-confirm" href=""><button class="btn btn-primary" type="button">Confirm</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 @include('layout.footer')
@@ -133,4 +151,14 @@
 
 <!-- Page level custom scripts -->
 <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
+<script>
+    $('.btn-show-pdf').on('click', function () {
+        $('#pdf-src').attr('src', '/slip-gaji/' + $(this).data('show-link'));
+        $("#pdf-title").text($(this).data('show-title'));
+    });
+    $('.btn-delete-record').on('click', function () {
+            $('#btn-confirm').attr('href', $(this).data('delete-link'));
+            $("#modal-text-record").text('Apakah anda yakin ingin menghapus pesan ' + $(this).data('delete-name') + '?');
+    });
+</script>
 </html>

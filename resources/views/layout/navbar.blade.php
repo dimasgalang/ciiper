@@ -20,6 +20,8 @@
         </div>
     </form>
 
+    <marquee style="margin-left: 15px;">{{ $quotes[0]['q'] . ' - ' . $quotes[0]['a'] }}</marquee>
+
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
 

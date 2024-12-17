@@ -11,7 +11,7 @@ class ModulController extends Controller
 {
     public function index() {
         $moduls   = Modul::all();
-        return view('modul.list-modul', compact('moduls'));
+        return view('modul.index', compact('moduls'));
     }
 
     public function delete($id) {

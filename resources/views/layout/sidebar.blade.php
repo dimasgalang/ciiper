@@ -34,6 +34,18 @@
         </div>
     </li>
     <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseKaryawan"
+            aria-expanded="true" aria-controls="collapseKaryawan">
+            <i class="fas fa-fw fa-users"></i>
+            <span>Employee</span>
+        </a>
+        <div id="collapseKaryawan" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('karyawan.daftar') }}">Daftar Karyawan</a>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTelegram"
             aria-expanded="true" aria-controls="collapseTelegram">
             <i class="fas fa-fw fa-address-book"></i>
@@ -81,6 +93,21 @@
         <div id="collapseModul" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('modul.daftar') }}">Modul</a>
+            </div>
+        </div>
+    </li>
+    
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseServices"
+            aria-expanded="true" aria-controls="collapseServices">
+            <i class="fas fa-fw fa-globe"></i>
+            <span>Services</span>
+        </a>
+        <div id="collapseServices" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="http://36.67.13.11:8018/login" target="_blank">IT Inventory</a>
+                <a class="collapse-item" href="http://36.67.13.11:8018/admin" target="_blank">IT Inventory - Admin</a>
+                <a class="collapse-item" href="http://36.66.191.116:5432/doc/page/login.asp?_1701438289643" target="_blank">CCTV HikVision</a>
             </div>
         </div>
     </li>

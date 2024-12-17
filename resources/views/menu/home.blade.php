@@ -131,15 +131,6 @@
                 </div>
 
                 <!-- Approach -->
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Quotes Today</h6>
-                    </div>
-                    <div class="card-body">
-                        <p>{{ $quotes[0]['q'] }}</p>
-                        <p>{{ $quotes[0]['a'] }}</p>
-                    </div>
-                </div>
                 <div class="row">
                     <!-- Area Chart -->
                     <div class="col-xl-8 col-lg-7">

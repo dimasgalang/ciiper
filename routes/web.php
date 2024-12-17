@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ModulController;
 use App\Http\Controllers\RegisterController;
@@ -60,5 +61,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/modul/create', [ModulController::class, 'create'])->name('modul.create');
     Route::post('/modul/store', [ModulController::class, 'store'])->name('modul.store');
 
+    //Karyawan
+    Route::get('/karyawan/daftar', [KaryawanController::class, 'index'])->name('karyawan.daftar');
 });
 

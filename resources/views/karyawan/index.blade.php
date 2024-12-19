@@ -71,7 +71,7 @@
                                         <td>{{ $employee->NAMA_KARYAWAN }}</td>
                                         <td>{{ $employee->DEPARTEMENT }}</td>
                                         <td>{{ $employee->BARCODE }}</td>
-                                        <td align="center"><img src="{{ asset('/foto-npk/' . $employee->NPK . '.jpg') }}" style="width: 150px;" onerror="this.style.display='none'; this.style.width='0px'"></td>
+                                        <td align="center"><img src="{{ asset('/foto-npk/' . $employee->NPK . '.jpg') }}" style="width: 100px;" onerror="this.style.display='none'; this.style.width='0px'"></td>
                                         <td align="center">
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $employee->NPK }}" data-delete-name="{{ $employee->NAMA_KARYAWAN }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>

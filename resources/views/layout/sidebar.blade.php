@@ -111,6 +111,11 @@
             </div>
         </div>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/docs/api" target="_blank">
+            <i class="fas fa-fw fa-table"></i>
+            <span>API Docs</span></a>
+    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

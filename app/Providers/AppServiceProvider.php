@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
+use Dedoc\Scramble\Scramble;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use GuzzleHttp\Client;
+use Illuminate\Routing\Route;
+use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +25,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
+        Scramble::routes(function (Route $route) {
+            return Str::startsWith($route->uri, 'api/');
+        });
+
         $client = new Client();
         $apiUrl = "https://zenquotes.io/api/quotes/";
         $response = $client->get($apiUrl);

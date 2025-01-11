@@ -17,8 +17,12 @@
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">Daftar User</h1>
+                    <div>
+                    <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
+                        class="fas fa-plus fa-sm text-white-50"></i> Import User</a>
                     <a href="{{ route('register.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-plus fa-sm text-white-50"></i> Create User</a>
+                        class="fas fa-plus fa-sm text-white-50"></i> Create User</a>
+                    </div>
                 </div>
                 
                 <!-- DataTales Example -->
@@ -113,6 +117,32 @@
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
                         <a id="btn-confirm" href=""><button class="btn btn-primary" type="button">Confirm</button></a>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="modal-title" class="modal-title" id="exampleModalLabel">Import User</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('user.import') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>PILIH FILE</label>
+                                    <input type="file" name="file" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                <button type="submit" class="btn btn-success">Import</button>
+                            </div>
+                    </form>
                 </div>
             </div>
         </div>

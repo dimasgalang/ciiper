@@ -60,7 +60,7 @@
                                         <th>Nama Karyawan</th>
                                         <th>Bagian</th>
                                         <th>Barcode</th>
-                                        <th>Photo</th>
+                                        <!-- <th>Photo</th> -->
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -71,8 +71,11 @@
                                         <td>{{ $employee->NAMA_KARYAWAN }}</td>
                                         <td>{{ $employee->DEPARTEMENT }}</td>
                                         <td>{{ $employee->BARCODE }}</td>
-                                        <td align="center"><img src="{{ asset('/foto-npk/' . $employee->NPK . '.jpg') }}" style="width: 100px;" onerror="this.style.display='none'; this.style.width='0px'"></td>
+                                        <!-- <td align="center"><img src="{{ asset('/foto-npk/' . $employee->NPK . '.jpg') }}" style="width: 100px;" onerror="this.style.display='none'; this.style.width='0px'"></td> -->
                                         <td align="center">
+                                            <a id="show-user" class="btn btn-primary btn-circle btn-sm btn-show-detail" data-url="{{ route('karyawan.detail', $employee->NPK) }}" data-show-link="{{ $employee->NPK }}" data-show-title="{{ $employee->NPK . ' - ' . $employee->NAMA_KARYAWAN }}" data-show-image="{{ asset('/foto-npk/' . $employee->NPK . '.jpg') }}">
+                                                <i class="fas fa-info"></i>
+                                            </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $employee->NPK }}" data-delete-name="{{ $employee->NAMA_KARYAWAN }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>
@@ -93,16 +96,106 @@
         <!-- End of Main Content -->
          
         <!-- Modal -->
-        <div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="pdf-title" class="modal-title" id="exampleModalLabel">Document Name</h5>
+                        <h5 id="detail-title" class="modal-title" id="exampleModalLabel">Data Karyawan</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body"><iframe id="pdf-src" src ="" width="100%" height="480px"></iframe></div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <center><img id="employee-PIC" src="" style="width: 200px;"></center>
+                            </div>
+                            <div class="col-xl-4 col-md-6 mb-4">
+                                <div>
+                                    <label>NPK :</label>
+                                    <input class="form-control" type="text" id="employee-NPK" value="" readonly>
+                                </div>
+                                <br>
+                                <div>
+                                    <label>NAMA :</label>
+                                    <input class="form-control" type="text" id="employee-NAMA" value="" readonly>
+                                </div>
+                                <br>
+                                <div>
+                                    <label>DEPARTEMENT :</label>
+                                    <input class="form-control" type="text" id="employee-DEPARTEMENT" value="" readonly>
+                                </div>
+                                <br>
+                                <div>
+                                    <label>JENIS KELAMIN :</label>
+                                    <input class="form-control" type="text" id="employee-JK" value="" readonly>
+                                </div>
+                                <br>
+                                <div>
+                                    <label>TANGGAL LAHIR :</label>
+                                    <input class="form-control" type="text" id="employee-TGLLAHIR" value="" readonly>
+                                </div>
+                                <br>
+                                <div>
+                                    <label>PENDIDIKAN TERAKHIR :</label>
+                                    <input class="form-control" type="text" id="employee-PDDK" value="" readonly>
+                                </div>
+                                <br>
+                                <div>
+                                    <label>AGAMA :</label>
+                                    <input class="form-control" type="text" id="employee-AGAMA" value="" readonly>
+                                </div>
+                                <br>
+                                <div>
+                                    <label>TMK :</label>
+                                    <input class="form-control" type="text" id="employee-TMK" value="" readonly>
+                                </div>
+                                <br>
+                            </div>
+                            <div class="col-xl-4 col-md-6 mb-4">
+                                <div>
+                                    <label>USIA MASUK :</label>
+                                    <input class="form-control" type="text" id="employee-USIA" value="" readonly>
+                                </div>
+                                <br>
+                                <div>
+                                    <label>ALAMAT :</label>
+                                    <input class="form-control" type="text" id="employee-ALAMAT" value="" readonly>
+                                </div>
+                                <br>
+                                <div>
+                                    <label>KABUPATEN :</label>
+                                    <input class="form-control" type="text" id="employee-KABUPATEN" value="" readonly>
+                                </div>
+                                <br>
+                                <div>
+                                    <label>NO. KTP :</label>
+                                    <input class="form-control" type="text" id="employee-KTP" value="" readonly>
+                                </div>
+                                <br>
+                                <div>
+                                    <label>NO. KK :</label>
+                                    <input class="form-control" type="text" id="employee-NO_KK" value="" readonly>
+                                </div>
+                                <br>
+                                <div>
+                                    <label>NAMA IBU :</label>
+                                    <input class="form-control" type="text" id="employee-IBU" value="" readonly>
+                                </div>
+                                <br>
+                                <div>
+                                    <label>NO. HP :</label>
+                                    <input class="form-control" type="text" id="employee-HP" value="" readonly>
+                                </div>
+                                <br>
+                                <div>
+                                    <label>STATUS :</label>
+                                    <input class="form-control" type="text" id="employee-STATUS" value="" readonly>
+                                </div>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
                     </div>
@@ -137,13 +230,46 @@
 <!-- Page level custom scripts -->
 <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
 <script>
-    $('.btn-show-pdf').on('click', function () {
+    $('#dataTable').DataTable({
+    "order": [[ 2, "asc" ]] 
+});
+</script>
+<script>
+    $('.btn-show-detail').on('click', function () {
         $('#pdf-src').attr('src', '/slip-gaji/' + $(this).data('show-link'));
-        $("#pdf-title").text($(this).data('show-title'));
+        $("#detail-title").text($(this).data('show-title'));
     });
     $('.btn-delete-record').on('click', function () {
             $('#btn-confirm').attr('href', $(this).data('delete-link'));
-            $("#modal-text-record").text('Apakah anda yakin ingin menghapus pesan ' + $(this).data('delete-name') + '?');
+            $("#modal-text-record").text('Apakah anda yakin ingin menghapus karyawan ' + $(this).data('delete-name') + '?');
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('body').on('click', '#show-user', function() {
+            var userURL = $(this).data('url');
+            var userIMG = $(this).data('show-image');
+            $.get(userURL, function (data) {
+                $('#detailModal').modal('show');
+                $('#employee-NPK').val(data[0].NPK);
+                $('#employee-NAMA').val(data[0].NAMA);
+                $('#employee-DEPARTEMENT').val(data[0].DEPARTEMENT);
+                $('#employee-JK').val(data[0].JK);
+                $('#employee-TGLLAHIR').val(data[0].TGLLAHIR);
+                $('#employee-PDDK').val(data[0].PDDK);
+                $('#employee-AGAMA').val(data[0].AGAMA);
+                $('#employee-TMK').val(data[0].TMK);
+                $('#employee-USIA').val(data[0].USIA);
+                $('#employee-ALAMAT').val(data[0].ALAMAT);
+                $('#employee-KABUPATEN').val(data[0].KABUPATEN);
+                $('#employee-KTP').val(data[0].KTP);
+                $('#employee-NO_KK').val(data[0].NO_KK);
+                $('#employee-IBU').val(data[0].IBU);
+                $('#employee-HP').val(data[0].HP);
+                $('#employee-STATUS').val(data[0].STATUS);
+                $('#employee-PIC').attr('src', userIMG);
+            })
+        });
     });
 </script>
 </html>

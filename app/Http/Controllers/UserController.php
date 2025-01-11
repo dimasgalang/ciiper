@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\UsersImport;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -45,5 +48,24 @@ class UserController extends Controller
         $user->save();
 
         return redirect()->intended('listuser')->with(['success' => 'Update User Berhasil!']);
+    }
+
+    public function import(Request $request)
+    {
+        $this->validate($request, [
+            'file' => 'required|mimes:csv,xls,xlsx'
+        ]);
+
+        $file = $request->file('file');
+        $nama_file = $file->hashName();
+        $path = $file->storeAs('public/excel/',$nama_file);
+        $import = Excel::import(new UsersImport(), storage_path('app/public/excel/'.$nama_file));
+        Storage::delete($path);
+
+        if($import) {
+            return redirect()->intended('listuser')->with(['success' => 'Data Berhasil Diimport!']);
+        } else {
+            return redirect()->intended('listuser')->with(['error' => 'Data Gagal Diimport!']);
+        }
     }
 }

@@ -61,7 +61,6 @@
                                         <th>ID</th>
                                         <th>Judul</th>
                                         <th>Generated Name</th>
-                                        <th>Hit</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -71,7 +70,6 @@
                                         <td>{{ $modul->id }}</td>
                                         <td>{{ $modul->judul }}</td>
                                         <td>{{ $modul->generated_name }}</td>
-                                        <td>{{ $modul->hit }}</td>
                                         <td align="center">
                                             <a class="btn btn-primary btn-circle btn-sm btn-show-pdf" data-show-link="{{ $modul->generated_name }}" data-show-title="{{ $modul->generated_name }}" data-toggle="modal" data-target="#pdfModal">
                                                 <i class="fas fa-file-pdf"></i>

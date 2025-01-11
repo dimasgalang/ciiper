@@ -45,6 +45,56 @@
             </div>
         </div>
     </li>
+    
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMaster"
+            aria-expanded="true" aria-controls="collapseMaster">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Master</span>
+        </a>
+        <div id="collapseMaster" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('buyer.index') }}">Buyer</a>
+                <a class="collapse-item" href="{{ route('brand.index') }}">Brand</a>
+                <a class="collapse-item" href="{{ route('style.index') }}">Style</a>
+                <a class="collapse-item" href="{{ route('season.index') }}">Season</a>
+                <a class="collapse-item" href="{{ route('po.index') }}">Purchase Order</a>
+                <a class="collapse-item" href="{{ route('fabrication.index') }}">Fabrication</a>
+                <a class="collapse-item" href="{{ route('fabricmill.index') }}">Fabric Mill</a>
+                <a class="collapse-item" href="{{ route('factory.index') }}">Factory</a>
+            </div>
+        </div>
+    </li>
+    
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrder"
+            aria-expanded="true" aria-controls="collapseOrder">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Order</span>
+        </a>
+        <div id="collapseOrder" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('ordermaster.index') }}">Order Master</a>
+                <a class="collapse-item" href="{{ route('orderlist.index') }}">Order List</a>
+                <a class="collapse-item" href="{{ route('rafproduction.index') }}">RAF Production</a>
+            </div>
+        </div>
+    </li>
+
+    
+    <!-- <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFinger"
+            aria-expanded="true" aria-controls="collapseFinger">
+            <i class="fas fa-fw fa-fingerprint"></i>
+            <span>Fingerprint</span>
+        </a>
+        <div id="collapseFinger" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('fingerprint.tarik-data') }}">Tarik Data</a>
+            </div>
+        </div>
+    </li>
+
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTelegram"
             aria-expanded="true" aria-controls="collapseTelegram">
@@ -71,8 +121,8 @@
             </div>
         </div>
     </li>
-    
-    <li class="nav-item">
+     -->
+    <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseExport"
             aria-expanded="true" aria-controls="collapseExport">
             <i class="fas fa-fw fa-upload"></i>
@@ -83,8 +133,9 @@
                 <a class="collapse-item" href="{{ route('template.generateslip') }}">Slip Gaji</a>
             </div>
         </div>
-    </li>
-    <li class="nav-item">
+    </li> -->
+
+    <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseModul"
             aria-expanded="true" aria-controls="collapseModul">
             <i class="fas fa-fw fa-file-pdf"></i>
@@ -96,8 +147,8 @@
             </div>
         </div>
     </li>
-    
-    <li class="nav-item">
+     -->
+    <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseServices"
             aria-expanded="true" aria-controls="collapseServices">
             <i class="fas fa-fw fa-globe"></i>
@@ -110,7 +161,7 @@
                 <a class="collapse-item" href="http://36.66.191.116:5432/doc/page/login.asp?_1701438289643" target="_blank">CCTV HikVision</a>
             </div>
         </div>
-    </li>
+    </li> -->
     <li class="nav-item">
         <a class="nav-link" href="/docs/api" target="_blank">
             <i class="fas fa-fw fa-table"></i>

@@ -39,6 +39,10 @@ return [
             'driver' => 'local',
             'root'   => public_path() . '/modul',
         ],
+        'sketch_uploads' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/sketch',
+        ],
         'slip_uploads' => [
             'driver' => 'local',
             'root'   => public_path() . '/slip-gaji',

@@ -97,7 +97,7 @@
                                         <td>{{ $orderlist->po_fab }}</td>
                                         <td>{{ $orderlist->etd }}</td> -->
                                         <td align="center">
-                                            <a id="show-detail" class="btn btn-primary btn-circle btn-sm btn-show-detail" data-url="{{ route('orderlist.detail', $orderlist->order_trans) }}" data-show-link="{{ $orderlist->order_trans }}" data-show-title="{{ $orderlist->order_trans . ' - ' . $orderlist->order_list }}">
+                                            <a id="show-detail" class="btn btn-primary btn-circle btn-sm btn-show-detail" data-url="{{ route('orderlist.fab', $orderlist->order_trans) }}" data-show-link="{{ $orderlist->order_trans }}" data-show-title="{{ $orderlist->order_trans . ' - ' . $orderlist->order_list }}">
                                                 <i class="fas fa-info"></i>
                                             </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $orderlist->id }}" data-delete-name="{{ $orderlist->orderlist_name }}" data-toggle="modal" data-target="#deleteModal">

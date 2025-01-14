@@ -28,7 +28,7 @@ class OrderListController extends Controller
         return view('orderlist.index', compact('orderlists'));
     }
     
-    public function show($order_trans) {
+    public function showfab($order_trans) {
         
         $fabrication = Fabrication::select('*', 'fabric_mill.*')
         ->leftJoin('fabric_mill', 'fabric_mill.fabmill_no', '=', 'fabrication.fabmill_no')

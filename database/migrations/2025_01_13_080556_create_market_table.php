@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('raf_production', function (Blueprint $table) {
+        Schema::create('market', function (Blueprint $table) {
             $table->id();
-            $table->string('order_trans');
-            $table->string('order_list');
-            $table->string('raf_no')->unique();
-            $table->date('raf_date');
-            $table->integer('raf_qty');
-            $table->string('remark');
+            $table->string('market_no')->unique();
+            $table->string('market_name');
             $table->timestamps();
         });
     }
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('raf_production');
+        Schema::dropIfExists('market');
     }
 };

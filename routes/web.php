@@ -9,6 +9,7 @@ use App\Http\Controllers\FingerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MarketController;
 use App\Http\Controllers\ModulController;
 use App\Http\Controllers\OrderListController;
 use App\Http\Controllers\OrderMasterController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\RafProductionController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SeasonController;
+use App\Http\Controllers\ShipModeController;
 use App\Http\Controllers\StyleController;
 use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\TemplateController;
@@ -117,16 +119,19 @@ Route::group(['middleware' => 'auth'], function () {
     //Order Master
     Route::get('/ordermaster/index', [OrderMasterController::class, 'index'])->name('ordermaster.index');
     Route::get('/ordermaster/delete/{id}', [OrderMasterController::class, 'delete'])->name('ordermaster.delete');
+    Route::get('/ordermaster/find/{id}', [OrderMasterController::class, 'find'])->name('ordermaster.find');
     Route::get('/ordermaster/create', [OrderMasterController::class, 'create'])->name('ordermaster.create');
+    Route::post('/ordermaster/update', [OrderMasterController::class, 'update'])->name('ordermaster.update');
     Route::post('/ordermaster/store', [OrderMasterController::class, 'store'])->name('ordermaster.store');
-    Route::get('/ordermaster/detail/{order_trans}', [OrderMasterController::class, 'show'])->name('ordermaster.detail');
+    Route::get('/ordermaster/orderlist/{order_trans}', [OrderMasterController::class, 'showlist'])->name('ordermaster.orderlist');
+    Route::get('/ordermaster/rafproduction/{order_list}', [OrderMasterController::class, 'showraf'])->name('ordermaster.rafproduction');
 
     //Order List
     Route::get('/orderlist/index', [OrderListController::class, 'index'])->name('orderlist.index');
     Route::get('/orderlist/delete/{id}', [OrderListController::class, 'delete'])->name('orderlist.delete');
     Route::get('/orderlist/create', [OrderListController::class, 'create'])->name('orderlist.create');
     Route::post('/orderlist/store', [OrderListController::class, 'store'])->name('orderlist.store');
-    Route::get('/orderlist/detail/{order_trans}', [OrderListController::class, 'show'])->name('orderlist.detail');
+    Route::get('/orderlist/fab/{order_trans}', [OrderListController::class, 'showfab'])->name('orderlist.fab');
     
     //Fabrication
     Route::get('/fabrication/index', [FabricationController::class, 'index'])->name('fabrication.index');
@@ -151,6 +156,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/rafproduction/delete/{id}', [RafProductionController::class, 'delete'])->name('rafproduction.delete');
     Route::get('/rafproduction/create', [RafProductionController::class, 'create'])->name('rafproduction.create');
     Route::post('/rafproduction/store', [RafProductionController::class, 'store'])->name('rafproduction.store');
+    
+    //Ship Mode
+    Route::get('/shipmode/index', [ShipModeController::class, 'index'])->name('shipmode.index');
+    Route::get('/shipmode/delete/{id}', [ShipModeController::class, 'delete'])->name('shipmode.delete');
+    Route::get('/shipmode/create', [ShipModeController::class, 'create'])->name('shipmode.create');
+    Route::post('/shipmode/store', [ShipModeController::class, 'store'])->name('shipmode.store');
+    
+    //Market
+    Route::get('/market/index', [MarketController::class, 'index'])->name('market.index');
+    Route::get('/market/delete/{id}', [MarketController::class, 'delete'])->name('market.delete');
+    Route::get('/market/create', [MarketController::class, 'create'])->name('market.create');
+    Route::post('/market/store', [MarketController::class, 'store'])->name('market.store');
 
     //Import
     Route::post('/user/import', [UserController::class, 'import'])->name('user.import');
@@ -165,5 +182,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/fabricmill/import', [FabricMillController::class, 'import'])->name('fabricmill.import');
     Route::post('/factory/import', [FactoryController::class, 'import'])->name('factory.import');
     Route::post('/rafproduction/import', [RafProductionController::class, 'import'])->name('rafproduction.import');
+    Route::post('/shipmode/import', [ShipModeController::class, 'import'])->name('shipmode.import');
+    Route::post('/market/import', [MarketController::class, 'import'])->name('market.import');
 });
 

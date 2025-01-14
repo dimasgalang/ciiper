@@ -62,6 +62,8 @@
                 <a class="collapse-item" href="{{ route('fabrication.index') }}">Fabrication</a>
                 <a class="collapse-item" href="{{ route('fabricmill.index') }}">Fabric Mill</a>
                 <a class="collapse-item" href="{{ route('factory.index') }}">Factory</a>
+                <a class="collapse-item" href="{{ route('shipmode.index') }}">Ship Mode</a>
+                <a class="collapse-item" href="{{ route('market.index') }}">Market</a>
             </div>
         </div>
     </li>

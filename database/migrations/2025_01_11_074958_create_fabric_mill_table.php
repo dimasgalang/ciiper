@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('style', function (Blueprint $table) {
+        Schema::create('fabric_mill', function (Blueprint $table) {
             $table->id();
-            $table->string('brand_no');
-            $table->string('style_no')->unique();
-            $table->string('style_name');
-            $table->string('style_desc');
+            $table->string('fabmill_no')->unique();
+            $table->string('fabmill_name');
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('style');
+        Schema::dropIfExists('fabrication_mill');
     }
 };

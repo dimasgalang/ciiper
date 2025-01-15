@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('qty_ocf')->default(0);
             $table->integer('qty_gmt')->default(0);
             $table->integer('qty_sbd')->default(0);
-            $table->string('follow_up');
+            $table->string('fu_no');
             $table->string('sketch_file');
             $table->string('wash_type');
             $table->string('remark');

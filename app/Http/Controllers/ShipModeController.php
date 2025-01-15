@@ -35,7 +35,8 @@ class ShipModeController extends Controller
     }
 
     public function create() {
-        return view('shipmode.create');
+        $ships = ShipMode::all()->last();
+        return view('shipmode.create', compact('ships'));
     }
 
     public function store(Request $request)

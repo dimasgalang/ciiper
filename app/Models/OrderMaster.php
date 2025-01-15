@@ -24,5 +24,6 @@ class OrderMaster extends Model
         'wash_type',
         'remark',
         'sketch_file',
+        'desc',
     ];
 }

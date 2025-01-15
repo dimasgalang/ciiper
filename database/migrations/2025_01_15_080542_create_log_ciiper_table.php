@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fabrication_mill', function (Blueprint $table) {
+        Schema::create('log_ciiper', function (Blueprint $table) {
             $table->id();
-            $table->string('fabmill_no')->unique();
-            $table->string('fabmill_name');
+            $table->string('username');
+            $table->string('activity');
+            $table->string('time');
+            $table->string('icon');
+            $table->string('color');
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('fabrication_mill');
+        Schema::dropIfExists('log_ciiper');
     }
 };

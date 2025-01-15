@@ -72,6 +72,7 @@
                             <div>
                                 <label>Buyer :</label>
                                 <select class="form-control" id="buyer_no" name="buyer_no">
+                                    <option></option>
                                     @foreach($buyers as $buyer)
                                     <option value="{{ $buyer->buyer_no }}">{{ $buyer->buyer_no }} - {{ $buyer->buyer_name }}</option>
                                     @endforeach
@@ -80,25 +81,23 @@
                             <br>
                             <div>
                                 <label>Brand :</label>
-                                <select class="form-control" id="brand_no" name="brand_no">
-                                    @foreach($brands as $brand)
-                                    <option value="{{ $brand->brand_no }}">{{ $brand->brand_no }} - {{ $brand->brand_name }}</option>
-                                    @endforeach
+                                <select class="form-control" id="brand_no" name="brand_no" disabled>
                                 </select>
                             </div>
                             <br>
                             <div>
                                 <label>Style :</label>
-                                <select class="form-control" id="style_no" name="style_no">
-                                    @foreach($styles as $style)
-                                    <option value="{{ $style->style_no }}">{{ $style->style_no }} - {{ $style->style_name }}</option>
-                                    @endforeach
+                                <select class="form-control" id="style_no" name="style_no" disabled>
                                 </select>
                             </div>
                             <br>
                             <div>
-                                <label>Master PO :</label>
-                                <input class="form-control" type="text" id="po_no" name="po_no">
+                                <label>Master PO : </label>
+                                @if((substr($ordermasters->po_no,0,4)) == (date('y') . date('n') . 'E'))
+                                <input class="form-control" type="text" id="po_no" name="po_no" value="{{ date('y') . date('n') . 'E' . str_pad(substr($ordermasters->po_no,-4) + 1,4,'0',STR_PAD_LEFT) }}" readonly>
+                                @else
+                                <input class="form-control" type="text" id="po_no" name="po_no" value="{{ date('y') . date('n') . 'E' . str_pad(1,4,'0',STR_PAD_LEFT) }}" readonly>
+                                @endif
                             </div>
                             <br>
                             <div>
@@ -124,6 +123,7 @@
                             <div>
                                 <label>MR / Follow Up :</label>
                                 <select class="form-control" id="fu_no" name="fu_no">
+                                    <option></option>
                                     @foreach($followups as $followup)
                                     <option value="{{ $followup->fu_no }}">{{ $followup->fu_no }} - {{ $followup->fu_name }}</option>
                                     @endforeach
@@ -170,24 +170,70 @@
 
 @include('layout.footer')
 </body>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 <script type="text/javascript">
     $("#season_no").select2({
-          allowClear: true
+          allowClear: true,
+          placeholder: 'Choose Season',
     });
     $("#buyer_no").select2({
-          allowClear: true
+          allowClear: true,
+          placeholder: 'Choose Buyer',
+    });
+    $(document).on("change", "#buyer_no", function(e){
+        e.preventDefault();
+        var buyer_no = $(this).val();
+        if (buyer_no) {
+            $.ajax({
+                url: '/ordermaster/fetchbrand/'+buyer_no,
+                type: "GET",
+                dataType: "json",
+                success:function(data) {
+                    $('#brand_no').empty();
+                    $('#brand_no').append('<option></option>');
+                    $.each(data, function(key, value) {
+                        $('#brand_no').append('<option value="'+ value.brand_no +'">'+ value.brand_no + ' - ' + value.brand_name +'</option>');
+                    });
+                    $('#brand_no').removeAttr('disabled');
+                }
+            });
+        } else{
+            $('#brand_no').empty();
+            $('#brand_no').attr('disabled','disabled');
+        }
     });
     $("#brand_no").select2({
-          allowClear: true
+          allowClear: true,
+          placeholder: 'Choose Brand',
+    });
+    $(document).on("change", "#brand_no", function(e){
+        e.preventDefault();
+        var brand_no = $(this).val();
+        if (brand_no) {
+            $.ajax({
+                url: '/ordermaster/fetchstyle/'+brand_no,
+                type: "GET",
+                dataType: "json",
+                success:function(data) {
+                    $('#style_no').empty();
+                    $('#style_no').append('<option></option>');
+                    $.each(data, function(key, value) {
+                        $('#style_no').append('<option value="'+ value.style_no +'">'+ value.style_no + ' - ' + value.style_name + '</option>');
+                    });
+                    $('#style_no').removeAttr('disabled');
+                }
+            });
+        } else{
+            $('#style_no').empty();
+            $('#style_no').attr('disabled','disabled');
+        }
     });
     $("#style_no").select2({
-          allowClear: true
+          allowClear: true,
+          placeholder: 'Choose Style',
     });
     $("#fu_no").select2({
-          allowClear: true
+          allowClear: true,
+          placeholder: 'Choose MR / Follow Up',
     });
 </script>
 </html>

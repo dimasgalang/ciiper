@@ -16,19 +16,19 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Fabrication List</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Shipment List</h1>
                     <div>
                     <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Import Fabrication</a>
-                    <a href="{{ route('fabrication.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-plus fa-sm text-white-50"></i> Create Fabrication</a>
+                        class="fas fa-plus fa-sm text-white-50"></i> Import Shipment</a>
+                    <a href="{{ route('shipment.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                            class="fas fa-plus fa-sm text-white-50"></i> Create Shipment</a>
                     </div>
                 </div>
                 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Fabrication Data</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Shipment Data</h6>
                     </div>
                     <div class="card-body">
                         @if ($message = Session::get('success'))
@@ -63,27 +63,29 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Order Trans</th>
-                                        <th>Fab No</th>
-                                        <th>Fab Mill</th>
-                                        <th>Fabrication</th>
-                                        <th>PO Fab</th>
-                                        <th>ETD</th>
+                                        <th>Order List</th>
+                                        <th>PO Buyer</th>
+                                        <th>Market</th>
+                                        <th>Ship Mode</th>
+                                        <th>Ship Qty</th>
+                                        <th>Ship Date</th>
+                                        <th>Remark</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($fabrications as $fabrication)
+                                    @foreach($shipments as $shipment)
                                     <tr>
-                                        <td>{{ $fabrication->id }}</td>
-                                        <td>{{ $fabrication->order_trans }}</td>
-                                        <td>{{ $fabrication->fab_no }}</td>
-                                        <td>{{ $fabrication->fabmill_no }}</td>
-                                        <td>{{ $fabrication->fabrication }}</td>
-                                        <td>{{ $fabrication->po_fab }}</td>
-                                        <td>{{ $fabrication->etd }}</td>
+                                        <td>{{ $shipment->id }}</td>
+                                        <td>{{ $shipment->order_list }}</td>
+                                        <td>{{ $shipment->pobuyer_no }}</td>
+                                        <td>{{ $shipment->market_name }}</td>
+                                        <td>{{ $shipment->ship_name }}</td>
+                                        <td>{{ $shipment->ship_qty }}</td>
+                                        <td>{{ $shipment->ship_date }}</td>
+                                        <td>{{ $shipment->remark }}</td>
                                         <td align="center">
-                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $fabrication->id }}" data-delete-name="{{ $fabrication->fabrication_name }}" data-toggle="modal" data-target="#deleteModal">
+                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $shipment->id }}" data-delete-name="{{ $shipment->shipment_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>
@@ -125,12 +127,12 @@
             <div class="modal-dialog modal-md" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="modal-title" class="modal-title" id="exampleModalLabel">Import Fabrication</h5>
+                        <h5 id="modal-title" class="modal-title" id="exampleModalLabel">Import Shipment</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <form action="{{ route('fabrication.import') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('shipment.import') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                             <div class="modal-body">
                                 <div class="form-group">
@@ -159,7 +161,7 @@
 <script>
     $('.btn-delete-record').on('click', function () {
             $('#btn-confirm').attr('href', $(this).data('delete-link'));
-            $("#modal-text-record").text('Apakah anda yakin ingin menghapus fabrication ' + $(this).data('delete-name') + '?');
+            $("#modal-text-record").text('Apakah anda yakin ingin menghapus shipment ' + $(this).data('delete-name') + '?');
     });
 </script>
 </html>

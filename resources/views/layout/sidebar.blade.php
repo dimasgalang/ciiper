@@ -79,6 +79,7 @@
                 <a class="collapse-item" href="{{ route('ordermaster.index') }}">Order Master</a>
                 <a class="collapse-item" href="{{ route('orderlist.index') }}">Order List</a>
                 <a class="collapse-item" href="{{ route('rafproduction.index') }}">RAF Production</a>
+                <a class="collapse-item" href="{{ route('shipment.index') }}">Shipment</a>
             </div>
         </div>
     </li>

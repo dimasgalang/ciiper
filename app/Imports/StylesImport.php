@@ -25,6 +25,7 @@ class StylesImport implements ToModel, WithStartRow
             'brand_no' => $row[1],
             'style_no' => $row[2],
             'style_name' => $row[3],
+            'style_desc' => $row[4],
         ]);
     }
 }

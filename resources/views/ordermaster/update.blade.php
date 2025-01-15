@@ -56,7 +56,7 @@
                             </div>
                             @endif
                             <div>
-                                <input class="form-control" type="hidden" id="id" name="id" value="{{ $ordermasters->id }}" readonly>
+                                <input class="form-control" type="text" id="id" name="id" value="{{ $ordermasters->id }}" readonly>
                             </div>
                             <div>
                                 <label>Order Trans :</label>
@@ -141,14 +141,9 @@
                             <div>
                                 <label>Sketch Image :</label>
                                 <br>
-                                <input class="file" type="file" id="sketch_file" name="sketch_file">
+                                <input class="file" type="file" id="sketch_file" name="sketch_file" accept="image/png, image/jpg, image/jpeg">
                             </div>
                             <br>
-                            <!-- <div>
-                                <label>Sketch :</label>
-                                <input class="form-control" type="text" id="sketch_file" name="sketch_file">
-                            </div>
-                            <br> -->
                             <div>
                                 <label>Remark :</label>
                                 <input class="form-control" type="text" id="remark" name="remark" value="{{ $ordermasters->remark }}">
@@ -173,9 +168,6 @@
 
 @include('layout.footer')
 </body>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 <script type="text/javascript">
     $("#season_no").select2({
           allowClear: true

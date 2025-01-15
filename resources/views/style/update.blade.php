@@ -16,17 +16,17 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Upload Modul</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Update Style</h1>
                 </div>
                 
 
                 <!-- Approach -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Form Upload Modul</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Update Style</h6>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="{{ route('modul.store') }}" enctype="multipart/form-data">
+                        <form method="post" action="{{ route('style.update') }}" enctype="multipart/form-data">
                             @csrf
                             @if ($message = Session::get('success'))
                             <div class="alert alert-success alert-block">
@@ -56,28 +56,31 @@
                             </div>
                             @endif
                             <div>
-                                <label>Judul :</label>
-                                <input class="form-control" type="text" id="judul" name="judul">
+                                <input class="form-control" type="hidden" id="id" name="id" value="{{ $styles->id }}" readonly>
+                            </div>
+                            <div>
+                                <label>Brand No :</label>
+                                <input class="form-control" type="text" id="brand_no" name="brand_no" value="{{ $styles->brand_no }}" required readonly>
                             </div>
                             <br>
                             <div>
-                                <label>File :</label>
-                                <br>
-                                <input type="file" class="@error('file') is-invalid @enderror" name="file">
-                                @error('file')
-                                    <div class="alert alert-danger mt-2">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
+                                <label>Style No :</label>
+                                <input class="form-control" type="text" id="style_no" name="style_no" value="{{ $styles->style_no }}" required readonly>
                             </div>
                             <br>
                             <div>
-                                <input class="form-control" type="hidden" id="hit" name="hit" value="0">
+                                <label>Style Name :</label>
+                                <input class="form-control" type="text" id="style_name" name="style_name" value="{{ $styles->style_name }}">
+                            </div>
+                            <br>
+                            <div>
+                                <label>Style Desc :</label>
+                                <input class="form-control" type="text" id="style_desc" name="style_desc" value="{{ $styles->style_desc }}">
                             </div>
                             <br>
                             <div class="row">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary btn-block">Upload</button>
+                                    <button type="submit" class="btn btn-primary btn-block">Update</button>
                                 </div>
                             </div>
                         </form>
@@ -94,9 +97,4 @@
 
 @include('layout.footer')
 </body>
-<script type="text/javascript">
-    $("#chatid").select2({
-          allowClear: true
-    });
-</script>
 </html>

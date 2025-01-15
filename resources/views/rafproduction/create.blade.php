@@ -56,17 +56,25 @@
                             </div>
                             @endif
                             <div>
-                                <label>Order List :</label>
-                                <select class="form-control" id="order_list" name="order_list">
-                                    @foreach($orderlists as $orderlist)
-                                    <option value="{{ $orderlist->order_list }}">{{ $orderlist->order_list }} - {{ $orderlist->pobuyer_no }}</option>
+                                <label>Order Master :</label>
+                                <select class="form-control" id="order_trans" name="order_trans">
+                                    <option></option>
+                                    @foreach($ordermasters as $ordermaster)
+                                    <option value="{{ $ordermaster->order_trans }}">{{ $ordermaster->order_trans }} - {{ $ordermaster->po_no }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <br>
                             <div>
+                                <label>Order List :</label>
+                                <select class="form-control" id="order_list" name="order_list" disabled>
+                                    <option></option>
+                                </select>
+                            </div>
+                            <br>
+                            <div>
                                 <label>RAF No :</label>
-                                <input class="form-control" type="text" id="raf_no" name="raf_no" required>
+                                <input class="form-control" type="text" id="raf_no" name="raf_no" value="{{ 'RAF' . str_pad($rafs->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                             </div>
                             <br>
                             <div>
@@ -103,12 +111,38 @@
 
 @include('layout.footer')
 </body>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" /> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script> -->
 <script type="text/javascript">
     $("#order_list").select2({
-          allowClear: true
+          allowClear: true,
+          placeholder: 'Choose Order List',
+    });
+    $("#order_trans").select2({
+          allowClear: true,
+          placeholder: 'Choose Master PO',
+    });
+    $(document).on("change", "#order_trans", function(e){
+        e.preventDefault();
+        var order_trans = $(this).val();
+        if (order_trans) {
+            $.ajax({
+                url: '/rafproduction/fetchorderlist/'+order_trans,
+                type: "GET",
+                dataType: "json",
+                success:function(data) {
+                    $('#order_list').empty();
+                    $('#order_list').append('<option></option>');
+                    $.each(data, function(key, value) {
+                        $('#order_list').append('<option value="'+ value.order_list +'">'+ value.lot_no + ' - ' + value.pobuyer_no +'</option>');
+                    });
+                    $('#order_list').removeAttr('disabled');
+                }
+            });
+        } else{
+            $('#order_list').empty();
+            $('#order_list').attr('disabled','disabled');
+        }
     });
 </script>
 <script type="text/javascript">
@@ -116,5 +150,5 @@
     format: 'YYYY-MM-DD',
     locale: 'en'
   });
-</script> 
+</script>
 </html>

@@ -17,6 +17,7 @@ use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\RafProductionController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SeasonController;
+use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\ShipModeController;
 use App\Http\Controllers\StyleController;
 use App\Http\Controllers\TelegramController;
@@ -103,6 +104,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/style/delete/{id}', [StyleController::class, 'delete'])->name('style.delete');
     Route::get('/style/create', [StyleController::class, 'create'])->name('style.create');
     Route::post('/style/store', [StyleController::class, 'store'])->name('style.store');
+    Route::get('/style/find/{id}', [StyleController::class, 'find'])->name('style.find');
+    Route::post('/style/update', [StyleController::class, 'update'])->name('style.update');
 
     //Season
     Route::get('/season/index', [SeasonController::class, 'index'])->name('season.index');
@@ -124,14 +127,22 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/ordermaster/update', [OrderMasterController::class, 'update'])->name('ordermaster.update');
     Route::post('/ordermaster/store', [OrderMasterController::class, 'store'])->name('ordermaster.store');
     Route::get('/ordermaster/orderlist/{order_trans}', [OrderMasterController::class, 'showlist'])->name('ordermaster.orderlist');
+    Route::get('/ordermaster/shipment/{order_trans}', [OrderMasterController::class, 'showshipment'])->name('ordermaster.shipment');
     Route::get('/ordermaster/rafproduction/{order_list}', [OrderMasterController::class, 'showraf'])->name('ordermaster.rafproduction');
+    Route::get('/ordermaster/fab/{order_list}', [OrderMasterController::class, 'showfab'])->name('ordermaster.fab');
+    Route::get('/ordermaster/style/{order_list}', [OrderMasterController::class, 'showStyle'])->name('ordermaster.style');
+    Route::get('/ordermaster/fetchbrand/{buyer_no}', [OrderMasterController::class, 'fetchbrand'])->name('ordermaster.fetchbrand');
+    Route::get('/ordermaster/fetchstyle/{brand_no}', [OrderMasterController::class, 'fetchstyle'])->name('ordermaster.fetchstyle');
 
     //Order List
     Route::get('/orderlist/index', [OrderListController::class, 'index'])->name('orderlist.index');
     Route::get('/orderlist/delete/{id}', [OrderListController::class, 'delete'])->name('orderlist.delete');
+    Route::get('/orderlist/change/{id}', [OrderListController::class, 'finish'])->name('orderlist.change');
     Route::get('/orderlist/create', [OrderListController::class, 'create'])->name('orderlist.create');
     Route::post('/orderlist/store', [OrderListController::class, 'store'])->name('orderlist.store');
     Route::get('/orderlist/fab/{order_trans}', [OrderListController::class, 'showfab'])->name('orderlist.fab');
+    Route::get('/orderlist/find/{id}', [OrderListController::class, 'find'])->name('orderlist.find');
+    Route::post('/orderlist/update', [OrderListController::class, 'update'])->name('orderlist.update');
     
     //Fabrication
     Route::get('/fabrication/index', [FabricationController::class, 'index'])->name('fabrication.index');
@@ -156,6 +167,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/rafproduction/delete/{id}', [RafProductionController::class, 'delete'])->name('rafproduction.delete');
     Route::get('/rafproduction/create', [RafProductionController::class, 'create'])->name('rafproduction.create');
     Route::post('/rafproduction/store', [RafProductionController::class, 'store'])->name('rafproduction.store');
+    Route::get('/rafproduction/fetchorderlist/{order_trans}', [RafProductionController::class, 'fetchorderlist'])->name('rafproduction.fetchorderlist');
     
     //Ship Mode
     Route::get('/shipmode/index', [ShipModeController::class, 'index'])->name('shipmode.index');
@@ -168,6 +180,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/market/delete/{id}', [MarketController::class, 'delete'])->name('market.delete');
     Route::get('/market/create', [MarketController::class, 'create'])->name('market.create');
     Route::post('/market/store', [MarketController::class, 'store'])->name('market.store');
+    
+    //Shipment
+    Route::get('/shipment/index', [ShipmentController::class, 'index'])->name('shipment.index');
+    Route::get('/shipment/delete/{id}', [ShipmentController::class, 'delete'])->name('shipment.delete');
+    Route::get('/shipment/create', [ShipmentController::class, 'create'])->name('shipment.create');
+    Route::post('/shipment/store', [ShipmentController::class, 'store'])->name('shipment.store');
 
     //Import
     Route::post('/user/import', [UserController::class, 'import'])->name('user.import');
@@ -184,5 +202,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/rafproduction/import', [RafProductionController::class, 'import'])->name('rafproduction.import');
     Route::post('/shipmode/import', [ShipModeController::class, 'import'])->name('shipmode.import');
     Route::post('/market/import', [MarketController::class, 'import'])->name('market.import');
+    Route::post('/shipment/import', [ShipmentController::class, 'import'])->name('shipment.import');
 });
 

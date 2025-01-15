@@ -39,10 +39,9 @@ class HomeController extends Controller
 
         $users = User::paginate(4)->sortDesc();
         $data = DB::connection('sqlsrv')->table('REKAP')->select('*')
-        ->where('TAHUN', '>=', date('Y'))
+        ->where('TAHUN', '>=', date('Y')-1)
         ->orderBy('TAHUN', 'ASC')
         ->orderBy('BULAN', 'ASC')->get()->toArray();
-
         $pkwtChart = [ 0 => 'Others' ];
         for($i = 0; $i < count($data); $i++) {
             $pkwtChart[$i] = $data[$i]->PKWT;

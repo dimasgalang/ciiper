@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\LogCiiper;
 use Dedoc\Scramble\Scramble;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
@@ -36,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
         $quote = json_decode($response->getBody(), true);
 
         date_default_timezone_set('Asia/Jakarta');
-        $logs = DB::connection('sqlsrv')->table('LOG_CIIPER')->select('*')->orderBy('TIME', 'DESC')->paginate(5);
+        $logs = LogCiiper::all()->take(5);
         View::share(['logs' => $logs, 'quotes' => $quote]);
     }
 }

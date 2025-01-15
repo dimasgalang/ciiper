@@ -66,6 +66,7 @@
                                         <th>Brand No</th>
                                         <th>Style No</th>
                                         <th>Style Name</th>
+                                        <th>Style Desc</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -76,7 +77,11 @@
                                         <td>{{ $style->brand_no }}</td>
                                         <td>{{ $style->style_no }}</td>
                                         <td>{{ $style->style_name }}</td>
+                                        <td>{{ $style->style_desc }}</td>
                                         <td align="center">
+                                            <a href="/style/find/{{ $style->id }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $style->id }}" data-delete-name="{{ $style->style_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>

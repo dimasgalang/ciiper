@@ -36,6 +36,7 @@ class OrderMastersImport implements ToModel, WithStartRow
             'wash_type' => $row[12],
             'remark' => $row[13],
             'sketch_file' => $row[14],
+            'desc' => $row[15],
         ]);
     }
 }

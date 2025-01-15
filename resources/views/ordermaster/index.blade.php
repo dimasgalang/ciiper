@@ -94,19 +94,16 @@
                                         <!-- <td>{{ $ordermaster->qty_ocf }}</td> -->
                                         <td>{{ $ordermaster->sum_raf_qty }}</td>
                                         <td>{{ $ordermaster->qty_sbd }}</td>
-                                        <td>{{ $ordermaster->fu_no }}</td>
+                                        <td>{{ $ordermaster->fu_name }}</td>
                                         <td>{{ $ordermaster->wash_type }}</td>
                                         <td><center><img id="sketch" src="{{ asset('/sketch/' . $ordermaster->sketch_file) }}" style="width: 200px;"></center></td>
                                         <td>{{ $ordermaster->remark }}</td>
-                                        <td align="center">
+                                        <td>
                                             <a href="/ordermaster/find/{{ $ordermaster->id }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a id="show-orderlist" class="btn btn-primary btn-circle btn-sm btn-show-orderlist" data-orderlist-url="{{ route('ordermaster.orderlist', $ordermaster->order_trans) }}" data-show-orderlist-link="{{ $ordermaster->order_trans }}" data-show-orderlist-title="{{ $ordermaster->order_trans }}" data-show-image="{{ asset('/sketch/' . $ordermaster->sketch_file) }}">
+                                            <a id="show-orderlist" class="btn btn-primary btn-circle btn-sm btn-show-orderlist" data-orderlist-url="{{ route('ordermaster.orderlist', $ordermaster->order_trans) }}" data-raf-url="{{ route('ordermaster.rafproduction', $ordermaster->order_trans) }}" data-fab-url="{{ route('ordermaster.fab', $ordermaster->order_trans) }}" data-shipment-url="{{ route('ordermaster.shipment', $ordermaster->order_trans) }}" data-style-url="{{ route('ordermaster.style', $ordermaster->order_trans) }}" data-show-orderlist-link="{{ $ordermaster->order_trans }}" data-show-orderlist-title="{{ $ordermaster->order_trans }}" data-show-image="{{ asset('/sketch/' . $ordermaster->sketch_file) }}">
                                                 <i class="fas fa-info"></i>
-                                            </a>
-                                            <a id="show-raf" class="btn btn-primary btn-circle btn-sm btn-show-raf" data-raf-url="{{ route('ordermaster.rafproduction', $ordermaster->order_trans) }}" data-show-raf-link="{{ $ordermaster->order_trans }}" data-show-raf-title="{{ $ordermaster->order_trans }}">
-                                                <i class="fas fa-flag"></i>
                                             </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $ordermaster->id }}" data-delete-name="{{ $ordermaster->order_trans }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
@@ -182,29 +179,139 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="row">
-                            <!-- <div class="col-xl-3 col-md-6 mb-4">
-                                <center><img id="sketch-PIC" src="" style="width: 200px;"></center>
-                            </div> -->
-                            <div class="col-xl-12 col-md-6 mb-4">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-modal" id="table-orderlist" width="100%" cellspacing="0">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Order List</th>
-                                                <th>Factory</th>
-                                                <th>Lot</th>
-                                                <th>PO Buyer</th>
-                                                <th>DC PO Qty (Dzn)</th>
-                                                <th>DC PO Qty (Pcs)</th>
-                                                <th>Ex Factory</th>
-                                                <th>Vsl Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
+                        <div class="tab">
+                            <button class="tablinks" onclick="openModal(event, 'Sketch')">Sketch</button>
+                            <button class="tablinks" onclick="openModal(event, 'Order List')">Order List</button>
+                            <button class="tablinks" onclick="openModal(event, 'RAF Production')">RAF Production</button>
+                            <button class="tablinks" onclick="openModal(event, 'Fabrication')">Fabrication</button>
+                            <button class="tablinks" onclick="openModal(event, 'Shipment')">Shipment</button>
+                        </div>
+                          
+                        <!-- Tab content -->
+                        <div id="Sketch" class="tabcontent">
+                            <br>
+                            <div class="row">
+                                <div class="col-xl-12 col-md-6 mb-4">
+                                    <div>
+                                        <label>STYLE NAME :</label>
+                                        <input class="form-control" type="text" id="order_list-style_name" value="" readonly>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>STYLE DESC :</label>
+                                        <input class="form-control" type="text" id="order_list-style_desc" value="" readonly>
+                                    </div>
+                                    <br>
+                                    <center><img id="sketch-PIC" src="" style="width: 80%;"></center>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="Order List" class="tabcontent">
+                            <br>
+                            <div class="row">
+                                <!-- <div class="col-xl-3 col-md-6 mb-4">
+                                    <center><img id="sketch-PIC" src="" style="width: 200px;"></center>
+                                </div> -->
+                                <div class="col-xl-12 col-md-6 mb-4">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-modal" id="table-orderlist" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Factory</th>
+                                                    <th>Lot</th>
+                                                    <th>PO Buyer</th>
+                                                    <th>DC PO Qty (Dzn)</th>
+                                                    <th>DC PO Qty (Pcs)</th>
+                                                    <th>RAF Qty (Pcs)</th>
+                                                    <th>Balance</th>
+                                                    <th>Ex Factory</th>
+                                                    <th>Vsl Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                          
+                        <div id="RAF Production" class="tabcontent">
+                            <br>
+                            <div class="row">
+                                <div class="col-xl-12 col-md-6 mb-4">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-modal" id="table-raf" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>RAF No</th>
+                                                    <th>RAF Date</th>
+                                                    <th>Lot</th>
+                                                    <th>PO Buyer</th>
+                                                    <th>RAF Qty</th>
+                                                    <th>Remark</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                          
+                        <div id="Fabrication" class="tabcontent">
+                            <br>
+                            <div class="row">
+                                <div class="col-xl-12 col-md-6 mb-4">
+                                    <div>
+                                        <label>FABRIC MILL :</label>
+                                        <input class="form-control" type="text" id="order_list-fabmill_name" value="" readonly>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>FABRICATION :</label>
+                                        <textarea  class="form-control" type="text" id="order_list-fabrication" value="" readonly rows="20"></textarea>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>PO FABRIC :</label>
+                                        <textarea class="form-control" type="text" id="order_list-po_fab" value="" readonly rows="5"></textarea>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>ETD :</label>
+                                        <textarea class="form-control" type="text" id="order_list-etd" value="" readonly rows="5"></textarea>
+                                    </div>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="Shipment" class="tabcontent">
+                            <br>
+                            <div class="row">
+                                <div class="col-xl-12 col-md-6 mb-4">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-modal" id="table-shipment" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>PO Buyer</th>
+                                                    <th>Market</th>
+                                                    <th>Ship Mode</th>
+                                                    <th>Ship Qty</th>
+                                                    <th>Ship Date</th>
+                                                    <th>Remark</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -233,13 +340,13 @@
                                     <table class="table table-bordered table-modal" id="table-raf" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
+                                                <th>No</th>
                                                 <th>Order List</th>
-                                                <th>RAF No</th>
-                                                <th>RAF Date</th>
-                                                <th>Lot</th>
                                                 <th>PO Buyer</th>
-                                                <th>RAF Qty</th>
+                                                <th>Market</th>
+                                                <th>Ship Mode</th>
+                                                <th>Ship Qty</th>
+                                                <th>Ship Date</th>
                                                 <th>Remark</th>
                                             </tr>
                                         </thead>
@@ -281,43 +388,39 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('body').on('click', '#show-orderlist', function() {
-            var jsonOrderList = $(this).data('orderlist-url'); 
-            // var sketchIMG = $(this).data('show-image');
+            $('#orderlistModal').modal('show');
+            var jsonOrderList = $(this).data('orderlist-url');
+            var jsonRaf = $(this).data('raf-url'); 
+            var jsonFab = $(this).data('fab-url'); 
+            var jsonShipment = $(this).data('shipment-url'); 
+            var jsonStyle = $(this).data('style-url'); 
+            var sketchIMG = $(this).data('show-image');
+            $('#sketch-PIC').attr('src', sketchIMG);
             $.get(jsonOrderList, function (data) {
-                $('#orderlistModal').modal('show');
-                // $('#sketch-PIC').attr('src', sketchIMG);
                 $('#table-orderlist').DataTable({
                     destroy: true,
                     processing: true,
                     ajax: jsonOrderList,
                     columns: [
-                        { data: 'id', name: 'id' },
-                        { data: 'order_list', name: 'order_list' },
+                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                         { data: 'factory_no', name: 'factory_no' },
                         { data: 'lot_no', name: 'lot_no' },
                         { data: 'pobuyer_no', name: 'pobuyer_no' },
                         { data: 'dcpo_dzn', name: 'dcpo_dzn' },
                         { data: 'dcpo_qty', name: 'dcpo_qty' },
+                        { data: 'raf_qty', name: 'raf_qty' },
+                        { data: 'balance', name: 'balance' },
                         { data: 'ex_factory_date', name: 'ex_factory_date' },
                         { data: 'vsl_date', name: 'vsl_date' },
             
                     ]
                 });
-            })
-        });
-    });
-    $(document).ready(function () {
-        $('body').on('click', '#show-raf', function() {
-            var jsonRaf = $(this).data('raf-url'); 
-            $.get(jsonRaf, function (data) {
-                $('#rafModal').modal('show');
                 $('#table-raf').DataTable({
                     destroy: true,
                     processing: true,
                     ajax: jsonRaf,
                     columns: [
-                        { data: 'id', name: 'id' },
-                        { data: 'order_list', name: 'order_list' },
+                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                         { data: 'raf_no', name: 'raf_no' },
                         { data: 'raf_date', name: 'raf_date' },
                         { data: 'lot_no', name: 'lot_no' },
@@ -327,7 +430,33 @@
             
                     ]
                 });
-            })
+
+                $('#table-shipment').DataTable({
+                    destroy: true,
+                    processing: true,
+                    ajax: jsonShipment,
+                    columns: [
+                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                        { data: 'pobuyer_no', name: 'pobuyer_no' },
+                        { data: 'market_name', name: 'market_name' },
+                        { data: 'ship_name', name: 'ship_name' },
+                        { data: 'ship_qty', name: 'ship_qty' },
+                        { data: 'ship_date', name: 'ship_date' },
+                        { data: 'remark', name: 'remark' },
+            
+                    ]
+                });
+            });
+            $.get(jsonFab, function (data) {
+                $('#order_list-fabmill_name').val(data[0].fabmill_name);
+                $('#order_list-fabrication').text(data[0].fabrication);
+                $('#order_list-po_fab').text(data[0].po_fab);
+                $('#order_list-etd').text(data[0].etd);
+            });
+            $.get(jsonStyle, function (data) {
+                $('#order_list-style_name').val(data[0].style_name);
+                $('#order_list-style_desc').val(data[0].style_desc);
+            });
         });
     });
 </script>
@@ -335,5 +464,22 @@
     $(document).ready(function () {
        
      });
-    </script>
+</script>
+<script>
+function openModal(evt, tabName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+</script>
 </html>

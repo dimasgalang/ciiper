@@ -58,7 +58,7 @@
                             <strong>{{ $message }}</strong>
                         </div>
                         @endif
-                        <div class="table-resorderlistnsive">
+                        <div class="table-responsive">
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
@@ -72,6 +72,7 @@
                                         <th>DC PO Qty (Pcs)</th>
                                         <th>Ex Factory</th>
                                         <th>Vsl Date</th>
+                                        <th>Status</th>
                                         <!-- <th>Fabric Mill</th>
                                         <th>Fabrication</th>
                                         <th>PO Fabric</th>
@@ -82,7 +83,7 @@
                                 <tbody>
                                     @foreach($orderlists as $orderlist)
                                     <tr>
-                                        <td>{{ $loop->index+1 }}</td>
+                                        <td>{{ $orderlist->id }}</td>
                                         <td>{{ $orderlist->order_trans }}</td>
                                         <td>{{ $orderlist->order_list }}</td>
                                         <td>{{ $orderlist->factory_name }}</td>
@@ -92,15 +93,34 @@
                                         <td>{{ $orderlist->dcpo_qty }}</td>
                                         <td>{{ $orderlist->ex_factory_date }}</td>
                                         <td>{{ $orderlist->vsl_date }}</td>
+                                        @if($orderlist->status == 'Finish')
+                                             <td align="center">
+                                                <a class="btn btn-success btn-circle btn-sm">
+                                                    <i class="fas fa-check"></i>
+                                                </a>
+                                            </td>
+                                        @else
+                                            <td align="center">
+                                                <a class="btn btn-danger btn-circle btn-sm">
+                                                    <i class="fas fa-times"></i>
+                                                </a>
+                                            </td>
+                                        @endif
                                         <!-- <td>{{ $orderlist->fabmill_name }}</td>
                                         <td>{{ $orderlist->fabrication }}</td>
                                         <td>{{ $orderlist->po_fab }}</td>
                                         <td>{{ $orderlist->etd }}</td> -->
-                                        <td align="center">
+                                        <td>
+                                            <a class="btn btn-success btn-circle btn-sm btn-change-record" data-change-link="change/{{ $orderlist->id }}" data-change-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#changeModal">
+                                                <i class="fas fa-check-square"></i>
+                                            </a>
+                                            <a href="/orderlist/find/{{ $orderlist->id }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                             <a id="show-detail" class="btn btn-primary btn-circle btn-sm btn-show-detail" data-url="{{ route('orderlist.fab', $orderlist->order_trans) }}" data-show-link="{{ $orderlist->order_trans }}" data-show-title="{{ $orderlist->order_trans . ' - ' . $orderlist->order_list }}">
                                                 <i class="fas fa-info"></i>
                                             </a>
-                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $orderlist->id }}" data-delete-name="{{ $orderlist->orderlist_name }}" data-toggle="modal" data-target="#deleteModal">
+                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $orderlist->id }}" data-delete-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>
@@ -133,6 +153,24 @@
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
                         <a id="btn-confirm" href=""><button class="btn btn-primary" type="button">Confirm</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="changeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="change-title" class="modal-title" id="exampleModalLabel">Finish Record</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"><p id="modal-text-record-change"></p></div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
+                        <a id="btn-confirm-change" href=""><button class="btn btn-primary" type="button">Confirm</button></a>
                     </div>
                 </div>
             </div>
@@ -222,6 +260,10 @@
     $('.btn-delete-record').on('click', function () {
             $('#btn-confirm').attr('href', $(this).data('delete-link'));
             $("#modal-text-record").text('Apakah anda yakin ingin menghapus orderlist ' + $(this).data('delete-name') + '?');
+    });
+    $('.btn-change-record').on('click', function () {
+            $('#btn-confirm-change').attr('href', $(this).data('change-link'));
+            $("#modal-text-record-change").text('Apakah anda yakin ingin mengubah status Order List ' + $(this).data('change-name') + ' menjadi Finish?');
     });
 </script>
 <script type="text/javascript">

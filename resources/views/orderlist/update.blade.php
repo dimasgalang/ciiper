@@ -16,17 +16,17 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Create Brand</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Update Order List</h1>
                 </div>
                 
 
                 <!-- Approach -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Form Create Brand</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Update Order List</h6>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="{{ route('brand.store') }}">
+                        <form method="post" action="{{ route('orderlist.update') }}" enctype="multipart/form-data">
                             @csrf
                             @if ($message = Session::get('success'))
                             <div class="alert alert-success alert-block">
@@ -56,35 +56,59 @@
                             </div>
                             @endif
                             <div>
-                                <label>Buyer No :</label>
-                                <select class="form-control" id="buyer_no" name="buyer_no">
-                                    @foreach($buyers as $buyer)
-                                    <option value="{{ $buyer->buyer_no }}">{{ $buyer->buyer_no }} - {{ $buyer->buyer_name }}</option>
+                                <input class="form-control" type="hidden" id="id" name="id" value="{{ $orderlists->id }}" required readonly>
+                            </div>
+                            <div>
+                                <label>Order Trans :</label>
+                                <select class="form-control" id="order_trans" name="order_trans">
+                                    @foreach($ordermasters as $ordermaster)
+                                        <option value="{{ $ordermaster->order_trans }}" {{ $orderlists->order_trans == $ordermaster->order_trans  ? 'selected' : ''}}>{{ $ordermaster->order_trans }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <br>
                             <div>
-                                <label>Brand No :</label>
-                                <input class="form-control" type="text" id="brand_no" name="brand_no" required>
+                                <label>Order List :</label>
+                                <input class="form-control" type="text" id="order_list" name="order_list" value="{{ $orderlists->order_list }}" required readonly>
                             </div>
                             <br>
                             <div>
-                                <label>Brand Name :</label>
-                                <input class="form-control" type="text" id="brand_name" name="brand_name">
-                            </div>
-                            <br>
-                            <div>
-                                <label>Brand Gender : </label>
-                                <select class="form-control" id="brand_gender" name="brand_gender">
-                                    <option value="Male">Male</option>
-                                    <option value="Ladies">Ladies</option>
+                                <label>Factory :</label>
+                                <select class="form-control" id="factory_no" name="factory_no">
+                                    @foreach($factorys as $factory)
+                                        <option value="{{ $factory->factory_no }}" {{ $orderlists->factory_no == $factory->factory_no  ? 'selected' : ''}}>{{ $factory->factory_name }}</option>
+                                    @endforeach
                                 </select>
+                            </div>
+                            <br>
+                            <div>
+                                <label>Lot :</label>
+                                <input class="form-control" type="text" id="lot_no" name="lot_no" value="{{ $orderlists->lot_no }}" required>
+                            </div>
+                            <br>
+                            <div>
+                                <label>PO Buyer :</label>
+                                <input class="form-control" type="text" id="pobuyer_no" name="pobuyer_no" value="{{ $orderlists->pobuyer_no }}" required>
+                            </div>
+                            <br>
+                            <div>
+                                <label>DC PO Qty :</label>
+                                <input class="form-control" type="text" id="dcpo_qty" name="dcpo_qty" value="{{ $orderlists->dcpo_qty }}" required>
+                            </div>
+                            <br>
+                            <div>
+                                <label>Ex Factory Date :</label>
+                                <input class="date form-control" type="date" id="ex_factory_date" name="ex_factory_date" value="{{ $orderlists->ex_factory_date }}" required>
+                            </div>
+                            <br>
+                            <div>
+                                <label>VSL Date :</label>
+                                <input class="date form-control" type="date" id="vsl_date" name="vsl_date" value="{{ $orderlists->vsl_date }}" required>
                             </div>
                             <br>
                             <div class="row">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary btn-block">Create</button>
+                                    <button type="submit" class="btn btn-primary btn-block">Update</button>
                                 </div>
                             </div>
                         </form>
@@ -102,7 +126,7 @@
 @include('layout.footer')
 </body>
 <script type="text/javascript">
-    $("#buyer_no").select2({
+    $("#order_trans").select2({
           allowClear: true
     });
 </script>

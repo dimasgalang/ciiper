@@ -66,13 +66,13 @@
                 @foreach($logs as $log)
                 <a class="dropdown-item d-flex align-items-center" href="#">
                     <div class="mr-3">
-                        <div class="icon-circle {{ $log->COLOR }}">
-                            <i class="fas fa-{{ $log->ICON }} text-white"></i>
+                        <div class="icon-circle {{ $log->color }}">
+                            <i class="fas fa-{{ $log->icon }} text-white"></i>
                         </div>
                     </div>
                     <div>
-                        <div class="small text-gray-500">{{ $log->TIME }}</div>
-                        <span class="font-weight-bold">{{ $log->USERNAME . ' - ' . $log->ACTIVITY }}</span>
+                        <div class="small text-gray-500">{{ $log->time }}</div>
+                        <span class="font-weight-bold">{{ $log->username . ' - ' . $log->activity }}</span>
                     </div>
                 </a>
                 @endforeach

@@ -8,6 +8,7 @@ use App\Models\Brand;
 use App\Models\Style;
 use App\Models\Buyer;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class StyleController extends Controller
@@ -47,6 +48,7 @@ class StyleController extends Controller
             'brand_no' => $request->brand_no,
             'style_no' => $request->style_no,
             'style_name' => $request->style_name,
+            'style_desc' => $request->style_desc,
         ]);
 
         return redirect()
@@ -58,5 +60,39 @@ class StyleController extends Controller
         $buyers = Style::find($id);    
         $buyers->delete();
         return redirect('style/index')->with(['error' => 'Record Berhasil Dihapus!']);
+    }
+
+    public function find($id) {
+        $styles = Style::find($id);
+        return view('style.update', compact('styles'));
+    }
+
+    public function update(Request $request)
+    {
+        $styles = Style::findOrFail($request->id);
+
+        $validator = Validator::make($request->all(), [
+            'brand_no' => 'required|max:225|',
+            'style_no' => 'required|max:255',
+            'style_name' => 'required|max:225|',
+            'style_desc' => 'required|max:225|',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $styles->fill([
+            'brand_no' => $request->brand_no,
+            'style_no' => $request->style_no,
+            'style_name' => $request->style_name,
+            'style_desc' => $request->style_desc,
+        ]);
+
+        $styles->save();
+
+        return redirect('style/index')->with(['success' => 'Style berhasil diupdate!']);
     }
 }

@@ -35,7 +35,8 @@ class MarketController extends Controller
     }
 
     public function create() {
-        return view('market.create');
+        $markets = Market::all()->last();
+        return view('market.create', compact('markets'));
     }
 
     public function store(Request $request)

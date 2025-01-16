@@ -73,6 +73,16 @@
                             </div>
                             <br>
                             <div>
+                                <label>Departement :</label>
+                                <select class="form-control" id="raf_dept" name="raf_dept">
+                                    <option></option>
+                                    @foreach($productiondepts as $productiondept)
+                                    <option value="{{ $productiondept->dept_no }}">{{ $productiondept->dept_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <br>
+                            <div>
                                 <label>RAF No :</label>
                                 <input class="form-control" type="text" id="raf_no" name="raf_no" value="{{ 'RAF' . str_pad($rafs->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                             </div>
@@ -143,6 +153,10 @@
             $('#order_list').empty();
             $('#order_list').attr('disabled','disabled');
         }
+    });
+    $("#raf_dept").select2({
+          allowClear: true,
+          placeholder: 'Choose Departement',
     });
 </script>
 <script type="text/javascript">

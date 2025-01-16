@@ -16,19 +16,19 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">RAF Production List</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Production Dept List</h1>
                     <div>
                     <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Import RAF Production</a>
-                    <a href="{{ route('rafproduction.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-plus fa-sm text-white-50"></i> Create RAF Production</a>
+                        class="fas fa-plus fa-sm text-white-50"></i> Import Production Dept</a>
+                    <a href="{{ route('productiondept.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                            class="fas fa-plus fa-sm text-white-50"></i> Create Production Dept</a>
                     </div>
                 </div>
                 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">RAF Production Data</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Production Dept Data</h6>
                     </div>
                     <div class="card-body">
                         @if ($message = Session::get('success'))
@@ -63,27 +63,19 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Order List</th>
-                                        <th>RAF No</th>
-                                        <th>RAF Date</th>
-                                        <th>RAF Dept</th>
-                                        <th>RAF Qty</th>
-                                        <th>Remark</th>
+                                        <th>Production Dept No</th>
+                                        <th>Production Dept Name</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($rafproductions as $rafproduction)
+                                    @foreach($productiondepts as $productiondept)
                                     <tr>
-                                        <td>{{ $rafproduction->id }}</td>
-                                        <td>{{ $rafproduction->order_list }}</td>
-                                        <td>{{ $rafproduction->raf_no }}</td>
-                                        <td>{{ $rafproduction->raf_date }}</td>
-                                        <td>{{ $rafproduction->dept_name }}</td>
-                                        <td>{{ $rafproduction->raf_qty }}</td>
-                                        <td>{{ $rafproduction->remark }}</td>
+                                        <td>{{ $productiondept->id }}</td>
+                                        <td>{{ $productiondept->dept_no }}</td>
+                                        <td>{{ $productiondept->dept_name }}</td>
                                         <td align="center">
-                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $rafproduction->id }}" data-delete-name="{{ $rafproduction->rafproduction_name }}" data-toggle="modal" data-target="#deleteModal">
+                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $productiondept->id }}" data-delete-name="{{ $productiondept->productiondept_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>
@@ -125,12 +117,12 @@
             <div class="modal-dialog modal-md" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="modal-title" class="modal-title" id="exampleModalLabel">Import RAF Production</h5>
+                        <h5 id="modal-title" class="modal-title" id="exampleModalLabel">Import Production Dept</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">x</span>
                         </button>
                     </div>
-                    <form action="{{ route('rafproduction.import') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('productiondept.import') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                             <div class="modal-body">
                                 <div class="form-group">
@@ -159,7 +151,7 @@
 <script>
     $('.btn-delete-record').on('click', function () {
             $('#btn-confirm').attr('href', $(this).data('delete-link'));
-            $("#modal-text-record").text('Apakah anda yakin ingin menghapus raf ' + $(this).data('delete-name') + '?');
+            $("#modal-text-record").text('Apakah anda yakin ingin menghapus productiondept ' + $(this).data('delete-name') + '?');
     });
 </script>
 </html>

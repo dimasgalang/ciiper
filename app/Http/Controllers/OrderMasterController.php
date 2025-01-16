@@ -24,7 +24,7 @@ class OrderMasterController extends Controller
 {
     public function index() {
         // $ordermasters = OrderMaster::all();
-        $ordermasters = OrderMaster::select('order_master.*','season.season_cat','buyer.buyer_name', 'brand.brand_name', 'style_name', 'followup.fu_name', DB::raw('round(sum(raf_production.raf_qty),2) as sum_raf_qty'))
+        $ordermasters = OrderMaster::select('order_master.*','season.season_cat','buyer.buyer_name', 'brand.brand_name', 'style_name', 'followup.fu_name', DB::raw('round(sum(if(raf_production.raf_dept = "DEP000000004", raf_production.raf_qty, 0)),2) as sum_raf_qty'))
         ->leftJoin('season', 'order_master.season_no', '=', 'season.season_no')
         ->leftJoin('buyer', 'order_master.buyer_no', '=', 'buyer.buyer_no')
         ->leftJoin('brand', 'order_master.brand_no', '=', 'brand.brand_no')
@@ -33,7 +33,7 @@ class OrderMasterController extends Controller
         ->leftJoin('raf_production', 'order_master.order_trans', '=', 'raf_production.order_trans')
         ->groupBy('order_master.order_trans')
         ->get();
-        // dd($ordermasters);
+        // return response()->json($ordermasters);
         return view('ordermaster.index', compact('ordermasters'));
     }
 
@@ -48,8 +48,7 @@ class OrderMasterController extends Controller
     }
 
     public function showlist($order_trans) {
-        
-        $orderlists = OrderList::select('order_list.factory_no', 'order_list.lot_no','order_list.pobuyer_no','order_list.ex_factory_date','order_list.vsl_date','order_list.dcpo_qty', DB::raw('round(order_list.dcpo_qty/12,2) as dcpo_dzn'), DB::raw('(sum(raf_production.raf_qty)-order_list.dcpo_qty) as balance'), DB::raw('sum(raf_production.raf_qty) as raf_qty'))
+        $orderlists = OrderList::select('order_list.factory_no', 'order_list.lot_no','order_list.pobuyer_no','order_list.ex_factory_date','order_list.vsl_date','order_list.dcpo_qty', DB::raw('round(order_list.dcpo_qty/12,2) as dcpo_dzn'), DB::raw('(sum(coalesce(raf_production.raf_qty,0))-order_list.dcpo_qty) as balance'), DB::raw('sum(coalesce(raf_production.raf_qty,0)) as raf_qty'))
         ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
         ->leftJoin('raf_production','order_list.order_list', '=', 'raf_production.order_list')
         ->where('order_list.order_trans', '=', $order_trans)
@@ -59,15 +58,62 @@ class OrderMasterController extends Controller
         return DataTables::of($orderlists)->addIndexColumn()->make(true);
     }
 
-    public function showraf($order_trans) {
-        
+    public function showrafproduction($order_trans) {
         $rafproductions = RafProduction::select('*','order_list.*','order_master.*')
         ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
         ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
         ->where('order_list.order_trans', '=', $order_trans)
+        ->where('raf_production.raf_dept', '=', 'DEP000000004')
         ->get();
         // return response()->json($orderlists);
         return DataTables::of($rafproductions)->addIndexColumn()->make(true);
+    }
+
+    public function showrafcutting($order_trans) {
+        $rafcuttings = RafProduction::select('order_list.lot_no','order_list.pobuyer_no','order_master.order_trans', DB::raw('(sum(raf_production.raf_qty)-order_list.dcpo_qty) as balance'), DB::raw('sum(raf_production.raf_qty) as raf_qty'),'order_list.dcpo_qty')
+        ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
+        ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
+        ->where('order_list.order_trans', '=', $order_trans)
+        ->where('raf_production.raf_dept', '=', 'DEP000000001')
+        ->groupBy('order_list.order_trans','order_list.lot_no','order_list.pobuyer_no','order_list.dcpo_qty')
+        ->get();
+        // return response()->json($orderlists);
+        return DataTables::of($rafcuttings)->addIndexColumn()->make(true);
+    }
+
+    public function showrafsewing($order_trans) {
+        $rafsewings = RafProduction::select('order_list.lot_no','order_list.pobuyer_no','order_master.order_trans', DB::raw('(sum(raf_production.raf_qty)-order_list.dcpo_qty) as balance'), DB::raw('sum(raf_production.raf_qty) as raf_qty'),'order_list.dcpo_qty')
+        ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
+        ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
+        ->where('order_list.order_trans', '=', $order_trans)
+        ->where('raf_production.raf_dept', '=', 'DEP000000002')
+        ->groupBy('order_list.order_trans','order_list.lot_no','order_list.pobuyer_no','order_list.dcpo_qty')
+        ->get();
+        // return response()->json($orderlists);
+        return DataTables::of($rafsewings)->addIndexColumn()->make(true);
+    }
+    public function showrafiron($order_trans) {
+        $rafirons = RafProduction::select('order_list.lot_no','order_list.pobuyer_no','order_master.order_trans', DB::raw('(sum(raf_production.raf_qty)-order_list.dcpo_qty) as balance'), DB::raw('sum(raf_production.raf_qty) as raf_qty'),'order_list.dcpo_qty')
+        ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
+        ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
+        ->where('order_list.order_trans', '=', $order_trans)
+        ->where('raf_production.raf_dept', '=', 'DEP000000003')
+        ->groupBy('order_list.order_trans','order_list.lot_no','order_list.pobuyer_no','order_list.dcpo_qty')
+        ->get();
+        // return response()->json($orderlists);
+        return DataTables::of($rafirons)->addIndexColumn()->make(true);
+    }
+    
+    public function showrafpacking($order_trans) {
+        $rafpackings = RafProduction::select('order_list.lot_no','order_list.pobuyer_no','order_master.order_trans', DB::raw('(sum(raf_production.raf_qty)-order_list.dcpo_qty) as balance'), DB::raw('sum(raf_production.raf_qty) as raf_qty'),'order_list.dcpo_qty')
+        ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
+        ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
+        ->where('order_list.order_trans', '=', $order_trans)
+        ->where('raf_production.raf_dept', '=', 'DEP000000004')
+        ->groupBy('order_list.order_trans','order_list.lot_no','order_list.pobuyer_no','order_list.dcpo_qty')
+        ->get();
+        // return response()->json($rafpackings);
+        return DataTables::of($rafpackings)->addIndexColumn()->make(true);
     }
 
     public function showshipment($order_trans) {
@@ -82,7 +128,6 @@ class OrderMasterController extends Controller
     }
     
     public function showfab($order_trans) {
-        
         $fabrication = Fabrication::select('*', 'fabric_mill.*')
         ->leftJoin('fabric_mill', 'fabric_mill.fabmill_no', '=', 'fabrication.fabmill_no')
         ->where('fabrication.order_trans', '=', $order_trans)
@@ -91,7 +136,6 @@ class OrderMasterController extends Controller
     }
 
     public function showStyle($order_trans) {
-        
         $style = Style::select('*', 'order_master.style_no')
         ->leftJoin('order_master', 'order_master.style_no', '=', 'style.style_no')
         ->where('order_master.order_trans', '=', $order_trans)

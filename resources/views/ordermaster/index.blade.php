@@ -76,7 +76,7 @@
                                         <th>MR</th>
                                         <th>Wash Type</th>
                                         <th>Sketch</th>
-                                        <th>Remark</th>
+                                        <!-- <th>Remark</th> -->
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -97,12 +97,12 @@
                                         <td>{{ $ordermaster->fu_name }}</td>
                                         <td>{{ $ordermaster->wash_type }}</td>
                                         <td><center><img id="sketch" src="{{ asset('/sketch/' . $ordermaster->sketch_file) }}" style="width: 200px;"></center></td>
-                                        <td>{{ $ordermaster->remark }}</td>
+                                        <!-- <td>{{ $ordermaster->remark }}</td> -->
                                         <td>
                                             <a href="/ordermaster/find/{{ $ordermaster->id }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a id="show-orderlist" class="btn btn-primary btn-circle btn-sm btn-show-orderlist" data-orderlist-url="{{ route('ordermaster.orderlist', $ordermaster->order_trans) }}" data-raf-url="{{ route('ordermaster.rafproduction', $ordermaster->order_trans) }}" data-fab-url="{{ route('ordermaster.fab', $ordermaster->order_trans) }}" data-shipment-url="{{ route('ordermaster.shipment', $ordermaster->order_trans) }}" data-style-url="{{ route('ordermaster.style', $ordermaster->order_trans) }}" data-show-orderlist-link="{{ $ordermaster->order_trans }}" data-show-orderlist-title="{{ $ordermaster->order_trans }}" data-show-image="{{ asset('/sketch/' . $ordermaster->sketch_file) }}">
+                                            <a id="show-orderlist" class="btn btn-primary btn-circle btn-sm btn-show-orderlist" data-orderlist-url="{{ route('ordermaster.orderlist', $ordermaster->order_trans) }}" data-rafproduction-url="{{ route('ordermaster.rafproduction', $ordermaster->order_trans) }}" data-rafcutting-url="{{ route('ordermaster.rafcutting', $ordermaster->order_trans) }}" data-rafsewing-url="{{ route('ordermaster.rafsewing', $ordermaster->order_trans) }}" data-rafiron-url="{{ route('ordermaster.rafiron', $ordermaster->order_trans) }}" data-rafpacking-url="{{ route('ordermaster.rafpacking', $ordermaster->order_trans) }}" data-fab-url="{{ route('ordermaster.fab', $ordermaster->order_trans) }}" data-shipment-url="{{ route('ordermaster.shipment', $ordermaster->order_trans) }}" data-style-url="{{ route('ordermaster.style', $ordermaster->order_trans) }}" data-show-orderlist-link="{{ $ordermaster->order_trans }}" data-show-orderlist-title="{{ $ordermaster->order_trans }}" data-show-image="{{ asset('/sketch/' . $ordermaster->sketch_file) }}">
                                                 <i class="fas fa-info"></i>
                                             </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $ordermaster->id }}" data-delete-name="{{ $ordermaster->order_trans }}" data-toggle="modal" data-target="#deleteModal">
@@ -182,7 +182,11 @@
                         <div class="tab">
                             <button class="tablinks" onclick="openModal(event, 'Sketch')">Sketch</button>
                             <button class="tablinks" onclick="openModal(event, 'Order List')">Order List</button>
-                            <button class="tablinks" onclick="openModal(event, 'RAF Production')">RAF Production</button>
+                            <button class="tablinks" onclick="openModal(event, 'Cutting')">Cutting</button>
+                            <button class="tablinks" onclick="openModal(event, 'Sewing')">Sewing</button>
+                            <button class="tablinks" onclick="openModal(event, 'Iron')">Iron</button>
+                            <button class="tablinks" onclick="openModal(event, 'Packing')">Packing</button>
+                            <!-- <button class="tablinks" onclick="openModal(event, 'RAF Production')">RAF Production</button> -->
                             <button class="tablinks" onclick="openModal(event, 'Fabrication')">Fabrication</button>
                             <button class="tablinks" onclick="openModal(event, 'Shipment')">Shipment</button>
                         </div>
@@ -238,12 +242,12 @@
                             </div>
                         </div>
                           
-                        <div id="RAF Production" class="tabcontent">
+                        <!-- <div id="RAF Production" class="tabcontent">
                             <br>
                             <div class="row">
                                 <div class="col-xl-12 col-md-6 mb-4">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-modal" id="table-raf" width="100%" cellspacing="0">
+                                        <table class="table table-bordered table-modal" id="table-raf-production" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -253,6 +257,102 @@
                                                     <th>PO Buyer</th>
                                                     <th>RAF Qty</th>
                                                     <th>Remark</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <div id="Cutting" class="tabcontent">
+                            <br>
+                            <div class="row">
+                                <div class="col-xl-12 col-md-6 mb-4">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-modal" id="table-raf-cutting" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Lot</th>
+                                                    <th>PO Buyer</th>
+                                                    <th>DC PO Qty</th>
+                                                    <th>RAF Qty</th>
+                                                    <th>Balance</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="Sewing" class="tabcontent">
+                            <br>
+                            <div class="row">
+                                <div class="col-xl-12 col-md-6 mb-4">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-modal" id="table-raf-sewing" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Lot</th>
+                                                    <th>PO Buyer</th>
+                                                    <th>DC PO Qty</th>
+                                                    <th>RAF Qty</th>
+                                                    <th>Balance</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="Iron" class="tabcontent">
+                            <br>
+                            <div class="row">
+                                <div class="col-xl-12 col-md-6 mb-4">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-modal" id="table-raf-iron" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Lot</th>
+                                                    <th>PO Buyer</th>
+                                                    <th>DC PO Qty</th>
+                                                    <th>RAF Qty</th>
+                                                    <th>Balance</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="Packing" class="tabcontent">
+                            <br>
+                            <div class="row">
+                                <div class="col-xl-12 col-md-6 mb-4">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-modal" id="table-raf-packing" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Lot</th>
+                                                    <th>PO Buyer</th>
+                                                    <th>DC PO Qty</th>
+                                                    <th>RAF Qty</th>
+                                                    <th>Balance</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -337,7 +437,7 @@
                         <div class="row">
                             <div class="col-xl-12 col-md-6 mb-4">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-modal" id="table-raf" width="100%" cellspacing="0">
+                                    <table class="table table-bordered table-modal" id="table-raf-production" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -390,7 +490,11 @@
         $('body').on('click', '#show-orderlist', function() {
             $('#orderlistModal').modal('show');
             var jsonOrderList = $(this).data('orderlist-url');
-            var jsonRaf = $(this).data('raf-url'); 
+            // var jsonRafProduction = $(this).data('rafproduction-url'); 
+            var jsonRafCutting = $(this).data('rafcutting-url'); 
+            var jsonRafSewing = $(this).data('rafsewing-url'); 
+            var jsonRafIron = $(this).data('rafiron-url'); 
+            var jsonRafPacking = $(this).data('rafpacking-url'); 
             var jsonFab = $(this).data('fab-url'); 
             var jsonShipment = $(this).data('shipment-url'); 
             var jsonStyle = $(this).data('style-url'); 
@@ -415,18 +519,78 @@
             
                     ]
                 });
-                $('#table-raf').DataTable({
+                // $('#table-raf-production').DataTable({
+                //     destroy: true,
+                //     processing: true,
+                //     ajax: jsonRafProduction,
+                //     columns: [
+                //         {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                //         { data: 'raf_no', name: 'raf_no' },
+                //         { data: 'raf_date', name: 'raf_date' },
+                //         { data: 'lot_no', name: 'lot_no' },
+                //         { data: 'pobuyer_no', name: 'pobuyer_no' },
+                //         { data: 'raf_qty', name: 'raf_qty' },
+                //         { data: 'remark', name: 'remark' },
+            
+                //     ]
+                // });
+
+                $('#table-raf-cutting').DataTable({
                     destroy: true,
                     processing: true,
-                    ajax: jsonRaf,
+                    ajax: jsonRafCutting,
                     columns: [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-                        { data: 'raf_no', name: 'raf_no' },
-                        { data: 'raf_date', name: 'raf_date' },
                         { data: 'lot_no', name: 'lot_no' },
                         { data: 'pobuyer_no', name: 'pobuyer_no' },
+                        { data: 'dcpo_qty', name: 'dcpo_qty' },
                         { data: 'raf_qty', name: 'raf_qty' },
-                        { data: 'remark', name: 'remark' },
+                        { data: 'balance', name: 'balance' },
+            
+                    ]
+                });
+
+                $('#table-raf-sewing').DataTable({
+                    destroy: true,
+                    processing: true,
+                    ajax: jsonRafSewing,
+                    columns: [
+                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                        { data: 'lot_no', name: 'lot_no' },
+                        { data: 'pobuyer_no', name: 'pobuyer_no' },
+                        { data: 'dcpo_qty', name: 'dcpo_qty' },
+                        { data: 'raf_qty', name: 'raf_qty' },
+                        { data: 'balance', name: 'balance' },
+            
+                    ]
+                });
+
+                $('#table-raf-iron').DataTable({
+                    destroy: true,
+                    processing: true,
+                    ajax: jsonRafIron,
+                    columns: [
+                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                        { data: 'lot_no', name: 'lot_no' },
+                        { data: 'pobuyer_no', name: 'pobuyer_no' },
+                        { data: 'dcpo_qty', name: 'dcpo_qty' },
+                        { data: 'raf_qty', name: 'raf_qty' },
+                        { data: 'balance', name: 'balance' },
+            
+                    ]
+                });
+
+                $('#table-raf-packing').DataTable({
+                    destroy: true,
+                    processing: true,
+                    ajax: jsonRafPacking,
+                    columns: [
+                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                        { data: 'lot_no', name: 'lot_no' },
+                        { data: 'pobuyer_no', name: 'pobuyer_no' },
+                        { data: 'dcpo_qty', name: 'dcpo_qty' },
+                        { data: 'raf_qty', name: 'raf_qty' },
+                        { data: 'balance', name: 'balance' },
             
                     ]
                 });

@@ -12,6 +12,7 @@ class RafProduction extends Model
     protected $fillable = [
         'order_trans',
         'raf_no',
+        'raf_dept',
         'order_list',
         'raf_date',
         'raf_qty',

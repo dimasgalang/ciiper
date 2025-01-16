@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\OrderList;
 use App\Models\OrderMaster;
+use App\Models\ProductionDept;
 use App\Models\RafProduction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,14 +14,17 @@ use Maatwebsite\Excel\Facades\Excel;
 class RafProductionController extends Controller
 {
     public function index() {
-        $rafproductions   = RafProduction::all();
+        $rafproductions   = RafProduction::select('raf_production.*','production_dept.dept_name')
+        ->leftJoin('production_dept', 'raf_production.raf_dept', '=', 'production_dept.dept_no')
+        ->get();
         return view('rafproduction.index', compact('rafproductions'));
     }
 
     public function create() {
         $ordermasters = OrderMaster::all();
+        $productiondepts = ProductionDept::all();
         $rafs = RafProduction::all()->last();
-        return view('rafproduction.create', compact('rafs','ordermasters'));
+        return view('rafproduction.create', compact('rafs','ordermasters','productiondepts'));
     }
 
     public function fetchorderlist($order_trans) {
@@ -36,6 +40,7 @@ class RafProductionController extends Controller
         RafProduction::create([
             'order_trans' => $request->order_trans,
             'order_list' => $request->order_list,
+            'raf_dept' => $request->raf_dept,
             'raf_no' => $request->raf_no,
             'raf_date' => $request->raf_date,
             'raf_qty' => $request->raf_qty,

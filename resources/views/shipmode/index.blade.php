@@ -75,7 +75,10 @@
                                         <td>{{ $shipmode->ship_no }}</td>
                                         <td>{{ $shipmode->ship_name }}</td>
                                         <td align="center">
-                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $shipmode->id }}" data-delete-name="{{ $shipmode->shipmode_name }}" data-toggle="modal" data-target="#deleteModal">
+                                            <a href="/shipmode/find/{{ $shipmode->id }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $shipmode->id }}" data-delete-name="{{ $shipmode->ship_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>
@@ -151,7 +154,7 @@
 <script>
     $('.btn-delete-record').on('click', function () {
             $('#btn-confirm').attr('href', $(this).data('delete-link'));
-            $("#modal-text-record").text('Apakah anda yakin ingin menghapus shipmode ' + $(this).data('delete-name') + '?');
+            $("#modal-text-record").text('Apakah anda yakin ingin menghapus Ship Mode ' + $(this).data('delete-name') + '?');
     });
 </script>
 </html>

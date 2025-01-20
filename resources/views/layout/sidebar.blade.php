@@ -6,7 +6,7 @@
         <div class="sidebar-brand-icon">
             <img src="{{ asset('img/chutex.svg') }}" style="width: 40px;">
         </div>
-        <div class="sidebar-brand-text mx-3">CIIPER <sup>Sys</sup></div>
+        <div class="sidebar-brand-text mx-3">Chutex <sup>Sys</sup></div>
     </a>
 
     <!-- Divider -->
@@ -29,11 +29,11 @@
         <div id="collapseAdmin" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('listuser') }}">List User</a>
-                <a class="collapse-item" href="{{ route('register.create') }}">Daftar User</a>
+                <a class="collapse-item" href="{{ route('role.index') }}">List Role</a>
             </div>
         </div>
     </li>
-    <li class="nav-item">
+    <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseKaryawan"
             aria-expanded="true" aria-controls="collapseKaryawan">
             <i class="fas fa-fw fa-users"></i>
@@ -44,7 +44,7 @@
                 <a class="collapse-item" href="{{ route('karyawan.daftar') }}">Daftar Karyawan</a>
             </div>
         </div>
-    </li>
+    </li> -->
     
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMaster"
@@ -65,6 +65,9 @@
                 <a class="collapse-item" href="{{ route('shipmode.index') }}">Ship Mode</a>
                 <a class="collapse-item" href="{{ route('market.index') }}">Market</a>
                 <a class="collapse-item" href="{{ route('productiondept.index') }}">Production Dept</a>
+                <a class="collapse-item" href="{{ route('followup.index') }}">Follow Up</a>
+                <a class="collapse-item" href="{{ route('washtype.index') }}">Wash Type</a>
+                <a class="collapse-item" href="{{ route('bordirtype.index') }}">Bordir Type</a>
             </div>
         </div>
     </li>
@@ -81,6 +84,7 @@
                 <a class="collapse-item" href="{{ route('orderlist.index') }}">Order List</a>
                 <a class="collapse-item" href="{{ route('rafproduction.index') }}">RAF Production</a>
                 <a class="collapse-item" href="{{ route('shipment.index') }}">Shipment</a>
+                <a class="collapse-item" href="{{ route('productionplanning.index') }}">Production Planning</a>
             </div>
         </div>
     </li>

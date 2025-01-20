@@ -73,16 +73,6 @@
                                     </div>
                                     @enderror
                                 </div>
-
-                                <div class="form-group">
-                                    <input type="text" class="form-control form-control-user @error('role') is-invalid @enderror" id="role" name="role"
-                                        placeholder="Role">
-                                    @error('role')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
                                 <div class="mb-3">
                                     <button type="submit" class="btn btn-primary btn-user btn-block">Register</button>
                                 </div>

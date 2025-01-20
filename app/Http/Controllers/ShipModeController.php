@@ -6,6 +6,7 @@ use App\Imports\ShipModesImport;
 use App\Models\ShipMode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ShipModeController extends Controller
@@ -35,8 +36,8 @@ class ShipModeController extends Controller
     }
 
     public function create() {
-        $ships = ShipMode::all()->last();
-        return view('shipmode.create', compact('ships'));
+        $shipmodes = ShipMode::all()->last();
+        return view('shipmode.create', compact('shipmodes'));
     }
 
     public function store(Request $request)
@@ -52,8 +53,38 @@ class ShipModeController extends Controller
     }
 
     public function delete($id) {
-        $shipmode = ShipMode::find($id);    
-        $shipmode->delete();
+        $shipmodes = ShipMode::find($id);    
+        $shipmodes->delete();
         return redirect('shipmode/index')->with(['error' => 'Record Berhasil Dihapus!']);
+    }
+
+    public function find($id) {
+        $shipmodes = ShipMode::find($id);
+        return view('shipmode.update', compact('shipmodes'));
+    }
+
+    public function update(Request $request)
+    {
+        $shipmodes = ShipMode::findOrFail($request->id);
+
+        $validator = Validator::make($request->all(), [
+            'ship_no' => 'required|max:225|',
+            'ship_name' => 'required|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $shipmodes->fill([
+            'ship_no' => $request->ship_no,
+            'ship_name' => $request->ship_name,
+        ]);
+
+        $shipmodes->save();
+
+        return redirect('shipmode/index')->with(['success' => 'Ship Mode berhasil diupdate!']);
     }
 }

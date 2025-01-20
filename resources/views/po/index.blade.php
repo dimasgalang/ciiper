@@ -63,8 +63,9 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Master PO No</th>
-                                        <th>Master PO Desc</th>
+                                        <th>PO No</th>
+                                        <th>Master PO</th>
+                                        <th>PO Desc</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -73,9 +74,13 @@
                                     <tr>
                                         <td>{{ $po->id }}</td>
                                         <td>{{ $po->po_no }}</td>
+                                        <td>{{ $po->po_master }}</td>
                                         <td>{{ $po->po_desc }}</td>
                                         <td align="center">
-                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $po->id }}" data-delete-name="{{ $po->po_name }}" data-toggle="modal" data-target="#deleteModal">
+                                            <a href="/po/find/{{ $po->id }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $po->id }}" data-delete-name="{{ $po->po_master }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>
@@ -151,7 +156,7 @@
 <script>
     $('.btn-delete-record').on('click', function () {
             $('#btn-confirm').attr('href', $(this).data('delete-link'));
-            $("#modal-text-record").text('Apakah anda yakin ingin menghapus po ' + $(this).data('delete-name') + '?');
+            $("#modal-text-record").text('Apakah anda yakin ingin menghapus Master PO ' + $(this).data('delete-name') + '?');
     });
 </script>
 </html>

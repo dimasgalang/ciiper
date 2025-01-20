@@ -63,7 +63,7 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Order Trans</th>
+                                        <th>Master PO</th>
                                         <th>Order List</th>
                                         <th>Factory</th>
                                         <th>Lot</th>
@@ -72,6 +72,8 @@
                                         <th>DC PO Qty (Pcs)</th>
                                         <th>Ex Factory</th>
                                         <th>Vsl Date</th>
+                                        <th>Wash Type</th>
+                                        <th>Bordir Type</th>
                                         <th>Status</th>
                                         <!-- <th>Fabric Mill</th>
                                         <th>Fabrication</th>
@@ -84,7 +86,7 @@
                                     @foreach($orderlists as $orderlist)
                                     <tr>
                                         <td>{{ $orderlist->id }}</td>
-                                        <td>{{ $orderlist->order_trans }}</td>
+                                        <td>{{ $orderlist->po_master }}</td>
                                         <td>{{ $orderlist->order_list }}</td>
                                         <td>{{ $orderlist->factory_name }}</td>
                                         <td>{{ $orderlist->lot_no }}</td>
@@ -93,6 +95,8 @@
                                         <td>{{ $orderlist->dcpo_qty }}</td>
                                         <td>{{ $orderlist->ex_factory_date }}</td>
                                         <td>{{ $orderlist->vsl_date }}</td>
+                                        <td>{{ $orderlist->wash_type }}</td>
+                                        <td>{{ $orderlist->bordir_type }}</td>
                                         @if($orderlist->status == 'Finish')
                                              <td align="center">
                                                 <a class="btn btn-success btn-circle btn-sm">
@@ -106,10 +110,6 @@
                                                 </a>
                                             </td>
                                         @endif
-                                        <!-- <td>{{ $orderlist->fabmill_name }}</td>
-                                        <td>{{ $orderlist->fabrication }}</td>
-                                        <td>{{ $orderlist->po_fab }}</td>
-                                        <td>{{ $orderlist->etd }}</td> -->
                                         <td>
                                             <a class="btn btn-success btn-circle btn-sm btn-change-record" data-change-link="change/{{ $orderlist->id }}" data-change-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#changeModal">
                                                 <i class="fas fa-check-square"></i>

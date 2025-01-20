@@ -57,7 +57,11 @@
                             @endif
                             <div>
                                 <label>Buyer No :</label>
-                                <input class="form-control" type="text" id="buyer_no" name="buyer_no" required>
+                                @if($buyers->id ?? '')
+                                <input class="form-control" type="text" id="buyer_no" name="buyer_no" value="{{ 'BYR' . str_pad($buyers->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @else
+                                <input class="form-control" type="text" id="buyer_no" name="buyer_no" value="{{ 'BYR' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @endif
                             </div>
                             <br>
                             <div>

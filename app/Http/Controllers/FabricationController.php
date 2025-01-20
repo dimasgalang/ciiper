@@ -4,14 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Imports\FabricationsImport;
 use App\Models\Fabrication;
+use App\Models\FabricMill;
+use App\Models\OrderMaster;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class FabricationController extends Controller
 {
     public function index() {
-        $fabrications   = Fabrication::all();
+        $fabrications = Fabrication::select('fabrication.*', 'purchase_order.po_master','fabric_mill.fabmill_name')
+        ->leftJoin('order_master', 'order_master.order_trans', '=', 'fabrication.order_trans')
+        ->leftJoin('purchase_order', 'purchase_order.po_no', '=', 'order_master.po_no')
+        ->leftJoin('fabric_mill', 'fabrication.fabmill_no', '=', 'fabric_mill.fabmill_no')
+        ->get();
         return view('fabrication.index', compact('fabrications'));
     }
 
@@ -35,7 +42,12 @@ class FabricationController extends Controller
     }
 
     public function create() {
-        return view('fabrication.create');
+        $ordermasters = OrderMaster::select('order_master.*', 'purchase_order.po_master')
+        ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
+        ->get();
+        $fabrications = Fabrication::all()->last();
+        $fabmills = FabricMill::all();
+        return view('fabrication.create', compact('ordermasters', 'fabrications','fabmills'));
     }
 
     public function store(Request $request)
@@ -43,7 +55,7 @@ class FabricationController extends Controller
         Fabrication::create([
             'order_trans' => $request->order_trans,
             'fab_no' => $request->fab_no,
-            'fabmil_no' => $request->fabmil_no,
+            'fabmill_no' => $request->fabmill_no,
             'fabrication' => $request->fabrication,
             'po_fab' => $request->po_fab,
             'etd' => $request->etd,
@@ -58,5 +70,45 @@ class FabricationController extends Controller
         $fabrication = Fabrication::find($id);    
         $fabrication->delete();
         return redirect('fabrication/index')->with(['error' => 'Record Berhasil Dihapus!']);
+    }
+
+    public function find($id) {
+        $fabrications = Fabrication::find($id);
+        $ordermasters = OrderMaster::all();
+        $fabmills = FabricMill::all();
+        return view('fabrication.update', compact('fabrications','ordermasters','fabmills'));
+    }
+
+    public function update(Request $request)
+    {
+        $fabrications = Fabrication::findOrFail($request->id);
+
+        $validator = Validator::make($request->all(), [
+            'order_trans' => 'required|max:225|',
+            'fab_no' => 'required|max:255',
+            'fabmill_no' => 'required|max:255',
+            'fabrication' => 'required',
+            'po_fab' => 'required',
+            'etd' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $fabrications->fill([
+            'order_trans' => $request->order_trans,
+            'fab_no' => $request->fab_no,
+            'fabmill_no' => $request->fabmill_no,
+            'fabrication' => $request->fabrication,
+            'po_fab' => $request->po_fab,
+            'etd' => $request->etd,
+        ]);
+
+        $fabrications->save();
+
+        return redirect('fabrication/index')->with(['success' => 'Fabrication berhasil diupdate!']);
     }
 }

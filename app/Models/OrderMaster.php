@@ -17,13 +17,11 @@ class OrderMaster extends Model
         'po_no',
         'style_no',
         'qty_order',
-        'qty_ofc',
+        'qty_ocf',
         'qty_gmt',
         'qty_sbd',
         'fu_no',
-        'wash_type',
         'remark',
         'sketch_file',
-        'desc',
     ];
 }

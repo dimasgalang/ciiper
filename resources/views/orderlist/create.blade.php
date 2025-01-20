@@ -58,15 +58,20 @@
                             <div>
                                 <label>Order Master :</label>
                                 <select class="form-control" id="order_trans" name="order_trans">
+                                    <option></option>
                                     @foreach($ordermasters as $ordermaster)
-                                    <option value="{{ $ordermaster->order_trans }}">{{ $ordermaster->order_trans . '-' . $ordermaster->po_no }}</option>
+                                    <option value="{{ $ordermaster->order_trans }}">{{ $ordermaster->order_trans . ' - ' . $ordermaster->po_master }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <br>
                             <div>
                                 <label>Order List :</label>
+                                @if($orderlists->id ?? '')
                                 <input class="form-control" type="text" id="order_list" name="order_list" value="{{ 'ORL' . str_pad($orderlists->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @else
+                                <input class="form-control" type="text" id="order_list" name="order_list" value="{{ 'ORL' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @endif
                             </div>
                             <br>
                             <div>
@@ -103,6 +108,42 @@
                                 <input class="date form-control" type="date" id="vsl_date" name="vsl_date" required>
                             </div>
                             <br>
+                            <div>
+                                <label>Wash Type :</label>
+                                <select class="form-control" id="wash_no" name="wash_no">
+                                    <option></option>
+                                    @foreach($washtypes as $washtype)
+                                    <option value="{{ $washtype->wash_no }}">{{ $washtype->wash_type }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <br>
+                            <div>
+                                <label>Bordir Type :</label>
+                                <option></option>
+                                <select class="form-control" id="bordir_no" name="bordir_no">
+                                    <option></option>
+                                    @foreach($bordirtypes as $bordirtype)
+                                    <option value="{{ $bordirtype->bordir_no }}">{{ $bordirtype->bordir_type }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <br>
+                            <div>
+                                <label>Line :</label>
+                                <input class="date form-control" type="number" id="line" name="line" required>
+                            </div>
+                            <br>
+                            <div>
+                                <label>Target Qty :</label>
+                                <input class="date form-control" type="number" id="target_qty" name="target_qty" required>
+                            </div>
+                            <br>
+                            <div>
+                                <label>Production Day :</label>
+                                <input class="date form-control" type="number" id="production_day" name="production_day" required>
+                            </div>
+                            <br>
                             <div class="row">
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary btn-block">Create</button>
@@ -124,10 +165,20 @@
 </body>
 <script type="text/javascript">
     $("#order_trans").select2({
-          allowClear: true
+          allowClear: true,
+          placeholder: 'Choose Master PO',
     });
     $("#factory_no").select2({
-          allowClear: true
+          allowClear: true,
+          placeholder: 'Choose Factory',
+    });
+    $("#wash_no").select2({
+          allowClear: true,
+          placeholder: 'Choose Wash Type',
+    });
+    $("#bordir_no").select2({
+          allowClear: true,
+          placeholder: 'Choose Bordir Type',
     });
 </script>
 </html>

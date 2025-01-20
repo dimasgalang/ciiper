@@ -56,7 +56,7 @@
                             </div>
                             @endif
                             <div>
-                                <input class="form-control" type="text" id="id" name="id" value="{{ $ordermasters->id }}" readonly>
+                                <input class="form-control" type="hidden" id="id" name="id" value="{{ $ordermasters->id }}" readonly>
                             </div>
                             <div>
                                 <label>Order Trans :</label>
@@ -67,7 +67,7 @@
                                 <label>Season :</label>
                                 <select class="form-control" id="season_no" name="season_no">
                                     @foreach($seasons as $season)
-                                        <option value="{{ $season->season_no }}" {{ $ordermasters->season_no == $season->season_no  ? 'selected' : ''}}>{{ $season->season_cat }}</option>
+                                        <option value="{{ $season->season_no }}" {{ $ordermasters->season_no == $season->season_no  ? 'selected' : ''}}>{{ $season->season_cat }} {{ $season->season_year }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -101,7 +101,11 @@
                             <br>
                             <div>
                                 <label>Master PO :</label>
-                                <input class="form-control" type="text" id="po_no" name="po_no" value="{{ $ordermasters->po_no }}">
+                                <select class="form-control" id="po_no" name="po_no">
+                                    @foreach($pos as $po)
+                                    <option value="{{ $po->po_no }}" {{ $ordermasters->po_no == $po->po_no  ? 'selected' : ''}}>{{ $po->po_master }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <br>
                             <div>
@@ -115,27 +119,12 @@
                             </div>
                             <br>
                             <div>
-                                <label>QTY GMT :</label>
-                                <input class="form-control" type="text" id="qty_gmt" name="qty_gmt" value="{{ $ordermasters->qty_gmt }}">
-                            </div>
-                            <br>
-                            <div>
-                                <label>QTY SBD :</label>
-                                <input class="form-control" type="text" id="qty_sbd" name="qty_sbd" value="{{ $ordermasters->qty_sbd }}">
-                            </div>
-                            <br>
-                            <div>
                                 <label>MR / Follow Up :</label>
                                 <select class="form-control" id="fu_no" name="fu_no">
                                     @foreach($followups as $followup)
                                     <option value="{{ $followup->fu_no }}" {{ $ordermasters->fu_no == $followup->fu_no  ? 'selected' : ''}}>{{ $followup->fu_name }}</option>
                                     @endforeach
                                 </select>
-                            </div>
-                            <br>
-                            <div>
-                                <label>Wash Type :</label>
-                                <input class="form-control" type="text" id="wash_type" name="wash_type" value="{{ $ordermasters->wash_type }}">
                             </div>
                             <br>
                             <div>
@@ -182,6 +171,9 @@
           allowClear: true
     });
     $("#fu_no").select2({
+          allowClear: true
+    });
+    $("#po_no").select2({
           allowClear: true
     });
 </script>

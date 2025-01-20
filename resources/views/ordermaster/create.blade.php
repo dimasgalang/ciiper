@@ -57,14 +57,19 @@
                             @endif
                             <div>
                                 <label>Order Trans :</label>
+                                @if($ordermasters->id ?? '')
                                 <input class="form-control" type="text" id="order_trans" name="order_trans" value="{{ 'ORM' . str_pad($ordermasters->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @else
+                                <input class="form-control" type="text" id="order_trans" name="order_trans" value="{{ 'ORM' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @endif
                             </div>
                             <br>
                             <div>
                                 <label>Season :</label>
                                 <select class="form-control" id="season_no" name="season_no">
+                                    <option></option>
                                     @foreach($seasons as $season)
-                                    <option value="{{ $season->season_no }}">{{ $season->season_no }} - {{ $season->season_cat }}</option>
+                                    <option value="{{ $season->season_no }}">{{ $season->season_no }} - {{ $season->season_cat }} {{ $season->season_year }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -92,12 +97,13 @@
                             </div>
                             <br>
                             <div>
-                                <label>Master PO : </label>
-                                @if((substr($ordermasters->po_no,0,4)) == (date('y') . date('n') . 'E'))
-                                <input class="form-control" type="text" id="po_no" name="po_no" value="{{ date('y') . date('n') . 'E' . str_pad(substr($ordermasters->po_no,-4) + 1,4,'0',STR_PAD_LEFT) }}" readonly>
-                                @else
-                                <input class="form-control" type="text" id="po_no" name="po_no" value="{{ date('y') . date('n') . 'E' . str_pad(1,4,'0',STR_PAD_LEFT) }}" readonly>
-                                @endif
+                                <label>Master PO :</label>
+                                <select class="form-control" id="po_no" name="po_no">
+                                    <option></option>
+                                    @foreach($pos as $po)
+                                    <option value="{{ $po->po_no }}">{{ $po->po_no }} - {{ $po->po_master }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <br>
                             <div>
@@ -111,16 +117,6 @@
                             </div>
                             <br>
                             <div>
-                                <label>QTY GMT :</label>
-                                <input class="form-control" type="text" id="qty_gmt" name="qty_gmt">
-                            </div>
-                            <br>
-                            <div>
-                                <label>QTY SBD :</label>
-                                <input class="form-control" type="text" id="qty_sbd" name="qty_sbd">
-                            </div>
-                            <br>
-                            <div>
                                 <label>MR / Follow Up :</label>
                                 <select class="form-control" id="fu_no" name="fu_no">
                                     <option></option>
@@ -131,21 +127,11 @@
                             </div>
                             <br>
                             <div>
-                                <label>Wash Type :</label>
-                                <input class="form-control" type="text" id="wash_type" name="wash_type">
-                            </div>
-                            <br>
-                            <div>
                                 <label>Sketch Image :</label>
                                 <br>
                                 <input class="file" type="file" id="sketch_file" name="sketch_file">
                             </div>
                             <br>
-                            <!-- <div>
-                                <label>Sketch :</label>
-                                <input class="form-control" type="text" id="sketch_file" name="sketch_file">
-                            </div>
-                            <br> -->
                             <div>
                                 <label>Remark :</label>
                                 <input class="form-control" type="text" id="remark" name="remark">
@@ -234,6 +220,10 @@
     $("#fu_no").select2({
           allowClear: true,
           placeholder: 'Choose MR / Follow Up',
+    });
+    $("#po_no").select2({
+          allowClear: true,
+          placeholder: 'Choose Master PO',
     });
 </script>
 </html>

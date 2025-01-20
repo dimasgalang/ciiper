@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Imports\ProductionDeptsImport;
 use App\Models\ProductionDept;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProductionDeptController extends Controller
@@ -53,5 +54,35 @@ class ProductionDeptController extends Controller
         } else {
             return redirect()->intended('productiondept/index')->with(['error' => 'Data Gagal Diimport!']);
         }
+    }
+
+    public function find($id) {
+        $productiondepts = ProductionDept::find($id);
+        return view('productiondept.update', compact('productiondepts'));
+    }
+
+    public function update(Request $request)
+    {
+        $productiondepts = ProductionDept::findOrFail($request->id);
+
+        $validator = Validator::make($request->all(), [
+            'dept_no' => 'required|max:225|',
+            'dept_name' => 'required|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $productiondepts->fill([
+            'dept_no' => $request->dept_no,
+            'dept_name' => $request->dept_name,
+        ]);
+
+        $productiondepts->save();
+
+        return redirect('productiondept/index')->with(['success' => 'Market berhasil diupdate!']);
     }
 }

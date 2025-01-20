@@ -75,7 +75,10 @@
                                         <td>{{ $fabricmill->fabmill_no }}</td>
                                         <td>{{ $fabricmill->fabmill_name }}</td>
                                         <td align="center">
-                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $fabricmill->id }}" data-delete-name="{{ $fabricmill->fabricmill_name }}" data-toggle="modal" data-target="#deleteModal">
+                                            <a href="/fabricmill/find/{{ $fabricmill->id }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $fabricmill->id }}" data-delete-name="{{ $fabricmill->fabmill_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>
@@ -151,7 +154,7 @@
 <script>
     $('.btn-delete-record').on('click', function () {
             $('#btn-confirm').attr('href', $(this).data('delete-link'));
-            $("#modal-text-record").text('Apakah anda yakin ingin menghapus fabricmill ' + $(this).data('delete-name') + '?');
+            $("#modal-text-record").text('Apakah anda yakin ingin menghapus Fabric Mill ' + $(this).data('delete-name') + '?');
     });
 </script>
 </html>

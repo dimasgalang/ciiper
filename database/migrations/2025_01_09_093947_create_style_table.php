@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('brand_no');
             $table->string('style_no')->unique();
             $table->string('style_name');
-            $table->string('style_desc');
+            $table->string('style_desc')->nullable();
             $table->timestamps();
         });
     }

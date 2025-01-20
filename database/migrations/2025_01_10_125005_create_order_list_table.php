@@ -21,7 +21,12 @@ return new class extends Migration
             $table->integer('dcpo_qty');
             $table->date('ex_factory_date');
             $table->date('vsl_date');
-            $table->string('status');
+            $table->string('wash_no');
+            $table->string('bordir_no');
+            $table->integer('line');
+            $table->integer('target_qty');
+            $table->integer('production_day');
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

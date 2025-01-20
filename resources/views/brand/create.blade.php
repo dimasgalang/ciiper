@@ -66,7 +66,11 @@
                             <br>
                             <div>
                                 <label>Brand No :</label>
-                                <input class="form-control" type="text" id="brand_no" name="brand_no" required>
+                                @if($brands->id ?? '')
+                                <input class="form-control" type="text" id="brand_no" name="brand_no" value="{{ 'BRN' . str_pad($brands->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @else
+                                <input class="form-control" type="text" id="brand_no" name="brand_no" value="{{ 'BRN' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @endif
                             </div>
                             <br>
                             <div>
@@ -77,8 +81,9 @@
                             <div>
                                 <label>Brand Gender : </label>
                                 <select class="form-control" id="brand_gender" name="brand_gender">
-                                    <option value="Male">Male</option>
-                                    <option value="Ladies">Ladies</option>
+                                    @foreach($genders as $gender)
+                                    <option value="{{ $gender }}">{{ $gender }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <br>

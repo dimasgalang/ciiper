@@ -56,15 +56,6 @@
                             </div>
                             @endif
                             <div>
-                                <label>Role : </label>
-                                <select class="form-control" id="role" name="role">
-                                    <option value="Admin">Admin</option>
-                                    <option value="HRD">HRD</option>
-                                    <option value="Payroll">Payroll</option>
-                                </select>
-                            </div>
-                            <br>
-                            <div>
                                 <label>Nama Lengkap :</label>
                                 <input class="form-control" type="text" id="name" name="name">
                             </div>

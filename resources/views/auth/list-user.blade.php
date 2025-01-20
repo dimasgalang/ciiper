@@ -18,8 +18,6 @@
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">Daftar User</h1>
                     <div>
-                    <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Import User</a>
                     <a href="{{ route('register.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                         class="fas fa-plus fa-sm text-white-50"></i> Create User</a>
                     </div>
@@ -64,7 +62,6 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Name</th>
-                                        <th>Role</th>
                                         <th>Email</th>
                                         <th>Created At</th>
                                         <th>Updated At</th>
@@ -76,13 +73,15 @@
                                     <tr>
                                         <td>{{ $user->id }}</td>
                                         <td>{{ $user->name }}</td>
-                                        <td>{{ $user->role }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->created_at }}</td>
                                         <td>{{ $user->updated_at }}</td>
                                         <td align="center">
+                                            <a href="/user/assign/{{ $user->id }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-key"></i>
+                                            </a>
                                             <a href="/user/detail/{{ $user->id }}" class="btn btn-primary btn-circle btn-sm">
-                                                <i class="fas fa-info"></i>
+                                                <i class="fas fa-edit"></i>
                                             </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-user" data-delete-link="/user/delete/{{ $user->id }}" data-user-name="{{ $user->name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>

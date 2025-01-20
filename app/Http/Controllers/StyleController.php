@@ -14,7 +14,9 @@ use Maatwebsite\Excel\Facades\Excel;
 class StyleController extends Controller
 {
     public function index() {
-        $styles   = Style::all();
+        $styles   = Style::select('style.*', 'brand.brand_name')
+        ->leftJoin('brand', 'style.brand_no', '=', 'brand.brand_no')
+        ->get();
         return view('style.index', compact('styles'));
     }
 
@@ -39,7 +41,8 @@ class StyleController extends Controller
 
     public function create() {
         $brands   = Brand::all();
-        return view('style.create', compact('brands'));
+        $styles = Style::all()->last();
+        return view('style.create', compact('brands', 'styles'));
     }
 
     public function store(Request $request)

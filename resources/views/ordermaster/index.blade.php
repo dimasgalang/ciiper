@@ -63,20 +63,18 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <!-- <th>Order Trans</th> -->
+                                        <th>Order Trans</th>
                                         <th>Season</th>
                                         <th>Buyer</th>
                                         <th>Brand</th>
                                         <th>Style</th>
                                         <th>Master PO</th>
                                         <th>Qty</th>
-                                        <!-- <th>OCF</th> -->
+                                        <th>OCF</th>
                                         <th>GMT</th>
-                                        <th>SBD</th>
                                         <th>MR</th>
-                                        <th>Wash Type</th>
                                         <th>Sketch</th>
-                                        <!-- <th>Remark</th> -->
+                                        <th>Remark</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -84,25 +82,23 @@
                                     @foreach($ordermasters as $ordermaster)
                                     <tr>
                                         <td>{{ $ordermaster->id }}</td>
-                                        <!-- <td>{{ $ordermaster->order_trans }}</td> -->
-                                        <td>{{ $ordermaster->season_cat }}</td>
+                                        <td>{{ $ordermaster->order_trans }}</td>
+                                        <td>{{ $ordermaster->season_cat }} {{ $ordermaster->season_year }}</td>
                                         <td>{{ $ordermaster->buyer_name }}</td>
                                         <td>{{ $ordermaster->brand_name }}</td>
                                         <td>{{ $ordermaster->style_name }}</td>
-                                        <td>{{ $ordermaster->po_no }}</td>
+                                        <td>{{ $ordermaster->po_master }}</td>
                                         <td>{{ $ordermaster->qty_order }}</td>
-                                        <!-- <td>{{ $ordermaster->qty_ocf }}</td> -->
+                                        <td>{{ $ordermaster->qty_ocf }}</td>
                                         <td>{{ $ordermaster->sum_raf_qty }}</td>
-                                        <td>{{ $ordermaster->qty_sbd }}</td>
                                         <td>{{ $ordermaster->fu_name }}</td>
-                                        <td>{{ $ordermaster->wash_type }}</td>
                                         <td><center><img id="sketch" src="{{ asset('/sketch/' . $ordermaster->sketch_file) }}" style="width: 200px;"></center></td>
-                                        <!-- <td>{{ $ordermaster->remark }}</td> -->
+                                        <td>{{ $ordermaster->remark }}</td>
                                         <td>
                                             <a href="/ordermaster/find/{{ $ordermaster->id }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a id="show-orderlist" class="btn btn-primary btn-circle btn-sm btn-show-orderlist" data-orderlist-url="{{ route('ordermaster.orderlist', $ordermaster->order_trans) }}" data-rafproduction-url="{{ route('ordermaster.rafproduction', $ordermaster->order_trans) }}" data-rafcutting-url="{{ route('ordermaster.rafcutting', $ordermaster->order_trans) }}" data-rafsewing-url="{{ route('ordermaster.rafsewing', $ordermaster->order_trans) }}" data-rafiron-url="{{ route('ordermaster.rafiron', $ordermaster->order_trans) }}" data-rafpacking-url="{{ route('ordermaster.rafpacking', $ordermaster->order_trans) }}" data-fab-url="{{ route('ordermaster.fab', $ordermaster->order_trans) }}" data-shipment-url="{{ route('ordermaster.shipment', $ordermaster->order_trans) }}" data-style-url="{{ route('ordermaster.style', $ordermaster->order_trans) }}" data-show-orderlist-link="{{ $ordermaster->order_trans }}" data-show-orderlist-title="{{ $ordermaster->order_trans }}" data-show-image="{{ asset('/sketch/' . $ordermaster->sketch_file) }}">
+                                            <a id="show-orderlist" class="btn btn-primary btn-circle btn-sm btn-show-orderlist" data-orderlist-url="{{ route('ordermaster.orderlist', $ordermaster->order_trans) }}" data-rafproduction-url="{{ route('ordermaster.rafproduction', $ordermaster->order_trans) }}" data-rafcutting-url="{{ route('ordermaster.rafcutting', $ordermaster->order_trans) }}" data-rafsewing-url="{{ route('ordermaster.rafsewing', $ordermaster->order_trans) }}" data-rafiron-url="{{ route('ordermaster.rafiron', $ordermaster->order_trans) }}" data-rafpacking-url="{{ route('ordermaster.rafpacking', $ordermaster->order_trans) }}" data-fab-url="{{ route('ordermaster.fab', $ordermaster->order_trans) }}" data-shipment-url="{{ route('ordermaster.shipment', $ordermaster->order_trans) }}" data-style-url="{{ route('ordermaster.style', $ordermaster->order_trans) }}" data-productionplanning-url="{{ route('ordermaster.productionplanning', $ordermaster->order_trans) }}"  data-show-orderlist-link="{{ $ordermaster->order_trans }}" data-show-orderlist-title="{{ $ordermaster->order_trans }}" data-show-image="{{ asset('/sketch/' . $ordermaster->sketch_file) }}">
                                                 <i class="fas fa-info"></i>
                                             </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $ordermaster->id }}" data-delete-name="{{ $ordermaster->order_trans }}" data-toggle="modal" data-target="#deleteModal">
@@ -182,6 +178,7 @@
                         <div class="tab">
                             <button class="tablinks" onclick="openModal(event, 'Sketch')">Sketch</button>
                             <button class="tablinks" onclick="openModal(event, 'Order List')">Order List</button>
+                            <button class="tablinks" onclick="openModal(event, 'Production Planning')">Production Planning</button>
                             <button class="tablinks" onclick="openModal(event, 'Cutting')">Cutting</button>
                             <button class="tablinks" onclick="openModal(event, 'Sewing')">Sewing</button>
                             <button class="tablinks" onclick="openModal(event, 'Iron')">Iron</button>
@@ -232,6 +229,42 @@
                                                     <th>Balance</th>
                                                     <th>Ex Factory</th>
                                                     <th>Vsl Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="Production Planning" class="tabcontent">
+                            <br>
+                            <div class="row">
+                                <div class="col-xl-12 col-md-6 mb-4">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-modal" id="table-production-planning" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Sample</th>
+                                                    <th>MI</th>
+                                                    <th>Acc Fab Cart</th>
+                                                    <th>Fab</th>
+                                                    <th>Acc</th>
+                                                    <th>Bordir Approve</th>
+                                                    <th>Pattern</th>
+                                                    <th>Sample Test</th>
+                                                    <th>Marker</th>
+                                                    <th>Pilot Run</th>
+                                                    <th>PPM</th>
+                                                    <th>Start Cut.</th>
+                                                    <th>Finish Cut.</th>
+                                                    <th>Start Sew.</th>
+                                                    <th>Finish Sew.</th>
+                                                    <th>Finish Pack.</th>
+                                                    <th>Remark</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -374,7 +407,7 @@
                                     <br>
                                     <div>
                                         <label>FABRICATION :</label>
-                                        <textarea  class="form-control" type="text" id="order_list-fabrication" value="" readonly rows="20"></textarea>
+                                        <textarea  class="form-control" type="text" id="order_list-fabrication" value="" readonly rows="5"></textarea>
                                     </div>
                                     <br>
                                     <div>
@@ -498,6 +531,7 @@
             var jsonFab = $(this).data('fab-url'); 
             var jsonShipment = $(this).data('shipment-url'); 
             var jsonStyle = $(this).data('style-url'); 
+            var jsonProductionPlanning = $(this).data('productionplanning-url'); 
             var sketchIMG = $(this).data('show-image');
             $('#sketch-PIC').attr('src', sketchIMG);
             $.get(jsonOrderList, function (data) {
@@ -512,7 +546,7 @@
                         { data: 'pobuyer_no', name: 'pobuyer_no' },
                         { data: 'dcpo_dzn', name: 'dcpo_dzn' },
                         { data: 'dcpo_qty', name: 'dcpo_qty' },
-                        { data: 'raf_qty', name: 'raf_qty' },
+                        { data: 'sum_raf_qty', name: 'sum_raf_qty' },
                         { data: 'balance', name: 'balance' },
                         { data: 'ex_factory_date', name: 'ex_factory_date' },
                         { data: 'vsl_date', name: 'vsl_date' },
@@ -534,6 +568,33 @@
             
                 //     ]
                 // });
+
+                $('#table-production-planning').DataTable({
+                    destroy: true,
+                    processing: true,
+                    ajax: jsonProductionPlanning,
+                    columns: [
+                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                        { data: 'has_sample', name: 'has_sample' },
+                        { data: 'has_mi', name: 'has_mi' },
+                        { data: 'has_cart', name: 'has_cart' },
+                        { data: 'fab_date', name: 'fab_date' },
+                        { data: 'acc_date', name: 'acc_date' },
+                        { data: 'bordir_approve', name: 'bordir_approve' },
+                        { data: 'pattern_date', name: 'pattern_date' },
+                        { data: 'sampletest_date', name: 'sampletest_date' },
+                        { data: 'marker_date', name: 'marker_date' },
+                        { data: 'pilotrun_date', name: 'pilotrun_date' },
+                        { data: 'ppm_date', name: 'ppm_date' },
+                        { data: 'startcut_date', name: 'startcut_date' },
+                        { data: 'finishcut_date', name: 'finishcut_date' },
+                        { data: 'startsew_date', name: 'startsew_date' },
+                        { data: 'finishsew_date', name: 'finishsew_date' },
+                        { data: 'finishpack_date', name: 'finishpack_date' },
+                        { data: 'remark', name: 'remark' },
+            
+                    ]
+                });
 
                 $('#table-raf-cutting').DataTable({
                     destroy: true,

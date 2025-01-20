@@ -79,6 +79,9 @@
                                         <td>{{ $buyer->buyer_address }}</td>
                                         <td>{{ $buyer->buyer_contact }}</td>
                                         <td align="center">
+                                            <a href="/buyer/find/{{ $buyer->id }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $buyer->id }}" data-delete-name="{{ $buyer->buyer_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>

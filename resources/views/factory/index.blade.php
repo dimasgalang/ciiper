@@ -65,8 +65,6 @@
                                         <th>ID</th>
                                         <th>Factory No</th>
                                         <th>Factory Name</th>
-                                        <th>Factory Address</th>
-                                        <th>Factory Contact</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -76,9 +74,10 @@
                                         <td>{{ $factory->id }}</td>
                                         <td>{{ $factory->factory_no }}</td>
                                         <td>{{ $factory->factory_name }}</td>
-                                        <td>{{ $factory->factory_address }}</td>
-                                        <td>{{ $factory->factory_contact }}</td>
                                         <td align="center">
+                                            <a href="/factory/find/{{ $factory->id }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $factory->id }}" data-delete-name="{{ $factory->factory_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>

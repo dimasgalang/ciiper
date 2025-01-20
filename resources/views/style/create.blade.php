@@ -66,7 +66,11 @@
                             <br>
                             <div>
                                 <label>Style No :</label>
-                                <input class="form-control" type="text" id="style_no" name="style_no" required>
+                                @if($styles->id ?? '')
+                                <input class="form-control" type="text" id="style_no" name="style_no" value="{{ 'STY' . str_pad($styles->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @else
+                                <input class="form-control" type="text" id="style_no" name="style_no" value="{{ 'STY' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @endif
                             </div>
                             <br>
                             <div>

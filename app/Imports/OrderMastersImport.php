@@ -33,10 +33,10 @@ class OrderMastersImport implements ToModel, WithStartRow
             'qty_gmt' => $row[9],
             'qty_sbd' => $row[10],
             'fu_no' => $row[11],
-            'wash_type' => $row[12],
-            'remark' => $row[13],
-            'sketch_file' => $row[14],
-            'desc' => $row[15],
+            'wash_no' => $row[12],
+            'bordir_no' => $row[13],
+            'remark' => $row[14],
+            'sketch_file' => $row[15],
         ]);
     }
 }

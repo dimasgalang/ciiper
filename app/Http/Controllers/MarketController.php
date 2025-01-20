@@ -6,6 +6,7 @@ use App\Imports\MarketsImport;
 use App\Models\Market;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class MarketController extends Controller
@@ -52,8 +53,38 @@ class MarketController extends Controller
     }
 
     public function delete($id) {
-        $market = Market::find($id);    
-        $market->delete();
+        $markets = Market::find($id);    
+        $markets->delete();
         return redirect('market/index')->with(['error' => 'Record Berhasil Dihapus!']);
+    }
+
+    public function find($id) {
+        $markets = Market::find($id);
+        return view('market.update', compact('markets'));
+    }
+
+    public function update(Request $request)
+    {
+        $markets = Market::findOrFail($request->id);
+
+        $validator = Validator::make($request->all(), [
+            'market_no' => 'required|max:225|',
+            'market_name' => 'required|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $markets->fill([
+            'market_no' => $request->market_no,
+            'market_name' => $request->market_name,
+        ]);
+
+        $markets->save();
+
+        return redirect('market/index')->with(['success' => 'Market berhasil diupdate!']);
     }
 }

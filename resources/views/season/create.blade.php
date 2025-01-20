@@ -57,22 +57,25 @@
                             @endif
                             <div>
                                 <label>Season No :</label>
-                                <input class="form-control" type="text" id="season_no" name="season_no" required>
+                                @if($seasons->id ?? '')
+                                <input class="form-control" type="text" id="season_no" name="season_no" value="{{ 'SEA' . str_pad($seasons->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @else
+                                <input class="form-control" type="text" id="season_no" name="season_no" value="{{ 'SEA' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @endif
                             </div>
                             <br>
                             <div>
-                                <label>Season Cat : </label>
+                                <label>Season Cat :</label>
                                 <select class="form-control" id="season_cat" name="season_cat">
-                                    <option value="SPR">Spring</option>
-                                    <option value="FAL">Fall</option>
-                                    <option value="WIN">Winter</option>
-                                    <option value="SUM">Summer</option>
+                                    @foreach($seasonscats as $seasonscat)
+                                    <option value="{{ $seasonscat }}">{{ $seasonscat }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <br>
                             <div>
                                 <label>Season Year :</label>
-                                <input class="form-control" type="text" id="season_year" name="season_year">
+                                <input class="form-control" type="number" id="season_year" name="season_year" value="{{ date('Y') }}">
                             </div>
                             <br>
                             <div class="row">
@@ -95,7 +98,7 @@
 @include('layout.footer')
 </body>
 <script type="text/javascript">
-    $("#brand_no").select2({
+    $("#season_cat").select2({
           allowClear: true
     });
 </script>

@@ -18,6 +18,11 @@ class OrderList extends Model
         'dcpo_qty',
         'ex_factory_date',
         'vsl_date',
+        'wash_no',
+        'bordir_no',
+        'line',
+        'target_qty',
+        'production_day',
         'status',
     ];
 }

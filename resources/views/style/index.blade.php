@@ -63,8 +63,8 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Brand No</th>
                                         <th>Style No</th>
+                                        <th>Brand</th>
                                         <th>Style Name</th>
                                         <th>Style Desc</th>
                                         <th>Action</th>
@@ -74,8 +74,8 @@
                                     @foreach($styles as $style)
                                     <tr>
                                         <td>{{ $style->id }}</td>
-                                        <td>{{ $style->brand_no }}</td>
                                         <td>{{ $style->style_no }}</td>
+                                        <td>{{ $style->brand_name }}</td>
                                         <td>{{ $style->style_name }}</td>
                                         <td>{{ $style->style_desc }}</td>
                                         <td align="center">

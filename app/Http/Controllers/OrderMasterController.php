@@ -3,16 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Imports\OrderMastersImport;
+use App\Models\BordirType;
 use App\Models\Brand;
 use App\Models\Buyer;
 use App\Models\Fabrication;
 use App\Models\FollowUp;
 use App\Models\OrderList;
 use App\Models\OrderMaster;
+use App\Models\ProductionPlanning;
+use App\Models\PurchaseOrder;
 use App\Models\RafProduction;
 use App\Models\Season;
 use App\Models\Shipment;
 use App\Models\Style;
+use App\Models\WashType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -24,13 +28,14 @@ class OrderMasterController extends Controller
 {
     public function index() {
         // $ordermasters = OrderMaster::all();
-        $ordermasters = OrderMaster::select('order_master.*','season.season_cat','buyer.buyer_name', 'brand.brand_name', 'style_name', 'followup.fu_name', DB::raw('round(sum(if(raf_production.raf_dept = "DEP000000004", raf_production.raf_qty, 0)),2) as sum_raf_qty'))
+        $ordermasters = OrderMaster::select('order_master.*','season.season_cat','season.season_year','buyer.buyer_name', 'brand.brand_name', 'style_name', 'followup.fu_name','purchase_order.po_master', DB::raw('round(sum(if(raf_production.raf_dept = "DEP000000004", raf_production.raf_qty, 0)),2) as sum_raf_qty'))
         ->leftJoin('season', 'order_master.season_no', '=', 'season.season_no')
         ->leftJoin('buyer', 'order_master.buyer_no', '=', 'buyer.buyer_no')
         ->leftJoin('brand', 'order_master.brand_no', '=', 'brand.brand_no')
         ->leftJoin('style', 'order_master.style_no', '=', 'style.style_no')
         ->leftJoin('followup', 'order_master.fu_no', '=', 'followup.fu_no')
         ->leftJoin('raf_production', 'order_master.order_trans', '=', 'raf_production.order_trans')
+        ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
         ->groupBy('order_master.order_trans')
         ->get();
         // return response()->json($ordermasters);
@@ -44,11 +49,12 @@ class OrderMasterController extends Controller
         $brands = Brand::all();
         $styles = Style::all();
         $followups = FollowUp::all();
-        return view('ordermaster.create', compact('ordermasters','seasons','buyers','brands','styles','followups'));
+        $pos = PurchaseOrder::all();
+        return view('ordermaster.create', compact('ordermasters','seasons','buyers','brands','styles','followups','pos'));
     }
 
     public function showlist($order_trans) {
-        $orderlists = OrderList::select('order_list.factory_no', 'order_list.lot_no','order_list.pobuyer_no','order_list.ex_factory_date','order_list.vsl_date','order_list.dcpo_qty', DB::raw('round(order_list.dcpo_qty/12,2) as dcpo_dzn'), DB::raw('(sum(coalesce(raf_production.raf_qty,0))-order_list.dcpo_qty) as balance'), DB::raw('sum(coalesce(raf_production.raf_qty,0)) as raf_qty'))
+        $orderlists = OrderList::select('order_list.factory_no', 'order_list.lot_no','order_list.pobuyer_no','order_list.ex_factory_date','order_list.vsl_date','order_list.dcpo_qty', DB::raw('round(order_list.dcpo_qty/12,2) as dcpo_dzn'), DB::raw('(sum(coalesce(if(raf_production.raf_dept = "DEP000000004", raf_production.raf_qty, 0),0))-order_list.dcpo_qty) as balance'), DB::raw('round(sum(if(raf_production.raf_dept = "DEP000000004", raf_production.raf_qty, 0)),2) as sum_raf_qty'))
         ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
         ->leftJoin('raf_production','order_list.order_list', '=', 'raf_production.order_list')
         ->where('order_list.order_trans', '=', $order_trans)
@@ -135,12 +141,22 @@ class OrderMasterController extends Controller
         return response()->json($fabrication);
     }
 
-    public function showStyle($order_trans) {
+    public function showstyle($order_trans) {
         $style = Style::select('*', 'order_master.style_no')
         ->leftJoin('order_master', 'order_master.style_no', '=', 'style.style_no')
         ->where('order_master.order_trans', '=', $order_trans)
         ->get();
         return response()->json($style);
+    }
+
+    public function showproductionplanning($order_trans) {
+        $productionplannings = ProductionPlanning::select('production_planning.*', 'purchase_order.po_master', 'order_list.pobuyer_no')
+        ->leftJoin('order_list', 'production_planning.order_list', '=', 'order_list.order_list')
+        ->leftJoin('order_master', 'order_master.order_trans', '=', 'production_planning.order_trans')
+        ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
+        ->where('order_master.order_trans', '=', $order_trans)
+        ->get();
+        return DataTables::of($productionplannings)->addIndexColumn()->make(true);
     }
 
     public function import(Request $request)
@@ -181,12 +197,8 @@ class OrderMasterController extends Controller
             'po_no' => $request->po_no,
             'qty_order' => $request->qty_order,
             'qty_ocf' => $request->qty_ocf,
-            'qty_gmt' => $request->qty_gmt,
-            'qty_sbd' => $request->qty_sbd,
             'fu_no' => $request->fu_no,
-            'wash_type' => $request->wash_type,
             'remark' => $request->remark,
-            // 'sketch_file' => $request->sketch_file,
             'sketch_file' => $fileName,
         ]);
 
@@ -209,11 +221,14 @@ class OrderMasterController extends Controller
         $brands = Brand::all();
         $styles = Style::all();
         $followups = FollowUp::all();
-        return view('ordermaster.update', compact('ordermasters','seasons','buyers','brands','styles','followups'));
+        $pos = PurchaseOrder::all();
+        return view('ordermaster.update', compact('ordermasters','seasons','buyers','brands','styles','followups','pos'));
     }
 
     public function update(Request $request)
     {
+        $ordermasters = OrderMaster::findOrFail($request->id);
+
         if($request->hasFile('sketch_file')){
             $request->validate([
                 'sketch_file' => 'required|mimes:jpg,png,jpeg|'
@@ -222,8 +237,6 @@ class OrderMasterController extends Controller
             $file = $request->file('sketch_file');
             $fileName = $file->getClientOriginalName();
             $file->storeAs('', $fileName, 'sketch_uploads');
-    
-            $ordermasters = OrderMaster::findOrFail($request->id);
     
             $validator = Validator::make($request->all(), [
                 'order_trans' => 'required|max:255',
@@ -234,10 +247,7 @@ class OrderMasterController extends Controller
                 'po_no' => 'required|max:225|',
                 'qty_order' => 'required|max:225|',
                 'qty_ocf' => 'required|max:225|',
-                'qty_gmt' => 'required|max:225|',
-                'qty_sbd' => 'required|max:225|',
                 'fu_no' => 'required|max:225|',
-                'wash_type' => 'required|max:225|',
                 'sketch_file' => 'required',
                 'remark' => 'required|max:225|',
             ]);
@@ -257,17 +267,12 @@ class OrderMasterController extends Controller
                 'po_no' => $request->po_no,
                 'qty_order' => $request->qty_order,
                 'qty_ocf' => $request->qty_ocf,
-                'qty_gmt' => $request->qty_gmt,
-                'qty_sbd' => $request->qty_sbd,
                 'fu_no' => $request->fu_no,
-                'wash_type' => $request->wash_type,
                 'sketch_file' => $fileName,
                 'remark' => $request->remark,
             ]);
     
         } else{
-            $ordermasters = OrderMaster::findOrFail($request->id);
-    
             $validator = Validator::make($request->all(), [
                 'order_trans' => 'required|max:255',
                 'season_no' => 'required|max:225|',
@@ -277,10 +282,7 @@ class OrderMasterController extends Controller
                 'po_no' => 'required|max:225|',
                 'qty_order' => 'required|max:225|',
                 'qty_ocf' => 'required|max:225|',
-                'qty_gmt' => 'required|max:225|',
-                'qty_sbd' => 'required|max:225|',
                 'fu_no' => 'required|max:225|',
-                'wash_type' => 'required|max:225|',
                 'remark' => 'required|max:225|',
             ]);
     
@@ -299,18 +301,14 @@ class OrderMasterController extends Controller
                 'po_no' => $request->po_no,
                 'qty_order' => $request->qty_order,
                 'qty_ocf' => $request->qty_ocf,
-                'qty_gmt' => $request->qty_gmt,
-                'qty_sbd' => $request->qty_sbd,
                 'fu_no' => $request->fu_no,
-                'wash_type' => $request->wash_type,
                 'remark' => $request->remark,
             ]);    
+
+            $ordermasters->save();
+    
+            return redirect('ordermaster/index')->with(['success' => 'Order Master berhasil diupdate!']);
         }
-
-        
-        $ordermasters->save();
-
-        return redirect('ordermaster/index')->with(['success' => 'Order Master berhasil diupdate!']);
     }
 
     public function fetchbrand($buyer_no) {

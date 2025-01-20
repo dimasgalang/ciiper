@@ -57,26 +57,17 @@
                             @endif
                             <div>
                                 <label>ID :</label>
-                                <input class="form-control" type="text" id="id" name="id" value="{{ $user->id }}" readonly>
-                            </div>
-                            <br>
-                            <div>
-                                <label>Role : </label>
-                                <select class="form-control" id="role" name="role">
-                                    @foreach($roles as $role)
-                                        <option value="{{ $role }}" {{ $user->role == $role  ? 'selected' : ''}}>{{ $role }}</option>
-                                    @endforeach
-                                </select>
+                                <input class="form-control" type="text" id="id" name="id" value="{{ $users->id }}" readonly>
                             </div>
                             <br>
                             <div>
                                 <label>Nama Lengkap :</label>
-                                <input class="form-control" type="text" id="name" name="name" value="{{ $user->name }}">
+                                <input class="form-control" type="text" id="name" name="name" value="{{ $users->name }}">
                             </div>
                             <br>
                             <div>
                                 <label>Email :</label>
-                                <input class="form-control" type="email" id="email" name="email" value="{{ $user->email }}">
+                                <input class="form-control" type="email" id="email" name="email" value="{{ $users->email }}">
                             </div>
                             <br>
                             <div class="row">

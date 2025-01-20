@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Imports\OrderListsImport;
+use App\Models\BordirType;
 use App\Models\Brand;
 use App\Models\Buyer;
 use App\Models\Fabrication;
@@ -13,6 +14,7 @@ use App\Models\OrderMaster;
 use App\Models\RafProduction;
 use App\Models\Season;
 use App\Models\Style;
+use App\Models\WashType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -22,7 +24,7 @@ class OrderListController extends Controller
 {
     public function index() {
         // $orderlists = OrderList::all();
-        $orderlists = OrderList::select('order_list.*','season.season_cat','buyer.buyer_name', 'brand.brand_name', 'style.style_name', 'fabrication.fabrication', 'fabrication.po_fab', 'fabrication.etd', 'fabric_mill.fabmill_name', 'factory.factory_name')
+        $orderlists = OrderList::select('order_list.*','purchase_order.po_master','season.season_cat','buyer.buyer_name', 'brand.brand_name', 'style.style_name', 'fabrication.fabrication', 'fabrication.po_fab', 'fabrication.etd', 'fabric_mill.fabmill_name', 'factory.factory_name','wash_type','bordir_type')
         ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
         ->leftJoin('season', 'order_master.season_no', '=', 'season.season_no')
         ->leftJoin('buyer', 'order_master.buyer_no', '=', 'buyer.buyer_no')
@@ -31,6 +33,9 @@ class OrderListController extends Controller
         ->leftJoin('fabrication', 'order_master.order_trans', '=', 'fabrication.order_trans')
         ->leftJoin('fabric_mill', 'fabric_mill.fabmill_no', '=', 'fabrication.fabmill_no')
         ->leftJoin('factory', 'factory.factory_no', '=', 'order_list.factory_no')
+        ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
+        ->leftJoin('wash_type', 'order_list.wash_no', '=', 'wash_type.wash_no')
+        ->leftJoin('bordir_type', 'order_list.bordir_no', '=', 'bordir_type.bordir_no')
         ->get();
         // dd($orderlists);
         return view('orderlist.index', compact('orderlists'));
@@ -66,14 +71,18 @@ class OrderListController extends Controller
 
     public function create() {
         $orderlists = OrderList::all()->last();
-        $ordermasters = OrderMaster::all();
+        $ordermasters = OrderMaster::select('order_master.*','purchase_order.po_master')
+        ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
+        ->get();
         $seasons = Season::all();
         $buyers = Buyer::all();
         $brands = Brand::all();
         $styles = Style::all();
         $followups = FollowUp::all();
         $factorys = Factory::all();
-        return view('orderlist.create', compact('orderlists','ordermasters','seasons','buyers','brands','styles','followups','factorys'));
+        $washtypes = WashType::all();
+        $bordirtypes = BordirType::all();
+        return view('orderlist.create', compact('orderlists','ordermasters','seasons','buyers','brands','styles','followups','factorys','washtypes','bordirtypes'));
     }
 
     public function store(Request $request)
@@ -87,6 +96,11 @@ class OrderListController extends Controller
             'dcpo_qty' => $request->dcpo_qty,
             'ex_factory_date' => $request->ex_factory_date,
             'vsl_date' => $request->vsl_date,
+            'wash_no' => $request->wash_no,
+            'bordir_no' => $request->bordir_no,
+            'line' => $request->line,
+            'target_qty' => $request->target_qty,
+            'production_day' => $request->production_day,
         ]);
 
         return redirect()

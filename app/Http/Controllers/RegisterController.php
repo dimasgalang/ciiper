@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ModelHasRoles;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +19,8 @@ class RegisterController extends Controller
 
     public function create()
     {
-        return view('auth.registration');
+        $roles = Role::all();
+        return view('auth.registration', compact('roles'));
     }
 
     public function store(Request $request)
@@ -25,13 +28,11 @@ class RegisterController extends Controller
         $this->validate($request, [
             'email' => ['required','email', 'unique:users,email'],
             'password' => ['required', 'min:8'],
-            'role' => 'required'
         ]);
 
        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'role' => $request->role,
             'password' => Hash::make($request->password),
         ]);
 
@@ -47,13 +48,11 @@ class RegisterController extends Controller
         $this->validate($request, [
             'email' => ['required','email', 'unique:users,email'],
             'password' => ['required', 'min:8'],
-            'role' => 'required'
         ]);
 
        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'role' => $request->role,
             'password' => Hash::make($request->password),
         ]);
 

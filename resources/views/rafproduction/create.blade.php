@@ -60,7 +60,7 @@
                                 <select class="form-control" id="order_trans" name="order_trans">
                                     <option></option>
                                     @foreach($ordermasters as $ordermaster)
-                                    <option value="{{ $ordermaster->order_trans }}">{{ $ordermaster->order_trans }} - {{ $ordermaster->po_no }}</option>
+                                    <option value="{{ $ordermaster->order_trans }}">{{ $ordermaster->order_trans }} - {{ $ordermaster->po_master }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -84,7 +84,11 @@
                             <br>
                             <div>
                                 <label>RAF No :</label>
+                                @if($rafs->id ?? '')
                                 <input class="form-control" type="text" id="raf_no" name="raf_no" value="{{ 'RAF' . str_pad($rafs->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @else
+                                <input class="form-control" type="text" id="raf_no" name="raf_no" value="{{ 'RAF' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @endif
                             </div>
                             <br>
                             <div>
@@ -94,7 +98,7 @@
                             <br>
                             <div>
                                 <label>RAF Qty :</label>
-                                <input class="form-control" type="text" id="raf_qty" name="raf_qty">
+                                <input class="form-control" type="number" id="raf_qty" name="raf_qty">
                             </div>
                             <br>
                             <div>

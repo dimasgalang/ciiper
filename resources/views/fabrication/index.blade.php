@@ -63,8 +63,8 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Order Trans</th>
                                         <th>Fab No</th>
+                                        <th>Master PO</th>
                                         <th>Fab Mill</th>
                                         <th>Fabrication</th>
                                         <th>PO Fab</th>
@@ -76,13 +76,16 @@
                                     @foreach($fabrications as $fabrication)
                                     <tr>
                                         <td>{{ $fabrication->id }}</td>
-                                        <td>{{ $fabrication->order_trans }}</td>
                                         <td>{{ $fabrication->fab_no }}</td>
-                                        <td>{{ $fabrication->fabmill_no }}</td>
+                                        <td>{{ $fabrication->po_master }}</td>
+                                        <td>{{ $fabrication->fabmill_name }}</td>
                                         <td>{{ $fabrication->fabrication }}</td>
                                         <td>{{ $fabrication->po_fab }}</td>
                                         <td>{{ $fabrication->etd }}</td>
                                         <td align="center">
+                                            <a href="/fabrication/find/{{ $fabrication->id }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $fabrication->id }}" data-delete-name="{{ $fabrication->fabrication_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>

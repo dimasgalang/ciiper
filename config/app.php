@@ -171,6 +171,7 @@ return [
         Davcpas1234\LaravelPdfViewer\LaravelPdfViewerServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
     ])->toArray(),
 
     /*

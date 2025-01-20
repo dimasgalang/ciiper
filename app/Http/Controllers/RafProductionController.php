@@ -21,7 +21,9 @@ class RafProductionController extends Controller
     }
 
     public function create() {
-        $ordermasters = OrderMaster::all();
+        $ordermasters = OrderMaster::select('order_master.*', 'purchase_order.po_master')
+        ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
+        ->get();
         $productiondepts = ProductionDept::all();
         $rafs = RafProduction::all()->last();
         return view('rafproduction.create', compact('rafs','ordermasters','productiondepts'));

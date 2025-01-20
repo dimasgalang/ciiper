@@ -25,8 +25,7 @@ return new class extends Migration
             $table->integer('qty_sbd')->default(0);
             $table->string('fu_no');
             $table->string('sketch_file');
-            $table->string('wash_type');
-            $table->string('remark');
+            $table->string('remark')->nullable();
             $table->timestamps();
         });
     }

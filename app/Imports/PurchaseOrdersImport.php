@@ -23,6 +23,8 @@ class PurchaseOrdersImport implements ToModel, WithStartRow
     {
         return new PurchaseOrder([
             'po_no' => $row[1],
+            'po_master' => $row[2],
+            'po_desc' => $row[3],
         ]);
     }
 }

@@ -56,8 +56,12 @@
                             </div>
                             @endif
                             <div>
-                                <label>Ship Mode No :</label>
-                                <input class="form-control" type="text" id="ship_no" name="ship_no" value="{{ 'SHI' . str_pad($ships->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                <label>Ship No :</label>
+                                @if($shipmodes->id ?? '')
+                                <input class="form-control" type="text" id="ship_no" name="ship_no" value="{{ 'SHM' . str_pad($shipmodes->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @else
+                                <input class="form-control" type="text" id="ship_no" name="ship_no" value="{{ 'SHM' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @endif
                             </div>
                             <br>
                             <div>

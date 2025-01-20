@@ -75,7 +75,10 @@
                                         <td>{{ $productiondept->dept_no }}</td>
                                         <td>{{ $productiondept->dept_name }}</td>
                                         <td align="center">
-                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $productiondept->id }}" data-delete-name="{{ $productiondept->productiondept_name }}" data-toggle="modal" data-target="#deleteModal">
+                                            <a href="/productiondept/find/{{ $productiondept->id }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $productiondept->id }}" data-delete-name="{{ $productiondept->dept_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>
@@ -151,7 +154,7 @@
 <script>
     $('.btn-delete-record').on('click', function () {
             $('#btn-confirm').attr('href', $(this).data('delete-link'));
-            $("#modal-text-record").text('Apakah anda yakin ingin menghapus productiondept ' + $(this).data('delete-name') + '?');
+            $("#modal-text-record").text('Apakah anda yakin ingin menghapus Production Dept ' + $(this).data('delete-name') + '?');
     });
 </script>
 </html>

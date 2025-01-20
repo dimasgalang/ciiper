@@ -57,7 +57,11 @@
                             @endif
                             <div>
                                 <label>Fabric Mill No :</label>
-                                <input class="form-control" type="text" id="fabmill_no" name="fabmill_no" required>
+                                @if($fabricmills->id ?? '')
+                                <input class="form-control" type="text" id="fabmill_no" name="fabmill_no" value="{{ 'FBM' . str_pad($fabricmills->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @else
+                                <input class="form-control" type="text" id="fabmill_no" name="fabmill_no" value="{{ 'FBM' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @endif
                             </div>
                             <br>
                             <div>

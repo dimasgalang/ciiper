@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('raf_no')->unique();
             $table->date('raf_date');
             $table->integer('raf_qty');
-            $table->integer('raf_dept');
-            $table->string('remark');
+            $table->string('raf_dept');
+            $table->string('remark')->nullable();
             $table->timestamps();
         });
     }

@@ -87,7 +87,7 @@
                             <br>
                             <div>
                                 <label>Ship Qty :</label>
-                                <input class="form-control" type="text" id="ship_qty" name="ship_qty" required>
+                                <input class="form-control" type="number" id="ship_qty" name="ship_qty" required>
                             </div>
                             <br>
                             <div>

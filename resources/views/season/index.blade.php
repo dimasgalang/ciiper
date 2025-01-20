@@ -77,6 +77,9 @@
                                         <td>{{ $season->season_cat }}</td>
                                         <td>{{ $season->season_year }}</td>
                                         <td align="center">
+                                            <a href="/season/find/{{ $season->id }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $season->id }}" data-delete-name="{{ $season->season_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>

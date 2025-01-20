@@ -6,6 +6,7 @@ use App\Imports\FabricMillsImport;
 use App\Models\FabricMill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class FabricMillController extends Controller
@@ -51,8 +52,38 @@ class FabricMillController extends Controller
     }
 
     public function delete($id) {
-        $fabricmill = FabricMill::find($id);    
-        $fabricmill->delete();
+        $fabricmills = FabricMill::find($id);    
+        $fabricmills->delete();
         return redirect('fabricmill/index')->with(['error' => 'Record Berhasil Dihapus!']);
+    }
+
+    public function find($id) {
+        $fabricmills = FabricMill::find($id);
+        return view('fabricmill.update', compact('fabricmills'));
+    }
+
+    public function update(Request $request)
+    {
+        $fabricmills = FabricMill::findOrFail($request->id);
+
+        $validator = Validator::make($request->all(), [
+            'fabmill_no' => 'required|max:225|',
+            'fabmill_name' => 'required|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $fabricmills->fill([
+            'fabmill_no' => $request->fabmill_no,
+            'fabmill_name' => $request->fabmill_name,
+        ]);
+
+        $fabricmills->save();
+
+        return redirect('fabricmill/index')->with(['success' => 'Fabric Mill berhasil diupdate!']);
     }
 }

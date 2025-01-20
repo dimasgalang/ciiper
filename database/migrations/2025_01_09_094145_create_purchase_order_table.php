@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('purchase_order', function (Blueprint $table) {
             $table->id();
             $table->string('po_no')->unique();
-            $table->string('po_desc');
+            $table->string('po_master');
+            $table->string('po_desc')->nullable();
             $table->timestamps();
         });
     }

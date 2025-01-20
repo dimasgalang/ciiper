@@ -106,6 +106,24 @@
                                 <input class="date form-control" type="date" id="vsl_date" name="vsl_date" value="{{ $orderlists->vsl_date }}" required>
                             </div>
                             <br>
+                            <div>
+                                <label>Wash Type :</label>
+                                <select class="form-control" id="wash_no" name="wash_no">
+                                    @foreach($washtypes as $washtype)
+                                    <option value="{{ $washtype->wash_no }}" {{ $ordermasters->wash_no == $washtype->wash_no  ? 'selected' : ''}}>{{ $washtype->wash_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <br>
+                            <div>
+                                <label>Bordir Type :</label>
+                                <select class="form-control" id="bordir_no" name="bordir_no">
+                                    @foreach($bordirtypes as $bordirtype)
+                                    <option value="{{ $bordirtype->bordir_no }}" {{ $ordermasters->bordir_no == $bordirtype->bordir_no  ? 'selected' : ''}}>{{ $bordirtype->bordir_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <br>
                             <div class="row">
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary btn-block">Update</button>

@@ -11,6 +11,7 @@ class PurchaseOrder extends Model
     public $table = "purchase_order";
     protected $fillable = [
         'po_no',
+        'po_master',
         'po_desc',
     ];
 }

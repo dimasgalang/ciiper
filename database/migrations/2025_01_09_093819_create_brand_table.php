@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('brand', function (Blueprint $table) {
             $table->id();
+            $table->string('buyer_no');
             $table->string('brand_no')->unique();
             $table->string('brand_name');
-            $table->string('brand_gender');
-            $table->string('buyer_no');
+            $table->string('brand_gender')->nullable();
             $table->timestamps();
         });
     }

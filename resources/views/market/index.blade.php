@@ -75,6 +75,9 @@
                                         <td>{{ $market->market_no }}</td>
                                         <td>{{ $market->market_name }}</td>
                                         <td align="center">
+                                            <a href="/market/find/{{ $market->id }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $market->id }}" data-delete-name="{{ $market->market_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>

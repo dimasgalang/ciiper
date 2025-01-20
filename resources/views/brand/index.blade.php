@@ -63,8 +63,8 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Buyer No</th>
                                         <th>Brand No</th>
+                                        <th>Buyer</th>
                                         <th>Brand Name</th>
                                         <th>Brand Gender</th>
                                         <th>Action</th>
@@ -74,11 +74,14 @@
                                     @foreach($brands as $brand)
                                     <tr>
                                         <td>{{ $brand->id }}</td>
-                                        <td>{{ $brand->buyer_no }}</td>
                                         <td>{{ $brand->brand_no }}</td>
+                                        <td>{{ $brand->buyer_name }}</td>
                                         <td>{{ $brand->brand_name }}</td>
                                         <td>{{ $brand->brand_gender }}</td>
                                         <td align="center">
+                                            <a href="/brand/find/{{ $brand->id }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $brand->id }}" data-delete-name="{{ $brand->brand_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>

@@ -36,7 +36,8 @@ class BuyerController extends Controller
     }
 
     public function create() {
-        return view('buyer.create');
+        $buyers = Buyer::all()->last();
+        return view('buyer.create', compact('buyers'));
     }
 
     public function store(Request $request)
@@ -57,5 +58,39 @@ class BuyerController extends Controller
         $buyers = Buyer::find($id);    
         $buyers->delete();
         return redirect('buyer/index')->with(['error' => 'Record Berhasil Dihapus!']);
+    }
+
+    public function find($id) {
+        $buyers = Buyer::find($id);
+        return view('buyer.update', compact('buyers'));
+    }
+
+    public function update(Request $request)
+    {
+        $buyers = Buyer::findOrFail($request->id);
+
+        $validator = Validator::make($request->all(), [
+            'buyer_no' => 'required|max:255',
+            'buyer_name' => 'required|max:225|',
+            'buyer_address' => 'required|max:225|',
+            'buyer_contact' => 'required|max:225|',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $buyers->fill([
+            'buyer_no' => $request->buyer_no,
+            'buyer_name' => $request->buyer_name,
+            'buyer_address' => $request->buyer_address,
+            'buyer_contact' => $request->buyer_contact,
+        ]);
+
+        $buyers->save();
+
+        return redirect()->intended('buyer/index')->with(['success' => 'Update Buyer Berhasil!']);
     }
 }

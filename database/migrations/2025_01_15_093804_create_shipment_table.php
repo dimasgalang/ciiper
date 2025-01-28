@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('ship_no');
             $table->integer('ship_qty');
             $table->date('ship_date');
-            $table->string('remark');
+            $table->string('remark')->nullable();
             $table->timestamps();
         });
     }

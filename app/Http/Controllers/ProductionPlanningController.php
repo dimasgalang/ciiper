@@ -49,6 +49,14 @@ class ProductionPlanningController extends Controller
         return view('productionplanning.create', compact('ordermasters', 'orderlists'));
     }
 
+    public function fetchorderlist($order_trans) {
+        $orderlists   = OrderList::select('*', 'order_master.*')
+        ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
+        ->where('order_list.order_trans', '=', $order_trans)
+        ->get();
+        return response()->json($orderlists);
+    }
+
     public function store(Request $request)
     {
         ProductionPlanning::create([

@@ -75,7 +75,7 @@
                                 <tbody>
                                     @foreach($rafproductions as $rafproduction)
                                     <tr>
-                                        <td>{{ $rafproduction->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $rafproduction->order_list }}</td>
                                         <td>{{ $rafproduction->raf_no }}</td>
                                         <td>{{ $rafproduction->raf_date }}</td>

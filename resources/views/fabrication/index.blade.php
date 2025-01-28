@@ -75,7 +75,7 @@
                                 <tbody>
                                     @foreach($fabrications as $fabrication)
                                     <tr>
-                                        <td>{{ $fabrication->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $fabrication->fab_no }}</td>
                                         <td>{{ $fabrication->po_master }}</td>
                                         <td>{{ $fabrication->fabmill_name }}</td>

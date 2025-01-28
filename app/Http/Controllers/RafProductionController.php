@@ -37,6 +37,17 @@ class RafProductionController extends Controller
         return response()->json($orderlists);
     }
 
+    public function fetchrafleft($order_list, $raf_dept) {
+        $raf_productions = RafProduction::select('raf_production.order_list','order_list.dcpo_qty', DB::raw('sum(raf_production.raf_qty) as sum_raf_qty'), DB::raw('(order_list.dcpo_qty - sum(raf_production.raf_qty)) as raf_left'))
+        ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
+        ->where('raf_production.order_list', '=', $order_list)
+        ->where('raf_production.raf_dept', '=', $raf_dept)
+        ->groupBy('raf_production.order_list','order_list.dcpo_qty')
+        ->get();
+        return response()->json($raf_productions);
+    }
+
+
     public function store(Request $request)
     {
         RafProduction::create([

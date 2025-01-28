@@ -72,7 +72,7 @@
                                 <tbody>
                                     @foreach($seasons as $season)
                                     <tr>
-                                        <td>{{ $season->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $season->season_no }}</td>
                                         <td>{{ $season->season_cat }}</td>
                                         <td>{{ $season->season_year }}</td>

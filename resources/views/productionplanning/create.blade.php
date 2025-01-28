@@ -58,6 +58,7 @@
                             <div>
                                 <label>Order Master :</label>
                                 <select class="form-control" id="order_trans" name="order_trans">
+                                    <option></option>
                                     @foreach($ordermasters as $ordermaster)
                                     <option value="{{ $ordermaster->order_trans }}">{{ $ordermaster->order_trans . '-' . $ordermaster->po_master }}</option>
                                     @endforeach
@@ -66,10 +67,8 @@
                             <br>
                             <div>
                                 <label>Order List :</label>
-                                <select class="form-control" id="order_list" name="order_list">
-                                    @foreach($orderlists as $orderlist)
-                                    <option value="{{ $orderlist->order_list }}">{{ $orderlist->order_list }}</option>
-                                    @endforeach
+                                <select class="form-control" id="order_list" name="order_list" disabled>
+                                    <option></option>
                                 </select>
                             </div>
                             <br>
@@ -193,6 +192,28 @@
     $("#order_trans").select2({
           allowClear: true,
           placeholder: 'Choose Master PO',
+    });
+    $(document).on("change", "#order_trans", function(e){
+        e.preventDefault();
+        var order_trans = $(this).val();
+        if (order_trans) {
+            $.ajax({
+                url: '/productionplanning/fetchorderlist/'+order_trans,
+                type: "GET",
+                dataType: "json",
+                success:function(data) {
+                    $('#order_list').empty();
+                    $('#order_list').append('<option></option>');
+                    $.each(data, function(key, value) {
+                        $('#order_list').append('<option value="'+ value.order_list +'">'+ value.lot_no + ' - ' + value.pobuyer_no +'</option>');
+                    });
+                    $('#order_list').removeAttr('disabled');
+                }
+            });
+        } else{
+            $('#order_list').empty();
+            $('#order_list').attr('disabled','disabled');
+        }
     });
     $("#order_list").select2({
           allowClear: true,

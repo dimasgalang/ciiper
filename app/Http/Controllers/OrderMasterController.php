@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\OrderMasterExport;
 use App\Imports\OrderMastersImport;
 use App\Models\BordirType;
 use App\Models\Brand;
@@ -75,51 +76,122 @@ class OrderMasterController extends Controller
         return DataTables::of($rafproductions)->addIndexColumn()->make(true);
     }
 
-    public function showrafcutting($order_trans) {
-        $rafcuttings = RafProduction::select('order_list.lot_no','order_list.pobuyer_no','order_master.order_trans', DB::raw('(sum(raf_production.raf_qty)-order_list.dcpo_qty) as balance'), DB::raw('sum(raf_production.raf_qty) as raf_qty'),'order_list.dcpo_qty')
-        ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
-        ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
-        ->where('order_list.order_trans', '=', $order_trans)
-        ->where('raf_production.raf_dept', '=', 'DEP000000001')
-        ->groupBy('order_list.order_trans','order_list.lot_no','order_list.pobuyer_no','order_list.dcpo_qty')
-        ->get();
-        // return response()->json($orderlists);
-        return DataTables::of($rafcuttings)->addIndexColumn()->make(true);
+    public function showrafcutting($order_trans, Request $request) {
+        if($request->ajax()) {
+            $rafcuttings = RafProduction::select('raf_production.order_list','order_list.lot_no','order_list.pobuyer_no','order_master.order_trans','raf_production.raf_date','order_list.dcpo_qty','raf_production.raf_qty', DB::raw('((select sum(raf_qty) from raf_production t2 where t2.raf_date <= raf_production.raf_date and t2.raf_dept = "DEP000000001" and t2.order_list = raf_production.order_list order by order_list, raf_date)-dcpo_qty) as balance'), DB::raw('((select sum(raf_qty) from raf_production t2 where t2.raf_date <= raf_production.raf_date and t2.raf_dept = "DEP000000001" and t2.order_list = raf_production.order_list order by order_list, raf_date)) as totalraf'))
+            ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
+            ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
+            ->where('order_list.order_trans', '=', $order_trans)
+            ->where('raf_production.raf_dept', '=', 'DEP000000001')
+            ->orderBy('raf_production.order_list')
+            ->orderBy('raf_production.raf_date');
+            // return response()->json($orderlists);
+            return DataTables::of($rafcuttings)
+            ->addIndexColumn()
+            ->filter(function ($instance) use ($request) {
+                if ($request->filled('fromdateCutting') && $request->filled('todateCutting') && $request->filled('searchCutting')) {
+                    $searchCutting = $request->get('searchCutting');
+                    $instance
+                    ->where('raf_production.raf_date', '>=', $request->get('fromdateCutting'))
+                    ->where('raf_production.raf_date', '<=', $request->get('todateCutting'))
+                    ->where('raf_production.raf_dept', '=', 'DEP000000001')
+                    ->where(function($query) use ($searchCutting) {
+                        $query->orWhere('order_list.lot_no', 'LIKE', "%$searchCutting%")
+                        ->orWhere('order_list.pobuyer_no', 'LIKE', "%$searchCutting%")
+                        ->orWhere('order_list.dcpo_qty', 'LIKE', "%$searchCutting%")
+                        ->orWhere('raf_production.raf_qty', 'LIKE', "%$searchCutting%");
+                    });
+                }
+            })->make(true);
+        }
     }
 
-    public function showrafsewing($order_trans) {
-        $rafsewings = RafProduction::select('order_list.lot_no','order_list.pobuyer_no','order_master.order_trans', DB::raw('(sum(raf_production.raf_qty)-order_list.dcpo_qty) as balance'), DB::raw('sum(raf_production.raf_qty) as raf_qty'),'order_list.dcpo_qty')
-        ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
-        ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
-        ->where('order_list.order_trans', '=', $order_trans)
-        ->where('raf_production.raf_dept', '=', 'DEP000000002')
-        ->groupBy('order_list.order_trans','order_list.lot_no','order_list.pobuyer_no','order_list.dcpo_qty')
-        ->get();
-        // return response()->json($orderlists);
-        return DataTables::of($rafsewings)->addIndexColumn()->make(true);
+    public function showrafsewing($order_trans, Request $request) {
+        if($request->ajax()) {
+            $rafsewings = RafProduction::select('raf_production.order_list','order_list.lot_no','order_list.pobuyer_no','order_master.order_trans','raf_production.raf_date','order_list.dcpo_qty','raf_production.raf_qty', DB::raw('((select sum(raf_qty) from raf_production t2 where t2.raf_date <= raf_production.raf_date and t2.raf_dept = "DEP000000002" and t2.order_list = raf_production.order_list order by order_list, raf_date)-dcpo_qty) as balance'), DB::raw('((select sum(raf_qty) from raf_production t2 where t2.raf_date <= raf_production.raf_date and t2.raf_dept = "DEP000000002" and t2.order_list = raf_production.order_list order by order_list, raf_date)) as totalraf'))
+            ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
+            ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
+            ->where('order_list.order_trans', '=', $order_trans)
+            ->where('raf_production.raf_dept', '=', 'DEP000000002')
+            ->orderBy('raf_production.order_list')
+            ->orderBy('raf_production.raf_date');
+            // return response()->json($orderlists);
+            return DataTables::of($rafsewings)
+            ->addIndexColumn()
+            ->filter(function ($instance) use ($request) {
+                if ($request->filled('fromdateSewing') && $request->filled('todateSewing') && $request->filled('searchSewing')) {
+                    $searchSewing = $request->get('searchSewing');
+                    $instance
+                    ->where('raf_production.raf_date', '>=', $request->get('fromdateSewing'))
+                    ->where('raf_production.raf_date', '<=', $request->get('todateSewing'))
+                    ->where('raf_production.raf_dept', '=', 'DEP000000002')
+                    ->where(function($query) use ($searchSewing) {
+                        $query->orWhere('order_list.lot_no', 'LIKE', "%$searchSewing%")
+                        ->orWhere('order_list.pobuyer_no', 'LIKE', "%$searchSewing%")
+                        ->orWhere('order_list.dcpo_qty', 'LIKE', "%$searchSewing%")
+                        ->orWhere('raf_production.raf_qty', 'LIKE', "%$searchSewing%");
+                    });
+                }
+            })->make(true);
+        }
     }
-    public function showrafiron($order_trans) {
-        $rafirons = RafProduction::select('order_list.lot_no','order_list.pobuyer_no','order_master.order_trans', DB::raw('(sum(raf_production.raf_qty)-order_list.dcpo_qty) as balance'), DB::raw('sum(raf_production.raf_qty) as raf_qty'),'order_list.dcpo_qty')
-        ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
-        ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
-        ->where('order_list.order_trans', '=', $order_trans)
-        ->where('raf_production.raf_dept', '=', 'DEP000000003')
-        ->groupBy('order_list.order_trans','order_list.lot_no','order_list.pobuyer_no','order_list.dcpo_qty')
-        ->get();
-        // return response()->json($orderlists);
-        return DataTables::of($rafirons)->addIndexColumn()->make(true);
+    public function showrafiron($order_trans, Request $request) {
+        if($request->ajax()) {
+            $rafirons = RafProduction::select('raf_production.order_list','order_list.lot_no','order_list.pobuyer_no','order_master.order_trans','raf_production.raf_date','order_list.dcpo_qty','raf_production.raf_qty', DB::raw('((select sum(raf_qty) from raf_production t2 where t2.raf_date <= raf_production.raf_date and t2.raf_dept = "DEP000000003" and t2.order_list = raf_production.order_list order by order_list, raf_date)-dcpo_qty) as balance'), DB::raw('((select sum(raf_qty) from raf_production t2 where t2.raf_date <= raf_production.raf_date and t2.raf_dept = "DEP000000003" and t2.order_list = raf_production.order_list order by order_list, raf_date)) as totalraf'))
+            ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
+            ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
+            ->where('order_list.order_trans', '=', $order_trans)
+            ->where('raf_production.raf_dept', '=', 'DEP000000003')
+            ->orderBy('raf_production.order_list')
+            ->orderBy('raf_production.raf_date');
+            // return response()->json($orderlists);
+            return DataTables::of($rafirons)
+            ->addIndexColumn()
+            ->filter(function ($instance) use ($request) {
+                if ($request->filled('fromdateIron') && $request->filled('todateIron') && $request->filled('searchIron')) {
+                    $searchIron = $request->get('searchIron');
+                    $instance
+                    ->where('raf_production.raf_date', '>=', $request->get('fromdateIron'))
+                    ->where('raf_production.raf_date', '<=', $request->get('todateIron'))
+                    ->where('raf_production.raf_dept', '=', 'DEP000000003')
+                    ->where(function($query) use ($searchIron) {
+                        $query->orWhere('order_list.lot_no', 'LIKE', "%$searchIron%")
+                        ->orWhere('order_list.pobuyer_no', 'LIKE', "%$searchIron%")
+                        ->orWhere('order_list.dcpo_qty', 'LIKE', "%$searchIron%")
+                        ->orWhere('raf_production.raf_qty', 'LIKE', "%$searchIron%");
+                    });
+                }
+            })->make(true);
+        }
     }
     
-    public function showrafpacking($order_trans) {
-        $rafpackings = RafProduction::select('order_list.lot_no','order_list.pobuyer_no','order_master.order_trans', DB::raw('(sum(raf_production.raf_qty)-order_list.dcpo_qty) as balance'), DB::raw('sum(raf_production.raf_qty) as raf_qty'),'order_list.dcpo_qty')
-        ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
-        ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
-        ->where('order_list.order_trans', '=', $order_trans)
-        ->where('raf_production.raf_dept', '=', 'DEP000000004')
-        ->groupBy('order_list.order_trans','order_list.lot_no','order_list.pobuyer_no','order_list.dcpo_qty')
-        ->get();
-        // return response()->json($rafpackings);
-        return DataTables::of($rafpackings)->addIndexColumn()->make(true);
+    public function showrafpacking($order_trans, Request $request) {
+        if($request->ajax()) {
+            $rafpackings = RafProduction::select('raf_production.order_list','order_list.lot_no','order_list.pobuyer_no','order_master.order_trans','raf_production.raf_date','order_list.dcpo_qty','raf_production.raf_qty', DB::raw('((select sum(raf_qty) from raf_production t2 where t2.raf_date <= raf_production.raf_date and t2.raf_dept = "DEP000000004" and t2.order_list = raf_production.order_list order by order_list, raf_date)-dcpo_qty) as balance'), DB::raw('((select sum(raf_qty) from raf_production t2 where t2.raf_date <= raf_production.raf_date and t2.raf_dept = "DEP000000004" and t2.order_list = raf_production.order_list order by order_list, raf_date)) as totalraf'))
+            ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
+            ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
+            ->where('order_list.order_trans', '=', $order_trans)
+            ->where('raf_production.raf_dept', '=', 'DEP000000004')
+            ->orderBy('raf_production.order_list')
+            ->orderBy('raf_production.raf_date');
+            // return response()->json($rafpackings);
+            return DataTables::of($rafpackings)
+            ->addIndexColumn()->filter(function ($instance) use ($request) {
+                if ($request->filled('fromdatePacking') && $request->filled('todatePacking') && $request->filled('searchPacking')) {
+                    $searchPacking = $request->get('searchPacking');
+                    $instance
+                    ->where('raf_production.raf_date', '>=', $request->get('fromdatePacking'))
+                    ->where('raf_production.raf_date', '<=', $request->get('todatePacking'))
+                    ->where('raf_production.raf_dept', '=', 'DEP000000004')
+                    ->where(function($query) use ($searchPacking) {
+                        $query->orWhere('order_list.lot_no', 'LIKE', "%$searchPacking%")
+                        ->orWhere('order_list.pobuyer_no', 'LIKE', "%$searchPacking%")
+                        ->orWhere('order_list.dcpo_qty', 'LIKE', "%$searchPacking%")
+                        ->orWhere('raf_production.raf_qty', 'LIKE', "%$searchPacking%");
+                    });
+                }
+            })->make(true);
+        }
     }
 
     public function showshipment($order_trans) {
@@ -249,7 +321,7 @@ class OrderMasterController extends Controller
                 'qty_ocf' => 'required|max:225|',
                 'fu_no' => 'required|max:225|',
                 'sketch_file' => 'required',
-                'remark' => 'required|max:225|',
+                // 'remark' => 'required|max:225|',
             ]);
     
             if ($validator->fails()) {
@@ -283,7 +355,7 @@ class OrderMasterController extends Controller
                 'qty_order' => 'required|max:225|',
                 'qty_ocf' => 'required|max:225|',
                 'fu_no' => 'required|max:225|',
-                'remark' => 'required|max:225|',
+                // 'remark' => 'required|max:225|',
             ]);
     
             if ($validator->fails()) {
@@ -304,11 +376,11 @@ class OrderMasterController extends Controller
                 'fu_no' => $request->fu_no,
                 'remark' => $request->remark,
             ]);    
-
-            $ordermasters->save();
-    
-            return redirect('ordermaster/index')->with(['success' => 'Order Master berhasil diupdate!']);
         }
+
+        $ordermasters->save();
+
+        return redirect('ordermaster/index')->with(['success' => 'Order Master berhasil diupdate!']);
     }
 
     public function fetchbrand($buyer_no) {
@@ -324,4 +396,9 @@ class OrderMasterController extends Controller
         ->get();
         return response()->json($styles);
     }
+
+    public function export_excel()
+	{
+		return Excel::download(new OrderMasterExport, 'All Order Master.xlsx');
+	}
 }

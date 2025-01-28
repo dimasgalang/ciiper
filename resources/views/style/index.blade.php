@@ -73,7 +73,7 @@
                                 <tbody>
                                     @foreach($styles as $style)
                                     <tr>
-                                        <td>{{ $style->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $style->style_no }}</td>
                                         <td>{{ $style->brand_name }}</td>
                                         <td>{{ $style->style_name }}</td>

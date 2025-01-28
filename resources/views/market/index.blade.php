@@ -71,7 +71,7 @@
                                 <tbody>
                                     @foreach($markets as $market)
                                     <tr>
-                                        <td>{{ $market->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $market->market_no }}</td>
                                         <td>{{ $market->market_name }}</td>
                                         <td align="center">

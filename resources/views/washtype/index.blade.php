@@ -71,7 +71,7 @@
                                 <tbody>
                                     @foreach($washtypes as $washtype)
                                     <tr>
-                                        <td>{{ $washtype->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $washtype->wash_no }}</td>
                                         <td>{{ $washtype->wash_type }}</td>
                                         <td align="center">

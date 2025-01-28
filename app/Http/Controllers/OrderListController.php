@@ -16,6 +16,7 @@ use App\Models\Season;
 use App\Models\Style;
 use App\Models\WashType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
@@ -172,5 +173,15 @@ class OrderListController extends Controller
         $orderlists->save();
 
         return redirect('orderlist/index')->with(['success' => 'Order List berhasil diupdate!']);
+    }
+    
+
+    public function fetchorderleft($order_trans) {
+        $order_lists = OrderMaster::select('order_master.order_trans','order_master.qty_order', DB::raw('ifnull(sum(order_list.dcpo_qty),0) as sum_dcpo_qty'), DB::raw('ifnull((order_master.qty_order - ifnull(sum(order_list.dcpo_qty),0)),0) as qty_left'))
+        ->leftJoin('order_list', 'order_list.order_trans', '=', 'order_master.order_trans')
+        ->where('order_master.order_trans', '=', $order_trans)
+        ->groupBy('order_master.order_trans','order_master.qty_order')
+        ->get();
+        return response()->json($order_lists);
     }
 }

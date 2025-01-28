@@ -155,9 +155,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/ordermaster/shipment/{order_trans}', [OrderMasterController::class, 'showshipment'])->name('ordermaster.shipment');
     Route::get('/ordermaster/rafproduction/{order_trans}', [OrderMasterController::class, 'showrafproduction'])->name('ordermaster.rafproduction');
     Route::get('/ordermaster/rafcutting/{order_trans}', [OrderMasterController::class, 'showrafcutting'])->name('ordermaster.rafcutting');
+    Route::post('/ordermaster/rafcutting/{order_trans}', [OrderMasterController::class, 'showrafcutting'])->name('ordermaster.rafcutting');
     Route::get('/ordermaster/rafsewing/{order_trans}', [OrderMasterController::class, 'showrafsewing'])->name('ordermaster.rafsewing');
+    Route::post('/ordermaster/rafsewing/{order_trans}', [OrderMasterController::class, 'showrafsewing'])->name('ordermaster.rafsewing');
     Route::get('/ordermaster/rafiron/{order_trans}', [OrderMasterController::class, 'showrafiron'])->name('ordermaster.rafiron');
+    Route::post('/ordermaster/rafiron/{order_trans}', [OrderMasterController::class, 'showrafiron'])->name('ordermaster.rafiron');
     Route::get('/ordermaster/rafpacking/{order_trans}', [OrderMasterController::class, 'showrafpacking'])->name('ordermaster.rafpacking');
+    Route::post('/ordermaster/rafpacking/{order_trans}', [OrderMasterController::class, 'showrafpacking'])->name('ordermaster.rafpacking');
     Route::get('/ordermaster/fab/{order_trans}', [OrderMasterController::class, 'showfab'])->name('ordermaster.fab');
     Route::get('/ordermaster/style/{order_trans}', [OrderMasterController::class, 'showstyle'])->name('ordermaster.style');
     Route::get('/ordermaster/productionplanning/{order_trans}', [OrderMasterController::class, 'showproductionplanning'])->name('ordermaster.productionplanning');
@@ -171,6 +175,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/orderlist/create', [OrderListController::class, 'create'])->name('orderlist.create');
     Route::post('/orderlist/store', [OrderListController::class, 'store'])->name('orderlist.store');
     Route::get('/orderlist/fab/{order_trans}', [OrderListController::class, 'showfab'])->name('orderlist.fab');
+    Route::get('/orderlist/fetchorderleft/{order_trans}', [OrderListController::class, 'fetchorderleft'])->name('orderlist.fetchorderleft');
     Route::get('/orderlist/find/{id}', [OrderListController::class, 'find'])->name('orderlist.find');
     Route::post('/orderlist/update', [OrderListController::class, 'update'])->name('orderlist.update');
     
@@ -204,6 +209,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/rafproduction/create', [RafProductionController::class, 'create'])->name('rafproduction.create');
     Route::post('/rafproduction/store', [RafProductionController::class, 'store'])->name('rafproduction.store');
     Route::get('/rafproduction/fetchorderlist/{order_trans}', [RafProductionController::class, 'fetchorderlist'])->name('rafproduction.fetchorderlist');
+    Route::get('/rafproduction/fetchrafleft/{order_list}/{raf_dept}', [RafProductionController::class, 'fetchrafleft'])->name('rafproduction.fetchrafleft');
     
     //Ship Mode
     Route::get('/shipmode/index', [ShipModeController::class, 'index'])->name('shipmode.index');
@@ -226,6 +232,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/shipment/delete/{id}', [ShipmentController::class, 'delete'])->name('shipment.delete');
     Route::get('/shipment/create', [ShipmentController::class, 'create'])->name('shipment.create');
     Route::post('/shipment/store', [ShipmentController::class, 'store'])->name('shipment.store');
+    Route::get('/shipment/fetchorderlist/{order_trans}', [ShipmentController::class, 'fetchorderlist'])->name('shipment.fetchorderlist');
     
     //Production Dept
     Route::get('/productiondept/index', [ProductionDeptController::class, 'index'])->name('productiondept.index');
@@ -266,6 +273,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/productionplanning/store', [ProductionPlanningController::class, 'store'])->name('productionplanning.store');
     Route::get('/productionplanning/find/{id}', [ProductionPlanningController::class, 'find'])->name('productionplanning.find');
     Route::post('/productionplanning/update', [ProductionPlanningController::class, 'update'])->name('productionplanning.update');
+    Route::get('/productionplanning/fetchorderlist/{order_trans}', [ProductionPlanningController::class, 'fetchorderlist'])->name('productionplanning.fetchorderlist');
 
     //Import
     Route::post('/user/import', [UserController::class, 'import'])->name('user.import');
@@ -288,5 +296,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/followup/import', [FollowUpController::class, 'import'])->name('followup.import');
     Route::post('/bordirtype/import', [BordirTypeController::class, 'import'])->name('bordirtype.import');
     Route::post('/productionplanning/import', [ProductionPlanningController::class, 'import'])->name('productionplanning.import');
+
+    //Export
+    Route::get('/ordermaster/export', [OrderMasterController::class, 'export_excel'])->name('ordermaster.export');
+
 });
 

@@ -71,7 +71,7 @@
                                 <tbody>
                                     @foreach($fabricmills as $fabricmill)
                                     <tr>
-                                        <td>{{ $fabricmill->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $fabricmill->fabmill_no }}</td>
                                         <td>{{ $fabricmill->fabmill_name }}</td>
                                         <td align="center">

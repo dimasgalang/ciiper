@@ -71,7 +71,7 @@
                                 <tbody>
                                     @foreach($bordirtypes as $bordirtype)
                                     <tr>
-                                        <td>{{ $bordirtype->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $bordirtype->bordir_no }}</td>
                                         <td>{{ $bordirtype->bordir_type }}</td>
                                         <td align="center">

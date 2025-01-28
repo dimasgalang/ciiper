@@ -71,7 +71,7 @@
                                 <tbody>
                                     @foreach($followups as $followup)
                                     <tr>
-                                        <td>{{ $followup->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $followup->fu_no }}</td>
                                         <td>{{ $followup->fu_name }}</td>
                                         <td align="center">

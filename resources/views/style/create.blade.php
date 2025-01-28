@@ -78,6 +78,11 @@
                                 <input class="form-control" type="text" id="style_name" name="style_name">
                             </div>
                             <br>
+                            <div>
+                                <label>Style Desc :</label>
+                                <input class="form-control" type="text" id="style_desc" name="style_desc">
+                            </div>
+                            <br>
                             <div class="row">
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary btn-block">Create</button>

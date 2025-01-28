@@ -71,7 +71,7 @@
                                 <tbody>
                                     @foreach($productiondepts as $productiondept)
                                     <tr>
-                                        <td>{{ $productiondept->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $productiondept->dept_no }}</td>
                                         <td>{{ $productiondept->dept_name }}</td>
                                         <td align="center">

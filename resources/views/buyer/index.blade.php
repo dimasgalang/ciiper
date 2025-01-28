@@ -73,7 +73,7 @@
                                 <tbody>
                                     @foreach($buyers as $buyer)
                                     <tr>
-                                        <td>{{ $buyer->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $buyer->buyer_no }}</td>
                                         <td>{{ $buyer->buyer_name }}</td>
                                         <td>{{ $buyer->buyer_address }}</td>

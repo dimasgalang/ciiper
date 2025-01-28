@@ -76,7 +76,7 @@
                                 <tbody>
                                     @foreach($shipments as $shipment)
                                     <tr>
-                                        <td>{{ $shipment->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $shipment->order_list }}</td>
                                         <td>{{ $shipment->pobuyer_no }}</td>
                                         <td>{{ $shipment->market_name }}</td>

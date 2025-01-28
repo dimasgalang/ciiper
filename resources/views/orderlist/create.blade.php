@@ -94,8 +94,8 @@
                             </div>
                             <br>
                             <div>
-                                <label>DC PO Qty :</label>
-                                <input class="form-control" type="text" id="dcpo_qty" name="dcpo_qty" required>
+                                <label id="dcpo_left">DC PO Qty :</label>
+                                <input class="form-control" type="text" id="dcpo_qty" name="dcpo_qty" min="1" max="1" required>
                             </div>
                             <br>
                             <div>
@@ -167,6 +167,26 @@
     $("#order_trans").select2({
           allowClear: true,
           placeholder: 'Choose Master PO',
+    });
+    $(document).on("change", "#order_trans", function(e){
+        e.preventDefault();
+        var order_trans = $(this).val();
+        if (order_trans) {
+            $.ajax({
+                url: '/orderlist/fetchorderleft/'+order_trans,
+                type: "GET",
+                dataType: "json",
+                success:function(data) {
+                    $.each(data, function(key, value) {
+                        $('#dcpo_left').text('DC PO Qty : ' + value.qty_left);
+                        $('#dcpo_qty').attr("max",value.qty_left);
+                    });
+                }
+            });
+        } else{
+            $('#dcpo_left').text('DC PO Qty : ' + value.qty_left);
+            $('#dcpo_qty').attr("max",value.qty_left);
+        }
     });
     $("#factory_no").select2({
           allowClear: true,

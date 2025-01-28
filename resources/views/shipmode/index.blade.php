@@ -71,7 +71,7 @@
                                 <tbody>
                                     @foreach($shipmodes as $shipmode)
                                     <tr>
-                                        <td>{{ $shipmode->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $shipmode->ship_no }}</td>
                                         <td>{{ $shipmode->ship_name }}</td>
                                         <td align="center">

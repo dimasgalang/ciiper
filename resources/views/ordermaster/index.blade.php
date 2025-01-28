@@ -28,7 +28,11 @@
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Order Master Data</h6>
+                        <div class="row justify-content-between align-items-center" style="margin-left: 5px; margin-right: 5px;">
+                            <h6 class="m-0 font-weight-bold text-primary">Order Master Data</h6>
+                            <a href="{{ route('ordermaster.export') }}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
+                                    class="fas fa-plus fa-sm text-white-50"></i> Export Excel</a>
+                        </div>
                     </div>
                     <div class="card-body">
                         @if ($message = Session::get('success'))
@@ -59,7 +63,7 @@
                         </div>
                         @endif
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="font-size: 8;">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -81,7 +85,7 @@
                                 <tbody>
                                     @foreach($ordermasters as $ordermaster)
                                     <tr>
-                                        <td>{{ $ordermaster->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $ordermaster->order_trans }}</td>
                                         <td>{{ $ordermaster->season_cat }} {{ $ordermaster->season_year }}</td>
                                         <td>{{ $ordermaster->buyer_name }}</td>
@@ -98,7 +102,7 @@
                                             <a href="/ordermaster/find/{{ $ordermaster->id }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a id="show-orderlist" class="btn btn-primary btn-circle btn-sm btn-show-orderlist" data-orderlist-url="{{ route('ordermaster.orderlist', $ordermaster->order_trans) }}" data-rafproduction-url="{{ route('ordermaster.rafproduction', $ordermaster->order_trans) }}" data-rafcutting-url="{{ route('ordermaster.rafcutting', $ordermaster->order_trans) }}" data-rafsewing-url="{{ route('ordermaster.rafsewing', $ordermaster->order_trans) }}" data-rafiron-url="{{ route('ordermaster.rafiron', $ordermaster->order_trans) }}" data-rafpacking-url="{{ route('ordermaster.rafpacking', $ordermaster->order_trans) }}" data-fab-url="{{ route('ordermaster.fab', $ordermaster->order_trans) }}" data-shipment-url="{{ route('ordermaster.shipment', $ordermaster->order_trans) }}" data-style-url="{{ route('ordermaster.style', $ordermaster->order_trans) }}" data-productionplanning-url="{{ route('ordermaster.productionplanning', $ordermaster->order_trans) }}"  data-show-orderlist-link="{{ $ordermaster->order_trans }}" data-show-orderlist-title="{{ $ordermaster->order_trans }}" data-show-image="{{ asset('/sketch/' . $ordermaster->sketch_file) }}">
+                                            <a id="show-orderlist" class="btn btn-primary btn-circle btn-sm btn-show-orderlist" data-orderlist-url="{{ route('ordermaster.orderlist', $ordermaster->order_trans) }}" data-rafproduction-url="{{ route('ordermaster.rafproduction', $ordermaster->order_trans) }}" data-rafcutting-url="{{ route('ordermaster.rafcutting', $ordermaster->order_trans) }}" data-rafsewing-url="{{ route('ordermaster.rafsewing', $ordermaster->order_trans) }}" data-rafiron-url="{{ route('ordermaster.rafiron', $ordermaster->order_trans) }}" data-rafpacking-url="{{ route('ordermaster.rafpacking', $ordermaster->order_trans) }}" data-fab-url="{{ route('ordermaster.fab', $ordermaster->order_trans) }}" data-shipment-url="{{ route('ordermaster.shipment', $ordermaster->order_trans) }}" data-style-url="{{ route('ordermaster.style', $ordermaster->order_trans) }}" data-productionplanning-url="{{ route('ordermaster.productionplanning', $ordermaster->order_trans) }}"  data-show-orderlist-link="{{ $ordermaster->order_trans }}" data-show-orderlist-title="{{ $ordermaster->order_trans }} - {{ $ordermaster->po_master }}" data-show-image="{{ asset('/sketch/' . $ordermaster->sketch_file) }}">
                                                 <i class="fas fa-info"></i>
                                             </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $ordermaster->id }}" data-delete-name="{{ $ordermaster->order_trans }}" data-toggle="modal" data-target="#deleteModal">
@@ -169,14 +173,14 @@
             <div class="modal-dialog modal-xl" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="orderlist-title" class="modal-title" id="exampleModalLabel">Data Karyawan</h5>
+                        <h5 id="orderlist-title" class="modal-title" id="exampleModalLabel"></h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="tab">
-                            <button class="tablinks" onclick="openModal(event, 'Sketch')">Sketch</button>
+                            <button id="tabSketch" class="tablinks" onclick="openModal(event, 'Sketch')">Sketch</button>
                             <button class="tablinks" onclick="openModal(event, 'Order List')">Order List</button>
                             <button class="tablinks" onclick="openModal(event, 'Production Planning')">Production Planning</button>
                             <button class="tablinks" onclick="openModal(event, 'Cutting')">Cutting</button>
@@ -192,7 +196,10 @@
                         <div id="Sketch" class="tabcontent">
                             <br>
                             <div class="row">
-                                <div class="col-xl-12 col-md-6 mb-4">
+                                <div class="col-xl-4 col-md-6 mb-4">
+                                    <center><img id="sketch-PIC" src="" style="width: 80%;"></center>
+                                </div>
+                                <div class="col-xl-8 col-md-6 mb-4">
                                     <div>
                                         <label>STYLE NAME :</label>
                                         <input class="form-control" type="text" id="order_list-style_name" value="" readonly>
@@ -203,7 +210,6 @@
                                         <input class="form-control" type="text" id="order_list-style_desc" value="" readonly>
                                     </div>
                                     <br>
-                                    <center><img id="sketch-PIC" src="" style="width: 80%;"></center>
                                 </div>
                             </div>
                         </div>
@@ -240,6 +246,12 @@
                         </div>
 
                         <div id="Production Planning" class="tabcontent">
+                            <div id="createProductionPlanning">
+                                <br>
+                                <center>
+                                    <a href="{{ route('productionplanning.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_blank"><i
+                                        class="fas fa-plus fa-sm text-white-50"></i> Create Production Planning</a></center>
+                            </div>
                             <br>
                             <div class="row">
                                 <div class="col-xl-12 col-md-6 mb-4">
@@ -274,34 +286,48 @@
                                 </div>
                             </div>
                         </div>
-                          
-                        <!-- <div id="RAF Production" class="tabcontent">
-                            <br>
-                            <div class="row">
-                                <div class="col-xl-12 col-md-6 mb-4">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-modal" id="table-raf-production" width="100%" cellspacing="0">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>RAF No</th>
-                                                    <th>RAF Date</th>
-                                                    <th>Lot</th>
-                                                    <th>PO Buyer</th>
-                                                    <th>RAF Qty</th>
-                                                    <th>Remark</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
+
+                        <div id="Cutting" class="tabcontent">
+                            <div class="d-flex flex-row align-items-center justify-content-between" style="margin-top: 10px;">
+                                <h6 class="m-0 font-weight-bold text-primary"></h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-blue-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                        <!-- <div class="dropdown-header">Action:</div> -->
+                                        <a class="dropdown-item" href="{{ route('rafproduction.create') }}" target="_blank">Create RAF</a>
+                                        <!-- <a class="dropdown-item" href="#">Export Excel</a> -->
                                     </div>
                                 </div>
                             </div>
-                        </div> -->
-
-                        <div id="Cutting" class="tabcontent">
-                            <br>
+                            <div class="row">
+                                <div class="col-xl-12 col-md-6 mb-4">
+                                    <div>
+                                        <label>Search :</label>
+                                        <input class="date form-control" type="text" id="searchCutting" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-6 col-md-6 mb-4">
+                                    <div>
+                                        <label>From Date :</label>
+                                        <input class="date form-control" type="date" id="fromdateCutting" value="">
+                                    </div>
+                                    <br>
+                                    <button id='filter-data-cutting' type="submit" class="btn btn-primary">Filter</button>
+                                </div>
+                                <div class="col-xl-6 col-md-6 mb-4">
+                                    <div>
+                                        <label>To Date :</label>
+                                        <input class="date form-control" type="date" id="todateCutting" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
                             <div class="row">
                                 <div class="col-xl-12 col-md-6 mb-4">
                                     <div class="table-responsive">
@@ -312,12 +338,17 @@
                                                     <th>Lot</th>
                                                     <th>PO Buyer</th>
                                                     <th>DC PO Qty</th>
+                                                    <th>RAF Date</th>
                                                     <th>RAF Qty</th>
+                                                    <th>Total Raf</th>
                                                     <th>Balance</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                             </tbody>
+                                            <tfoot align="right">
+                                                <tr><th colspan="5"></th><th></th><th></th></tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -325,7 +356,46 @@
                         </div>
 
                         <div id="Sewing" class="tabcontent">
-                            <br>
+                            <div class="d-flex flex-row align-items-center justify-content-between" style="margin-top: 10px;">
+                                <h6 class="m-0 font-weight-bold text-primary"></h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-blue-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                        <!-- <div class="dropdown-header">Action:</div> -->
+                                        <a class="dropdown-item" href="{{ route('rafproduction.create') }}" target="_blank">Create RAF</a>
+                                        <!-- <a class="dropdown-item" href="#">Export Excel</a> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-md-6 mb-4">
+                                    <div>
+                                        <label>Search :</label>
+                                        <input class="date form-control" type="text" id="searchSewing" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-6 col-md-6 mb-4">
+                                    <div>
+                                        <label>From Date :</label>
+                                        <input class="date form-control" type="date" id="fromdateSewing" value="">
+                                    </div>
+                                    <br>
+                                    <button id='filter-data-sewing' type="submit" class="btn btn-primary">Filter</button>
+                                </div>
+                                <div class="col-xl-6 col-md-6 mb-4">
+                                    <div>
+                                        <label>To Date :</label>
+                                        <input class="date form-control" type="date" id="todateSewing" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
                             <div class="row">
                                 <div class="col-xl-12 col-md-6 mb-4">
                                     <div class="table-responsive">
@@ -336,7 +406,9 @@
                                                     <th>Lot</th>
                                                     <th>PO Buyer</th>
                                                     <th>DC PO Qty</th>
+                                                    <th>RAF Date</th>
                                                     <th>RAF Qty</th>
+                                                    <th>Total Raf</th>
                                                     <th>Balance</th>
                                                 </tr>
                                             </thead>
@@ -349,7 +421,46 @@
                         </div>
 
                         <div id="Iron" class="tabcontent">
-                            <br>
+                            <div class="d-flex flex-row align-items-center justify-content-between" style="margin-top: 10px;">
+                                <h6 class="m-0 font-weight-bold text-primary"></h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-blue-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                        <!-- <div class="dropdown-header">Action:</div> -->
+                                        <a class="dropdown-item" href="{{ route('rafproduction.create') }}" target="_blank">Create RAF</a>
+                                        <!-- <a class="dropdown-item" href="#">Export Excel</a> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-md-6 mb-4">
+                                    <div>
+                                        <label>Search :</label>
+                                        <input class="date form-control" type="text" id="searchIron" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-6 col-md-6 mb-4">
+                                    <div>
+                                        <label>From Date :</label>
+                                        <input class="date form-control" type="date" id="fromdateIron" value="">
+                                    </div>
+                                    <br>
+                                    <button id='filter-data-iron' type="submit" class="btn btn-primary">Filter</button>
+                                </div>
+                                <div class="col-xl-6 col-md-6 mb-4">
+                                    <div>
+                                        <label>To Date :</label>
+                                        <input class="date form-control" type="date" id="todateIron" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
                             <div class="row">
                                 <div class="col-xl-12 col-md-6 mb-4">
                                     <div class="table-responsive">
@@ -360,7 +471,9 @@
                                                     <th>Lot</th>
                                                     <th>PO Buyer</th>
                                                     <th>DC PO Qty</th>
+                                                    <th>RAF Date</th>
                                                     <th>RAF Qty</th>
+                                                    <th>Total Raf</th>
                                                     <th>Balance</th>
                                                 </tr>
                                             </thead>
@@ -373,7 +486,46 @@
                         </div>
 
                         <div id="Packing" class="tabcontent">
-                            <br>
+                            <div class="d-flex flex-row align-items-center justify-content-between" style="margin-top: 10px;">
+                                <h6 class="m-0 font-weight-bold text-primary"></h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-blue-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                        <!-- <div class="dropdown-header">Action:</div> -->
+                                        <a class="dropdown-item" href="{{ route('rafproduction.create') }}" target="_blank">Create RAF</a>
+                                        <!-- <a class="dropdown-item" href="#">Export Excel</a> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-md-6 mb-4">
+                                    <div>
+                                        <label>Search :</label>
+                                        <input class="date form-control" type="text" id="searchPacking" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-6 col-md-6 mb-4">
+                                    <div>
+                                        <label>From Date :</label>
+                                        <input class="date form-control" type="date" id="fromdatePacking" value="">
+                                    </div>
+                                    <br>
+                                    <button id='filter-data-packing' type="submit" class="btn btn-primary">Filter</button>
+                                </div>
+                                <div class="col-xl-6 col-md-6 mb-4">
+                                    <div>
+                                        <label>To Date :</label>
+                                        <input class="date form-control" type="date" id="todatePacking" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
                             <div class="row">
                                 <div class="col-xl-12 col-md-6 mb-4">
                                     <div class="table-responsive">
@@ -384,7 +536,9 @@
                                                     <th>Lot</th>
                                                     <th>PO Buyer</th>
                                                     <th>DC PO Qty</th>
+                                                    <th>RAF Date</th>
                                                     <th>RAF Qty</th>
+                                                    <th>Total Raf</th>
                                                     <th>Balance</th>
                                                 </tr>
                                             </thead>
@@ -398,11 +552,11 @@
                           
                         <div id="Fabrication" class="tabcontent">
                             <br>
-                            <div class="row">
-                                <div class="col-xl-12 col-md-6 mb-4">
+                            <div class="row" id="dataFabric">
+                                <div class="col-xl-6 col-md-6 mb-4">
                                     <div>
                                         <label>FABRIC MILL :</label>
-                                        <input class="form-control" type="text" id="order_list-fabmill_name" value="" readonly>
+                                        <textarea  class="form-control" type="text" id="order_list-fabmill_name" value="" readonly rows="5"></textarea>
                                     </div>
                                     <br>
                                     <div>
@@ -410,6 +564,8 @@
                                         <textarea  class="form-control" type="text" id="order_list-fabrication" value="" readonly rows="5"></textarea>
                                     </div>
                                     <br>
+                                </div>
+                                <div class="col-xl-6 col-md-6 mb-4">
                                     <div>
                                         <label>PO FABRIC :</label>
                                         <textarea class="form-control" type="text" id="order_list-po_fab" value="" readonly rows="5"></textarea>
@@ -425,6 +581,12 @@
                         </div>
 
                         <div id="Shipment" class="tabcontent">
+                            <div id="createShipment">
+                                <br>
+                                <center>
+                                    <a href="{{ route('shipment.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_blank"><i
+                                        class="fas fa-plus fa-sm text-white-50"></i> Create Shipment</a></center>
+                            </div>
                             <br>
                             <div class="row">
                                 <div class="col-xl-12 col-md-6 mb-4">
@@ -503,6 +665,21 @@
 <!-- Page level plugins -->
 <script src="{{asset('vendor/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
+<script>
+    $( document ).ready(function() {
+        var date = new Date();
+        var firstDay = date.getFullYear() + '-' + ('0' + (date.getMonth(),1)).slice(-2) + '-' + ('0' + 1).slice(-2);
+        var lastDay = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+        document.getElementById("fromdateCutting").value = firstDay;
+        document.getElementById("todateCutting").value = lastDay;
+        document.getElementById("fromdateSewing").value = firstDay;
+        document.getElementById("todateSewing").value = lastDay;
+        document.getElementById("fromdateIron").value = firstDay;
+        document.getElementById("todateIron").value = lastDay;
+        document.getElementById("fromdatePacking").value = firstDay;
+        document.getElementById("todatePacking").value = lastDay;
+    });
+</script>
 
 <!-- Page level custom scripts -->
 <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
@@ -519,9 +696,10 @@
     });
 </script>
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(function () {
         $('body').on('click', '#show-orderlist', function() {
-            $('#orderlistModal').modal('show');
+            // $("#dataSketch").css("display", "none");
+            // document.getElementById("dataSketch").style.display = 'none';
             var jsonOrderList = $(this).data('orderlist-url');
             // var jsonRafProduction = $(this).data('rafproduction-url'); 
             var jsonRafCutting = $(this).data('rafcutting-url'); 
@@ -535,6 +713,7 @@
             var sketchIMG = $(this).data('show-image');
             $('#sketch-PIC').attr('src', sketchIMG);
             $.get(jsonOrderList, function (data) {
+                $('#orderlistModal').modal('show');
                 $('#table-orderlist').DataTable({
                     destroy: true,
                     processing: true,
@@ -553,22 +732,6 @@
             
                     ]
                 });
-                // $('#table-raf-production').DataTable({
-                //     destroy: true,
-                //     processing: true,
-                //     ajax: jsonRafProduction,
-                //     columns: [
-                //         {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-                //         { data: 'raf_no', name: 'raf_no' },
-                //         { data: 'raf_date', name: 'raf_date' },
-                //         { data: 'lot_no', name: 'lot_no' },
-                //         { data: 'pobuyer_no', name: 'pobuyer_no' },
-                //         { data: 'raf_qty', name: 'raf_qty' },
-                //         { data: 'remark', name: 'remark' },
-            
-                //     ]
-                // });
-
                 $('#table-production-planning').DataTable({
                     destroy: true,
                     processing: true,
@@ -596,64 +759,128 @@
                     ]
                 });
 
-                $('#table-raf-cutting').DataTable({
-                    destroy: true,
-                    processing: true,
-                    ajax: jsonRafCutting,
-                    columns: [
-                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-                        { data: 'lot_no', name: 'lot_no' },
-                        { data: 'pobuyer_no', name: 'pobuyer_no' },
-                        { data: 'dcpo_qty', name: 'dcpo_qty' },
-                        { data: 'raf_qty', name: 'raf_qty' },
-                        { data: 'balance', name: 'balance' },
-            
-                    ]
+                $(function () {
+                    var tableCutting = $('#table-raf-cutting').DataTable({
+                        destroy: true,
+                        processing: true,
+                        serverSide: true,
+                        responsive: true,
+                        dom: 'rtip',
+                        ajax: {
+                            url: jsonRafCutting,
+                            data: function (d) {
+                                d.fromdateCutting = document.getElementById('fromdateCutting').value,
+                                d.todateCutting = document.getElementById('todateCutting').value,
+                                d.searchCutting = document.getElementById('searchCutting').value
+                            }
+                        },
+                        columns: [
+                            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                            { data: 'lot_no', name: 'lot_no', orderable: false },
+                            { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
+                            { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
+                            { data: 'raf_date', name: 'raf_date', orderable: false },
+                            { data: 'raf_qty', name: 'raf_qty', orderable: false },
+                            { data: 'totalraf', name: 'totalraf', orderable: false },
+                            { data: 'balance', name: 'balance', orderable: false },
+                        ],
+                    });
+                    $('#filter-data-cutting').click(function(){
+                        tableCutting.draw();
+                    });
                 });
 
-                $('#table-raf-sewing').DataTable({
-                    destroy: true,
-                    processing: true,
-                    ajax: jsonRafSewing,
-                    columns: [
-                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-                        { data: 'lot_no', name: 'lot_no' },
-                        { data: 'pobuyer_no', name: 'pobuyer_no' },
-                        { data: 'dcpo_qty', name: 'dcpo_qty' },
-                        { data: 'raf_qty', name: 'raf_qty' },
-                        { data: 'balance', name: 'balance' },
-            
-                    ]
+                $(function () {
+                    var tableSewing = $('#table-raf-sewing').DataTable({
+                        destroy: true,
+                        processing: true,
+                        serverSide: true,
+                        responsive: true,
+                        dom: 'rtip',
+                        ajax: {
+                            url: jsonRafSewing,
+                            data: function (d) {
+                                d.fromdateSewing = document.getElementById('fromdateSewing').value,
+                                d.todateSewing = document.getElementById('todateSewing').value,
+                                d.searchSewing = document.getElementById('searchSewing').value
+                            }
+                        },
+                        columns: [
+                            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                            { data: 'lot_no', name: 'lot_no', orderable: false },
+                            { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
+                            { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
+                            { data: 'raf_date', name: 'raf_date', orderable: false },
+                            { data: 'raf_qty', name: 'raf_qty', orderable: false },
+                            { data: 'totalraf', name: 'totalraf', orderable: false },
+                            { data: 'balance', name: 'balance', orderable: false },
+                        ],
+                    });
+                    $('#filter-data-sewing').click(function(){
+                        tableSewing.draw();
+                    });
                 });
 
-                $('#table-raf-iron').DataTable({
-                    destroy: true,
-                    processing: true,
-                    ajax: jsonRafIron,
-                    columns: [
-                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-                        { data: 'lot_no', name: 'lot_no' },
-                        { data: 'pobuyer_no', name: 'pobuyer_no' },
-                        { data: 'dcpo_qty', name: 'dcpo_qty' },
-                        { data: 'raf_qty', name: 'raf_qty' },
-                        { data: 'balance', name: 'balance' },
-            
-                    ]
+                $(function () {
+                    var tableIron = $('#table-raf-iron').DataTable({
+                        destroy: true,
+                        processing: true,
+                        serverSide: true,
+                        responsive: true,
+                        dom: 'rtip',
+                        ajax: {
+                            url: jsonRafIron,
+                            data: function (d) {
+                                d.fromdateIron = document.getElementById('fromdateIron').value,
+                                d.todateIron = document.getElementById('todateIron').value,
+                                d.searchIron = document.getElementById('searchIron').value
+                            }
+                        },
+                        columns: [
+                            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                            { data: 'lot_no', name: 'lot_no', orderable: false },
+                            { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
+                            { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
+                            { data: 'raf_date', name: 'raf_date', orderable: false },
+                            { data: 'raf_qty', name: 'raf_qty', orderable: false },
+                            { data: 'totalraf', name: 'totalraf', orderable: false },
+                            { data: 'balance', name: 'balance', orderable: false },
+                        ],
+                    });
+                    $('#filter-data-iron').click(function(){
+                        tableIron.draw();
+                    });
                 });
 
-                $('#table-raf-packing').DataTable({
-                    destroy: true,
-                    processing: true,
-                    ajax: jsonRafPacking,
-                    columns: [
-                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-                        { data: 'lot_no', name: 'lot_no' },
-                        { data: 'pobuyer_no', name: 'pobuyer_no' },
-                        { data: 'dcpo_qty', name: 'dcpo_qty' },
-                        { data: 'raf_qty', name: 'raf_qty' },
-                        { data: 'balance', name: 'balance' },
-            
-                    ]
+                $(function () {
+                    var tablePacking = $('#table-raf-packing').DataTable({
+                        destroy: true,
+                        processing: true,
+                        serverSide: true,
+                        responsive: true,
+                        dom: 'rtip',
+                        ajax: {
+                            url: jsonRafPacking,
+                            data: function (d) {
+                                d.fromdatePacking = document.getElementById('fromdatePacking').value,
+                                d.todatePacking = document.getElementById('todatePacking').value,
+                                d.searchPacking = document.getElementById('searchPacking').value
+                            }
+                        },
+                        columns: [
+                            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                            { data: 'lot_no', name: 'lot_no', orderable: false },
+                            { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
+                            { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
+                            { data: 'raf_date', name: 'raf_date', orderable: false },
+                            { data: 'raf_qty', name: 'raf_qty', orderable: false },
+                            { data: 'totalraf', name: 'totalraf', orderable: false },
+                            { data: 'balance', name: 'balance', orderable: false },
+                        ],
+                    });
+                    $('#filter-data-packing').click(function(){
+                        tablePacking.draw();
+                    });
                 });
 
                 $('#table-shipment').DataTable({
@@ -673,22 +900,17 @@
                 });
             });
             $.get(jsonFab, function (data) {
-                $('#order_list-fabmill_name').val(data[0].fabmill_name);
-                $('#order_list-fabrication').text(data[0].fabrication);
-                $('#order_list-po_fab').text(data[0].po_fab);
-                $('#order_list-etd').text(data[0].etd);
+                    $('#order_list-fabmill_name').text(data[0].fabmill_name);
+                    $('#order_list-fabrication').text(data[0].fabrication);
+                    $('#order_list-po_fab').text(data[0].po_fab);
+                    $('#order_list-etd').text(data[0].etd);
             });
             $.get(jsonStyle, function (data) {
-                $('#order_list-style_name').val(data[0].style_name);
-                $('#order_list-style_desc').val(data[0].style_desc);
+                    $('#order_list-style_name').val(data[0].style_name);
+                    $('#order_list-style_desc').val(data[0].style_desc);
             });
         });
     });
-</script>
-<script type="text/javascript">
-    $(document).ready(function () {
-       
-     });
 </script>
 <script>
 function openModal(evt, tabName) {

@@ -67,7 +67,7 @@
                                 <tbody>
                                     @foreach($moduls as $modul)
                                     <tr>
-                                        <td>{{ $modul->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $modul->judul }}</td>
                                         <td>{{ $modul->generated_name }}</td>
                                         <td align="center">

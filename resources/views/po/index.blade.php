@@ -72,7 +72,7 @@
                                 <tbody>
                                     @foreach($pos as $po)
                                     <tr>
-                                        <td>{{ $po->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $po->po_no }}</td>
                                         <td>{{ $po->po_master }}</td>
                                         <td>{{ $po->po_desc }}</td>

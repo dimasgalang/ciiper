@@ -74,7 +74,7 @@
                             <br>
                             <div>
                                 <label>Departement :</label>
-                                <select class="form-control" id="raf_dept" name="raf_dept">
+                                <select class="form-control" id="raf_dept" name="raf_dept" disabled>
                                     <option></option>
                                     @foreach($productiondepts as $productiondept)
                                     <option value="{{ $productiondept->dept_no }}">{{ $productiondept->dept_name }}</option>
@@ -97,8 +97,8 @@
                             </div>
                             <br>
                             <div>
-                                <label>RAF Qty :</label>
-                                <input class="form-control" type="number" id="raf_qty" name="raf_qty">
+                                <label id="raf_left">RAF Qty :</label>
+                                <input class="form-control" type="number" id="raf_qty" name="raf_qty" min="1" max="1">
                             </div>
                             <br>
                             <div>
@@ -158,15 +158,40 @@
             $('#order_list').attr('disabled','disabled');
         }
     });
+    $(document).on("change", "#order_list", function(e){
+        e.preventDefault();
+        var order_list = $(this).val();
+        if (order_list) {
+            $('#raf_dept').removeAttr('disabled');
+        } else{
+            $('#raf_dept').empty();
+            $('#raf_dept').attr('disabled','disabled');
+        }
+    });
     $("#raf_dept").select2({
           allowClear: true,
           placeholder: 'Choose Departement',
     });
-</script>
-<script type="text/javascript">
-    $('.date').datepicker({
-    format: 'YYYY-MM-DD',
-    locale: 'en'
-  });
+    $(document).on("change", "#raf_dept", function(e){
+        e.preventDefault();
+        var raf_dept = $(this).val();
+        var order_list = document.getElementById('order_list').value;
+        if (raf_dept) {
+            $.ajax({
+                url: '/rafproduction/fetchrafleft/'+order_list+'/'+raf_dept,
+                type: "GET",
+                dataType: "json",
+                success:function(data) {
+                    $.each(data, function(key, value) {
+                        $('#raf_left').text('RAF Qty : ' + value.raf_left);
+                        $('#raf_qty').attr("max",value.raf_left);
+                    });
+                }
+            });
+        } else{
+            $('#raf_left').text('RAF Qty : ' + value.raf_left);
+            $('#raf_qty').attr("max",value.raf_left);
+        }
+    });
 </script>
 </html>

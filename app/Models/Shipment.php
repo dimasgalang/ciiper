@@ -10,9 +10,10 @@ class Shipment extends Model
     use HasFactory;
     public $table = "shipment";
     protected $fillable = [
+        'ship_no',
         'order_list',
         'market_no',
-        'ship_no',
+        'shipmode_no',
         'ship_qty',
         'ship_date',
         'remark',

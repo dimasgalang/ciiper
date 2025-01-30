@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\FabricMillsImport;
 use App\Models\FabricMill;
+use App\Models\SetupIncrement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -36,11 +37,18 @@ class FabricMillController extends Controller
     }
 
     public function create() {
-        return view('fabricmill.create');
+        $setupincements = SetupIncrement::all()->where('models','=','FabricMill')->last();
+        return view('fabricmill.create', compact('setupincements'));
     }
 
     public function store(Request $request)
     {
+        SetupIncrement::updateOrCreate([
+            'models' => 'FabricMill'
+        ],[
+            'models' => 'FabricMill',
+            'last_number' => $request->fabmill_no,
+        ]);
         FabricMill::create([
             'fabmill_no' => $request->fabmill_no,
             'fabmill_name' => $request->fabmill_name,

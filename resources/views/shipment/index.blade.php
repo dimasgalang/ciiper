@@ -63,8 +63,8 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
+                                        <th>Shipment No</th>
                                         <th>Order List</th>
-                                        <th>PO Buyer</th>
                                         <th>Market</th>
                                         <th>Ship Mode</th>
                                         <th>Ship Qty</th>
@@ -77,14 +77,17 @@
                                     @foreach($shipments as $shipment)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $shipment->order_list }}</td>
+                                        <td>{{ $shipment->ship_no }}</td>
                                         <td>{{ $shipment->pobuyer_no }}</td>
                                         <td>{{ $shipment->market_name }}</td>
-                                        <td>{{ $shipment->ship_name }}</td>
+                                        <td>{{ $shipment->shipmode_name }}</td>
                                         <td>{{ $shipment->ship_qty }}</td>
                                         <td>{{ $shipment->ship_date }}</td>
                                         <td>{{ $shipment->remark }}</td>
                                         <td align="center">
+                                            <a href="/shipment/find/{{ $shipment->id }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $shipment->id }}" data-delete-name="{{ $shipment->shipment_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>

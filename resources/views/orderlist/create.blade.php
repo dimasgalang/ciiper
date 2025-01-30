@@ -67,8 +67,8 @@
                             <br>
                             <div>
                                 <label>Order List :</label>
-                                @if($orderlists->id ?? '')
-                                <input class="form-control" type="text" id="order_list" name="order_list" value="{{ 'ORL' . str_pad($orderlists->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @if($setupincements->last_number ?? '')
+                                <input class="form-control" type="text" id="order_list" name="order_list" value="{{ 'ORL' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @else
                                 <input class="form-control" type="text" id="order_list" name="order_list" value="{{ 'ORL' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @endif
@@ -95,7 +95,7 @@
                             <br>
                             <div>
                                 <label id="dcpo_left">DC PO Qty :</label>
-                                <input class="form-control" type="text" id="dcpo_qty" name="dcpo_qty" min="1" max="1" required>
+                                <input class="form-control" type="number" id="dcpo_qty" name="dcpo_qty" min="1" max="0" required>
                             </div>
                             <br>
                             <div>

@@ -22,8 +22,8 @@ class ShipModesImport implements ToModel, WithStartRow
     public function model(array $row)
     {
         return new ShipMode([
-            'ship_no' => $row[1],
-            'ship_name' => $row[2],
+            'shipmode_no' => $row[1],
+            'shipmode_name' => $row[2],
         ]);
     }
 }

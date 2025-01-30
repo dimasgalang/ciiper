@@ -59,10 +59,10 @@
                                 <input class="form-control" type="hidden" id="id" name="id" value="{{ $orderlists->id }}" required readonly>
                             </div>
                             <div>
-                                <label>Order Trans :</label>
+                                <label>Order Master / Master PO :</label>
                                 <select class="form-control" id="order_trans" name="order_trans">
                                     @foreach($ordermasters as $ordermaster)
-                                        <option value="{{ $ordermaster->order_trans }}" {{ $orderlists->order_trans == $ordermaster->order_trans  ? 'selected' : ''}}>{{ $ordermaster->order_trans }}</option>
+                                        <option value="{{ $ordermaster->order_trans }}" {{ $orderlists->order_trans == $ordermaster->order_trans  ? 'selected' : ''}}>{{ $ordermaster->order_trans . ' - ' . $ordermaster->po_master }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -110,7 +110,7 @@
                                 <label>Wash Type :</label>
                                 <select class="form-control" id="wash_no" name="wash_no">
                                     @foreach($washtypes as $washtype)
-                                    <option value="{{ $washtype->wash_no }}" {{ $ordermasters->wash_no == $washtype->wash_no  ? 'selected' : ''}}>{{ $washtype->wash_name }}</option>
+                                    <option value="{{ $washtype->wash_no }}" {{ $orderlists->wash_no == $washtype->wash_no  ? 'selected' : ''}}>{{ $washtype->wash_type }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -119,7 +119,7 @@
                                 <label>Bordir Type :</label>
                                 <select class="form-control" id="bordir_no" name="bordir_no">
                                     @foreach($bordirtypes as $bordirtype)
-                                    <option value="{{ $bordirtype->bordir_no }}" {{ $ordermasters->bordir_no == $bordirtype->bordir_no  ? 'selected' : ''}}>{{ $bordirtype->bordir_name }}</option>
+                                    <option value="{{ $bordirtype->bordir_no }}" {{ $orderlists->bordir_no == $bordirtype->bordir_no  ? 'selected' : ''}}>{{ $bordirtype->bordir_type }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -145,7 +145,16 @@
 </body>
 <script type="text/javascript">
     $("#order_trans").select2({
-          allowClear: true
+          allowClear: true,
+          placeholder: "Choose Master PO"
+    });
+    $("#wash_no").select2({
+          allowClear: true,
+          placeholder: "Choose Wash Type"
+    });
+    $("#bordir_no").select2({
+          allowClear: true,
+          placeholder: "Choose Bordir Type"
     });
 </script>
 </html>

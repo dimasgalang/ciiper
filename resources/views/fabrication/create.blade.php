@@ -56,7 +56,7 @@
                             </div>
                             @endif
                             <div>
-                                <label>Order Master :</label>
+                                <label>Order Master / Master PO :</label>
                                 <select class="form-control" id="order_trans" name="order_trans">
                                     <option></option>
                                     @foreach($ordermasters as $ordermaster)
@@ -67,8 +67,8 @@
                             <br>
                             <div>
                                 <label>Fabrication No :</label>
-                                @if($fabrications->id ?? '')
-                                <input class="form-control" type="text" id="fab_no" name="fab_no" value="{{ 'FAB' . str_pad($fabrications->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @if($setupincements->last_number ?? '')
+                                <input class="form-control" type="text" id="fab_no" name="fab_no" value="{{ 'FAB' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @else
                                 <input class="form-control" type="text" id="fab_no" name="fab_no" value="{{ 'FAB' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @endif

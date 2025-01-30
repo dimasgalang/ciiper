@@ -57,8 +57,8 @@
                             @endif
                             <div>
                                 <label>Factory No :</label>
-                                @if($factorys->id ?? '')
-                                <input class="form-control" type="text" id="factory_no" name="factory_no" value="{{ 'FAC' . str_pad($factorys->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @if($setupincements->last_number ?? '')
+                                <input class="form-control" type="text" id="factory_no" name="factory_no" value="{{ 'FAC' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @else
                                 <input class="form-control" type="text" id="factory_no" name="factory_no" value="{{ 'FAC' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @endif

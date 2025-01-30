@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Imports\WashTypesImport;
+use App\Models\SetupIncrement;
 use App\Models\WashType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -36,12 +37,18 @@ class WashTypeController extends Controller
     }
 
     public function create() {
-        $washtypes = WashType::all()->last();
-        return view('washtype.create', compact('washtypes'));
+        $setupincements = SetupIncrement::all()->where('models','=','WashType')->last();
+        return view('washtype.create', compact('setupincements'));
     }
 
     public function store(Request $request)
     {
+        SetupIncrement::updateOrCreate([
+            'models' => 'WashType'
+        ],[
+            'models' => 'WashType',
+            'last_number' => $request->wash_no,
+        ]);
         WashType::create([
             'wash_no' => $request->wash_no,
             'wash_type' => $request->wash_type,

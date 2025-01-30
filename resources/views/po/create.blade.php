@@ -57,8 +57,8 @@
                             @endif
                             <div>
                                 <label>PO No : </label>
-                                @if(((substr($pos?->po_no,0,4)) == (date('y') . date('n') . 'E')) || ($pos->id ?? ''))
-                                <input class="form-control" type="text" id="po_no" name="po_no" value="{{ 'PO' . str_pad($pos->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @if(((substr($pos?->po_no,0,4)) == (date('y') . date('n') . 'E')) || ($setupincements->last_number ?? ''))
+                                <input class="form-control" type="text" id="po_no" name="po_no" value="{{ 'PO' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @else
                                 <input class="form-control" type="text" id="po_no" name="po_no" value="{{ 'PO' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @endif
@@ -66,19 +66,16 @@
                             <br>
                             <div>
                                 <label>Master PO : </label>
-                                @if(((substr($pos?->po_no,0,4)) == (date('y') . date('n') . 'E')) || ($pos->id ?? ''))
-                                <input class="form-control" type="text" id="po_master" name="po_master" value="{{ date('y') . date('n') . 'E' . str_pad(substr($pos->po_no,-4) + 1,4,'0',STR_PAD_LEFT) }}" readonly>
+                                @if(((substr($pos?->po_master,0,4)) == (date('y') . date('n') . 'E')) || ($setupincements->last_number ?? ''))
+                                <input class="form-control" type="text" id="po_master" name="po_master" value="{{ date('y') . date('n') . 'E' . str_pad(intval(substr($pos?->po_master,-4)) + 1,4,'0',STR_PAD_LEFT) }}" readonly>
                                 @else
                                 <input class="form-control" type="text" id="po_master" name="po_master" value="{{ date('y') . date('n') . 'E' . str_pad(1,4,'0',STR_PAD_LEFT) }}" readonly>
                                 @endif
-                            </div>
-                            <br>
-                            <div>
-                                <label>Master PO Number : </label>
-                                @if(((substr($pos?->po_no,0,4)) == (date('y') . date('n'))) || ($pos->id ?? ''))
-                                <input class="form-control" type="text" id="po_number" name="po_number" value="{{ str_pad(substr($pos->po_no,-4) + 1,4,'0',STR_PAD_LEFT) }}" readonly>
+                                
+                                @if(((substr($pos?->po_master,0,4)) == (date('y') . date('n'))) || ($setupincements->last_number ?? ''))
+                                <input class="form-control" type="hidden" id="po_number" name="po_number" value="{{ str_pad(intval(substr($pos?->po_master,-4)) + 1,4,'0',STR_PAD_LEFT) }}" readonly>
                                 @else
-                                <input class="form-control" type="text" id="po_number" name="po_number" value="{{ str_pad(1,4,'0',STR_PAD_LEFT) }}">
+                                <input class="form-control" type="hidden" id="po_number" name="po_number" value="{{ str_pad(1,4,'0',STR_PAD_LEFT) }}">
                                 @endif
                             </div>
                             <br>

@@ -13,6 +13,7 @@ use App\Models\OrderList;
 use App\Models\OrderMaster;
 use App\Models\RafProduction;
 use App\Models\Season;
+use App\Models\SetupIncrement;
 use App\Models\Style;
 use App\Models\WashType;
 use Illuminate\Http\Request;
@@ -71,7 +72,7 @@ class OrderListController extends Controller
     }
 
     public function create() {
-        $orderlists = OrderList::all()->last();
+        $setupincements = SetupIncrement::all()->where('models','=','OrderList')->last();
         $ordermasters = OrderMaster::select('order_master.*','purchase_order.po_master')
         ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
         ->get();
@@ -83,11 +84,17 @@ class OrderListController extends Controller
         $factorys = Factory::all();
         $washtypes = WashType::all();
         $bordirtypes = BordirType::all();
-        return view('orderlist.create', compact('orderlists','ordermasters','seasons','buyers','brands','styles','followups','factorys','washtypes','bordirtypes'));
+        return view('orderlist.create', compact('setupincements','ordermasters','seasons','buyers','brands','styles','followups','factorys','washtypes','bordirtypes'));
     }
 
     public function store(Request $request)
     {
+        SetupIncrement::updateOrCreate([
+            'models' => 'OrderList'
+        ],[
+            'models' => 'OrderList',
+            'last_number' => $request->order_list,
+        ]);
         OrderList::create([
             'order_trans' => $request->order_trans,
             'order_list' => $request->order_list,
@@ -127,15 +134,21 @@ class OrderListController extends Controller
     }
 
     public function find($id) {
-        $orderlists = OrderList::find($id);  
-        $ordermasters = OrderMaster::all();  
+        $orderlists = OrderList::find($id);
+        $ordermasters = OrderMaster::select('order_master.po_no','purchase_order.po_master','order_list.*')
+        ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
+        ->leftJoin('order_list','order_master.order_trans','=','order_list.order_trans')
+        ->where('order_list.id','=',$id)
+        ->get();
         $seasons = Season::all();
         $buyers = Buyer::all();
         $brands = Brand::all();
         $styles = Style::all();
         $followups = FollowUp::all();
         $factorys = Factory::all();
-        return view('orderlist.update', compact('orderlists','ordermasters','seasons','buyers','brands','styles','followups','factorys'));
+        $washtypes = WashType::all();
+        $bordirtypes = BordirType::all();
+        return view('orderlist.update', compact('orderlists','ordermasters','seasons','buyers','brands','styles','followups','factorys','washtypes','bordirtypes'));
     }
 
     public function update(Request $request)

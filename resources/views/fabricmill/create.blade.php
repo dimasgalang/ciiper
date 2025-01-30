@@ -57,8 +57,8 @@
                             @endif
                             <div>
                                 <label>Fabric Mill No :</label>
-                                @if($fabricmills->id ?? '')
-                                <input class="form-control" type="text" id="fabmill_no" name="fabmill_no" value="{{ 'FBM' . str_pad($fabricmills->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @if($setupincements->last_number ?? '')
+                                <input class="form-control" type="text" id="fabmill_no" name="fabmill_no" value="{{ 'FBM' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @else
                                 <input class="form-control" type="text" id="fabmill_no" name="fabmill_no" value="{{ 'FBM' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @endif

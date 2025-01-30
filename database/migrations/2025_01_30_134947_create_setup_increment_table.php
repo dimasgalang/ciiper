@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ship_mode', function (Blueprint $table) {
+        Schema::create('setup_increment', function (Blueprint $table) {
             $table->id();
-            $table->string('shipmode_no')->unique();
-            $table->string('shipmode_name');
+            $table->string('models');
+            $table->string('last_number');
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ship_mode');
+        Schema::dropIfExists('setup_increment');
     }
 };

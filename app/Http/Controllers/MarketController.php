@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\MarketsImport;
 use App\Models\Market;
+use App\Models\SetupIncrement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -36,12 +37,18 @@ class MarketController extends Controller
     }
 
     public function create() {
-        $markets = Market::all()->last();
-        return view('market.create', compact('markets'));
+        $setupincements = SetupIncrement::all()->where('models','=','Market')->last();
+        return view('market.create', compact('setupincements'));
     }
 
     public function store(Request $request)
     {
+        SetupIncrement::updateOrCreate([
+            'models' => 'Market'
+        ],[
+            'models' => 'Market',
+            'last_number' => $request->market_no,
+        ]);
         Market::create([
             'market_no' => $request->market_no,
             'market_name' => $request->market_name,

@@ -57,8 +57,8 @@
                             @endif
                             <div>
                                 <label>Follow Up No :</label>
-                                @if($followups->id ?? '')
-                                <input class="form-control" type="text" id="fu_no" name="fu_no" value="{{ 'FOL' . str_pad($followups->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @if($setupincements->last_number ?? '')
+                                <input class="form-control" type="text" id="fu_no" name="fu_no" value="{{ 'FOL' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @else
                                 <input class="form-control" type="text" id="fu_no" name="fu_no" value="{{ 'FOL' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @endif

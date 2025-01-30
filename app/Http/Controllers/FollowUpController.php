@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Imports\FollowUpsImport;
 use App\Models\FollowUp;
+use App\Models\SetupIncrement;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
@@ -36,12 +37,19 @@ class FollowUpController extends Controller
     }
 
     public function create() {
-        $followups = FollowUp::all()->last();
-        return view('followup.create', compact('followups'));
+        $setupincements = SetupIncrement::all()->where('models','=','FollowUp')->last();
+        return view('followup.create', compact('setupincements'));
     }
 
     public function store(Request $request)
     {
+        SetupIncrement::updateOrCreate([
+            'models' => 'FollowUp'
+        ],[
+            'models' => 'FollowUp',
+            'last_number' => $request->fu_no,
+        ]);
+
         FollowUp::create([
             'fu_no' => $request->fu_no,
             'fu_name' => $request->fu_name,

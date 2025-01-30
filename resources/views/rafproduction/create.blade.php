@@ -56,7 +56,7 @@
                             </div>
                             @endif
                             <div>
-                                <label>Order Master :</label>
+                                <label>Order Master / Master PO :</label>
                                 <select class="form-control" id="order_trans" name="order_trans">
                                     <option></option>
                                     @foreach($ordermasters as $ordermaster)
@@ -66,7 +66,7 @@
                             </div>
                             <br>
                             <div>
-                                <label>Order List :</label>
+                                <label>Lot / PO Buyer :</label>
                                 <select class="form-control" id="order_list" name="order_list" disabled>
                                     <option></option>
                                 </select>
@@ -84,8 +84,8 @@
                             <br>
                             <div>
                                 <label>RAF No :</label>
-                                @if($rafs->id ?? '')
-                                <input class="form-control" type="text" id="raf_no" name="raf_no" value="{{ 'RAF' . str_pad($rafs->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @if($setupincements->last_number ?? '')
+                                <input class="form-control" type="text" id="raf_no" name="raf_no" value="{{ 'RAF' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @else
                                 <input class="form-control" type="text" id="raf_no" name="raf_no" value="{{ 'RAF' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @endif
@@ -182,10 +182,15 @@
                 type: "GET",
                 dataType: "json",
                 success:function(data) {
-                    $.each(data, function(key, value) {
-                        $('#raf_left').text('RAF Qty : ' + value.raf_left);
-                        $('#raf_qty').attr("max",value.raf_left);
-                    });
+                    if (data.length > 0) {
+                        $.each(data, function(key, value) {
+                            $('#raf_left').text('RAF Qty : ' + value.raf_left);
+                            $('#raf_qty').attr("max",value.raf_left);
+                        });
+                    } else {
+                        $('#raf_left').text('RAF Qty : ' + 0);
+                        $('#raf_qty').attr("max",0);
+                    }
                 }
             });
         } else{

@@ -208,6 +208,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/rafproduction/delete/{id}', [RafProductionController::class, 'delete'])->name('rafproduction.delete');
     Route::get('/rafproduction/create', [RafProductionController::class, 'create'])->name('rafproduction.create');
     Route::post('/rafproduction/store', [RafProductionController::class, 'store'])->name('rafproduction.store');
+    Route::get('/rafproduction/find/{id}', [RafProductionController::class, 'find'])->name('rafproduction.find');
+    Route::post('/rafproduction/update', [RafProductionController::class, 'update'])->name('rafproduction.update');
     Route::get('/rafproduction/fetchorderlist/{order_trans}', [RafProductionController::class, 'fetchorderlist'])->name('rafproduction.fetchorderlist');
     Route::get('/rafproduction/fetchrafleft/{order_list}/{raf_dept}', [RafProductionController::class, 'fetchrafleft'])->name('rafproduction.fetchrafleft');
     
@@ -232,7 +234,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/shipment/delete/{id}', [ShipmentController::class, 'delete'])->name('shipment.delete');
     Route::get('/shipment/create', [ShipmentController::class, 'create'])->name('shipment.create');
     Route::post('/shipment/store', [ShipmentController::class, 'store'])->name('shipment.store');
+    Route::get('/shipment/find/{id}', [ShipmentController::class, 'find'])->name('shipment.find');
+    Route::post('/shipment/update', [ShipmentController::class, 'update'])->name('shipment.update');
     Route::get('/shipment/fetchorderlist/{order_trans}', [ShipmentController::class, 'fetchorderlist'])->name('shipment.fetchorderlist');
+    Route::get('/shipment/fetchreadyship/{order_list}', [ShipmentController::class, 'fetchreadyship'])->name('shipment.fetchreadyship');
     
     //Production Dept
     Route::get('/productiondept/index', [ProductionDeptController::class, 'index'])->name('productiondept.index');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Imports\ShipModesImport;
+use App\Models\SetupIncrement;
 use App\Models\ShipMode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -36,15 +37,21 @@ class ShipModeController extends Controller
     }
 
     public function create() {
-        $shipmodes = ShipMode::all()->last();
-        return view('shipmode.create', compact('shipmodes'));
+        $setupincements = SetupIncrement::all()->where('models','=','ShipMode')->last();
+        return view('shipmode.create', compact('setupincements'));
     }
 
     public function store(Request $request)
     {
+        SetupIncrement::updateOrCreate([
+            'models' => 'ShipMode'
+        ],[
+            'models' => 'ShipMode',
+            'last_number' => $request->shipmode_no,
+        ]);
         ShipMode::create([
-            'ship_no' => $request->ship_no,
-            'ship_name' => $request->ship_name,
+            'shipmode_no' => $request->shipmode_no,
+            'shipmode_name' => $request->shipmode_name,
         ]);
 
         return redirect()
@@ -68,8 +75,8 @@ class ShipModeController extends Controller
         $shipmodes = ShipMode::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
-            'ship_no' => 'required|max:225|',
-            'ship_name' => 'required|max:255',
+            'shipmode_no' => 'required|max:225|',
+            'shipmode_name' => 'required|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -79,8 +86,8 @@ class ShipModeController extends Controller
         }
 
         $shipmodes->fill([
-            'ship_no' => $request->ship_no,
-            'ship_name' => $request->ship_name,
+            'shipmode_no' => $request->shipmode_no,
+            'shipmode_name' => $request->shipmode_name,
         ]);
 
         $shipmodes->save();

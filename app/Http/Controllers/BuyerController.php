@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\BuyersImport;
 use App\Models\Buyer;
+use App\Models\SetupIncrement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -36,12 +37,18 @@ class BuyerController extends Controller
     }
 
     public function create() {
-        $buyers = Buyer::all()->last();
-        return view('buyer.create', compact('buyers'));
+        $setupincements = SetupIncrement::all()->where('models','=','Buyer')->last();
+        return view('buyer.create', compact('setupincements'));
     }
 
     public function store(Request $request)
     {
+        SetupIncrement::updateOrCreate([
+            'models' => 'Buyer'
+        ],[
+            'models' => 'Buyer',
+            'last_number' => $request->buyer_no,
+        ]);
         Buyer::create([
             'buyer_no' => $request->buyer_no,
             'buyer_name' => $request->buyer_name,

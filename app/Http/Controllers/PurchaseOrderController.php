@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\PurchaseOrdersImport;
 use App\Models\PurchaseOrder;
+use App\Models\SetupIncrement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -37,12 +38,20 @@ class PurchaseOrderController extends Controller
     
     public function create() {
         $pos = PurchaseOrder::all()->last();
+        $setupincements = SetupIncrement::all()->where('models','=','PurchaseOrder')->last();
         $potypes = ['E', 'C', 'K'];
-        return view('po.create', compact('pos', 'potypes'));
+        // dd($pos);
+        return view('po.create', compact('pos', 'potypes','setupincements'));
     }
 
     public function store(Request $request)
     {
+        SetupIncrement::updateOrCreate([
+            'models' => 'PurchaseOrder'
+        ],[
+            'models' => 'PurchaseOrder',
+            'last_number' => $request->po_no,
+        ]);
         PurchaseOrder::create([
             'po_no' => $request->po_no,
             'po_master' => $request->po_master,

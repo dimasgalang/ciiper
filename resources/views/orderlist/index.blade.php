@@ -111,9 +111,11 @@
                                             </td>
                                         @endif
                                         <td>
+                                            @if($orderlist->status !== 'Finish')
                                             <a class="btn btn-success btn-circle btn-sm btn-change-record" data-change-link="change/{{ $orderlist->id }}" data-change-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#changeModal">
                                                 <i class="fas fa-check-square"></i>
                                             </a>
+                                            @endif
                                             <a href="/orderlist/find/{{ $orderlist->id }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
@@ -212,18 +214,20 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="row">
-                            <div class="col-xl-12 col-md-6 mb-4">
+                        <div class="row" id="dataFabric">
+                            <div class="col-xl-6 col-md-6 mb-4">
                                 <div>
                                     <label>FABRIC MILL :</label>
-                                    <input class="form-control" type="text" id="order_list-fabmill_name" value="" readonly>
+                                    <textarea  class="form-control" type="text" id="order_list-fabmill_name" value="" readonly rows="5"></textarea>
                                 </div>
                                 <br>
                                 <div>
                                     <label>FABRICATION :</label>
-                                    <textarea  class="form-control" type="text" id="order_list-fabrication" value="" readonly rows="20"></textarea>
+                                    <textarea  class="form-control" type="text" id="order_list-fabrication" value="" readonly rows="5"></textarea>
                                 </div>
                                 <br>
+                            </div>
+                            <div class="col-xl-6 col-md-6 mb-4">
                                 <div>
                                     <label>PO FABRIC :</label>
                                     <textarea class="form-control" type="text" id="order_list-po_fab" value="" readonly rows="5"></textarea>

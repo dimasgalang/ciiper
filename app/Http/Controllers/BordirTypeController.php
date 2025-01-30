@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\BordirTypesImport;
 use App\Models\BordirType;
+use App\Models\SetupIncrement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -36,12 +37,18 @@ class BordirTypeController extends Controller
     }
 
     public function create() {
-        $bordirtypes = BordirType::all()->last();
-        return view('bordirtype.create', compact('bordirtypes'));
+        $setupincements = SetupIncrement::all()->where('models','=','BordirType')->last();
+        return view('bordirtype.create', compact('setupincements'));
     }
 
     public function store(Request $request)
     {
+        SetupIncrement::updateOrCreate([
+            'models' => 'BordirType'
+        ],[
+            'models' => 'BordirType',
+            'last_number' => $request->bordir_no,
+        ]);
         BordirType::create([
             'bordir_no' => $request->bordir_no,
             'bordir_type' => $request->bordir_type,

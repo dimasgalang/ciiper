@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Imports\BrandsImport;
 use App\Models\Brand;
 use App\Models\Buyer;
+use App\Models\SetupIncrement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -40,13 +41,19 @@ class BrandController extends Controller
 
     public function create() {
         $buyers   = Buyer::all();
-        $brands = Brand::all()->last();
+        $setupincements = SetupIncrement::all()->where('models','=','Brand')->last();
         $genders = ['Mens', 'Ladies'];
-        return view('brand.create', compact('buyers', 'brands', 'genders'));
+        return view('brand.create', compact('buyers', 'setupincements', 'genders'));
     }
 
     public function store(Request $request)
     {
+        SetupIncrement::updateOrCreate([
+            'models' => 'Brand'
+        ],[
+            'models' => 'Brand',
+            'last_number' => $request->brand_no,
+        ]);
         Brand::create([
             'buyer_no' => $request->buyer_no,
             'brand_no' => $request->brand_no,

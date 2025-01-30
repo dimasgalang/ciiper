@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\FactorysImport;
 use App\Models\Factory;
+use App\Models\SetupIncrement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -36,12 +37,18 @@ class FactoryController extends Controller
     }
 
     public function create() {
-        $factorys = Factory::all()->last();
-        return view('factory.create', compact('factorys'));
+        $setupincements = SetupIncrement::all()->where('models','=','Factory')->last();
+        return view('factory.create', compact('setupincements'));
     }
 
     public function store(Request $request)
     {
+        SetupIncrement::updateOrCreate([
+            'models' => 'Factory'
+        ],[
+            'models' => 'Factory',
+            'last_number' => $request->factory_no,
+        ]);
         Factory::create([
             'factory_no' => $request->factory_no,
             'factory_name' => $request->factory_name,

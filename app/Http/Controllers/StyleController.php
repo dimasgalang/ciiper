@@ -7,6 +7,7 @@ use App\Imports\StylesImport;
 use App\Models\Brand;
 use App\Models\Style;
 use App\Models\Buyer;
+use App\Models\SetupIncrement;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
@@ -41,12 +42,18 @@ class StyleController extends Controller
 
     public function create() {
         $brands   = Brand::all();
-        $styles = Style::all()->last();
-        return view('style.create', compact('brands', 'styles'));
+        $setupincements = SetupIncrement::all()->where('models','=','Style')->last();
+        return view('style.create', compact('brands', 'setupincements'));
     }
 
     public function store(Request $request)
     {
+        SetupIncrement::updateOrCreate([
+            'models' => 'Style'
+        ],[
+            'models' => 'Style',
+            'last_number' => $request->style_no,
+        ]);
         Style::create([
             'brand_no' => $request->brand_no,
             'style_no' => $request->style_no,

@@ -56,17 +56,17 @@
                             </div>
                             @endif
                             <div>
-                                <label>Ship No :</label>
-                                @if($shipmodes->id ?? '')
-                                <input class="form-control" type="text" id="ship_no" name="ship_no" value="{{ 'SHM' . str_pad($shipmodes->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                <label>Ship Mode No :</label>
+                                @if($setupincements->last_number ?? '')
+                                <input class="form-control" type="text" id="shipmode_no" name="shipmode_no" value="{{ 'SHM' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @else
-                                <input class="form-control" type="text" id="ship_no" name="ship_no" value="{{ 'SHM' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                <input class="form-control" type="text" id="shipmode_no" name="shipmode_no" value="{{ 'SHM' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @endif
                             </div>
                             <br>
                             <div>
                                 <label>Ship Mode Name :</label>
-                                <input class="form-control" type="text" id="ship_name" name="ship_name" required>
+                                <input class="form-control" type="text" id="shipmode_name" name="shipmode_name" required>
                             </div>
                             <br>
                             <div class="row">

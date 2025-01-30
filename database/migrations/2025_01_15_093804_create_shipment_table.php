@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('shipment', function (Blueprint $table) {
             $table->id();
+            $table->string('ship_no')->unique();
             $table->string('order_list')->unique();
             $table->string('market_no');
             $table->string('ship_no');

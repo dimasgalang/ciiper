@@ -60,10 +60,10 @@
                             </div>
                             <div>
                                 <label>Order Trans :</label>
-                                <select class="form-control" id="order_trans" name="order_trans">
+                                <select class="form-control" id="order_trans" name="order_trans" readonly>
                                     <option></option>
                                     @foreach($ordermasters as $ordermaster)
-                                        <option value="{{ $ordermaster->order_trans }}" {{ $fabrications->order_trans == $ordermaster->order_trans  ? 'selected' : ''}}>{{ $ordermaster->order_trans }}</option>
+                                        <option value="{{ $ordermaster->order_trans }}" {{ $fabrications->order_trans == $ordermaster->order_trans  ? 'selected' : ''}}>{{ $ordermaster->order_trans }} - {{ $ordermaster->po_master }}</option>
                                     @endforeach
                                 </select>
                             </div>

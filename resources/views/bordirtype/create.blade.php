@@ -57,8 +57,8 @@
                             @endif
                             <div>
                                 <label>Bordir Type No :</label>
-                                @if($bordirtypes->id ?? '')
-                                <input class="form-control" type="text" id="bordir_no" name="bordir_no" value="{{ 'BOR' . str_pad($bordirtypes->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @if($setupincements->last_number ?? '')
+                                <input class="form-control" type="text" id="bordir_no" name="bordir_no" value="{{ 'BOR' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @else
                                 <input class="form-control" type="text" id="bordir_no" name="bordir_no" value="{{ 'BOR' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @endif

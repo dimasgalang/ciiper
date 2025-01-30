@@ -60,12 +60,12 @@
                             </div>
                             <div>
                                 <label>Ship Mode No :</label>
-                                <input class="form-control" type="text" id="ship_no" name="ship_no" value="{{ $shipmodes->ship_no }}" required readonly>
+                                <input class="form-control" type="text" id="shipmode_no" name="shipmode_no" value="{{ $shipmodes->shipmode_no }}" required readonly>
                             </div>
                             <br>
                             <div>
                                 <label>Ship Mode Name :</label>
-                                <input class="form-control" type="text" id="ship_name" name="ship_name" value="{{ $shipmodes->ship_name }}">
+                                <input class="form-control" type="text" id="shipmode_name" name="shipmode_name" value="{{ $shipmodes->shipmode_name }}">
                             </div>
                             <br>
                             <div class="row">

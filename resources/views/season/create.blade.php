@@ -57,8 +57,8 @@
                             @endif
                             <div>
                                 <label>Season No :</label>
-                                @if($seasons->id ?? '')
-                                <input class="form-control" type="text" id="season_no" name="season_no" value="{{ 'SEA' . str_pad($seasons->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @if($setupincements->last_number ?? '')
+                                <input class="form-control" type="text" id="season_no" name="season_no" value="{{ 'SEA' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @else
                                 <input class="form-control" type="text" id="season_no" name="season_no" value="{{ 'SEA' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @endif

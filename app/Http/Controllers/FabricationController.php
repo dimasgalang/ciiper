@@ -6,6 +6,7 @@ use App\Imports\FabricationsImport;
 use App\Models\Fabrication;
 use App\Models\FabricMill;
 use App\Models\OrderMaster;
+use App\Models\SetupIncrement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -45,13 +46,19 @@ class FabricationController extends Controller
         $ordermasters = OrderMaster::select('order_master.*', 'purchase_order.po_master')
         ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
         ->get();
-        $fabrications = Fabrication::all()->last();
+        $setupincements = SetupIncrement::all()->where('models','=','Fabrication')->last();
         $fabmills = FabricMill::all();
-        return view('fabrication.create', compact('ordermasters', 'fabrications','fabmills'));
+        return view('fabrication.create', compact('ordermasters', 'setupincements','fabmills'));
     }
 
     public function store(Request $request)
     {
+        SetupIncrement::updateOrCreate([
+            'models' => 'Fabrication'
+        ],[
+            'models' => 'Fabrication',
+            'last_number' => $request->fab_no,
+        ]);
         Fabrication::create([
             'order_trans' => $request->order_trans,
             'fab_no' => $request->fab_no,
@@ -74,7 +81,11 @@ class FabricationController extends Controller
 
     public function find($id) {
         $fabrications = Fabrication::find($id);
-        $ordermasters = OrderMaster::all();
+        $ordermasters = OrderMaster::select('order_master.po_no','purchase_order.po_master','fabrication.*')
+        ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
+        ->leftJoin('fabrication','order_master.order_trans','=','fabrication.order_trans')
+        ->where('fabrication.id', '=', $id)
+        ->get();
         $fabmills = FabricMill::all();
         return view('fabrication.update', compact('fabrications','ordermasters','fabmills'));
     }

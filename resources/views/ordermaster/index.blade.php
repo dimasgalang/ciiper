@@ -194,6 +194,21 @@
                           
                         <!-- Tab content -->
                         <div id="Sketch" class="tabcontent">
+                            <div class="d-flex flex-row align-items-center justify-content-between" style="margin-top: 10px;">
+                                <h6 class="m-0 font-weight-bold text-primary"></h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-blue-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                        <!-- <div class="dropdown-header">Action:</div> -->
+                                        <a id="updateSketchLink" class="dropdown-item" href="" target="_blank">Update Sketch</a>
+                                        <!-- <a class="dropdown-item" href="#">Export Excel</a> -->
+                                    </div>
+                                </div>
+                            </div>
                             <br>
                             <div class="row">
                                 <div class="col-xl-4 col-md-6 mb-4">
@@ -215,6 +230,21 @@
                         </div>
 
                         <div id="Order List" class="tabcontent">
+                            <div class="d-flex flex-row align-items-center justify-content-between" style="margin-top: 10px;">
+                                <h6 class="m-0 font-weight-bold text-primary"></h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-blue-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                        <!-- <div class="dropdown-header">Action:</div> -->
+                                        <a class="dropdown-item" href="{{ route('orderlist.create') }}" target="_blank">Create Order List</a>
+                                        <!-- <a class="dropdown-item" href="#">Export Excel</a> -->
+                                    </div>
+                                </div>
+                            </div>
                             <br>
                             <div class="row">
                                 <!-- <div class="col-xl-3 col-md-6 mb-4">
@@ -246,11 +276,20 @@
                         </div>
 
                         <div id="Production Planning" class="tabcontent">
-                            <div id="createProductionPlanning">
-                                <br>
-                                <center>
-                                    <a href="{{ route('productionplanning.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_blank"><i
-                                        class="fas fa-plus fa-sm text-white-50"></i> Create Production Planning</a></center>
+                            <div class="d-flex flex-row align-items-center justify-content-between" style="margin-top: 10px;">
+                                <h6 class="m-0 font-weight-bold text-primary"></h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-blue-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                        <!-- <div class="dropdown-header">Action:</div> -->
+                                        <a class="dropdown-item" href="{{ route('productionplanning.create') }}" target="_blank">Create Production Planning</a>
+                                        <!-- <a class="dropdown-item" href="#">Export Excel</a> -->
+                                    </div>
+                                </div>
                             </div>
                             <br>
                             <div class="row">
@@ -551,6 +590,21 @@
                         </div>
                           
                         <div id="Fabrication" class="tabcontent">
+                            <div class="d-flex flex-row align-items-center justify-content-between" style="margin-top: 10px;">
+                                <h6 class="m-0 font-weight-bold text-primary"></h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-blue-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                        <!-- <div class="dropdown-header">Action:</div> -->
+                                        <a id="updateFabricationLink" class="dropdown-item" href="" target="_blank">Update Fabrication</a>
+                                        <!-- <a class="dropdown-item" href="#">Export Excel</a> -->
+                                    </div>
+                                </div>
+                            </div>
                             <br>
                             <div class="row" id="dataFabric">
                                 <div class="col-xl-6 col-md-6 mb-4">
@@ -581,11 +635,20 @@
                         </div>
 
                         <div id="Shipment" class="tabcontent">
-                            <div id="createShipment">
-                                <br>
-                                <center>
-                                    <a href="{{ route('shipment.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_blank"><i
-                                        class="fas fa-plus fa-sm text-white-50"></i> Create Shipment</a></center>
+                            <div class="d-flex flex-row align-items-center justify-content-between" style="margin-top: 10px;">
+                                <h6 class="m-0 font-weight-bold text-primary"></h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-blue-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                        <!-- <div class="dropdown-header">Action:</div> -->
+                                        <a class="dropdown-item" href="{{ route('shipment.create') }}" target="_blank">Create Shipment</a>
+                                        <!-- <a class="dropdown-item" href="#">Export Excel</a> -->
+                                    </div>
+                                </div>
                             </div>
                             <br>
                             <div class="row">
@@ -720,7 +783,7 @@
                     ajax: jsonOrderList,
                     columns: [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-                        { data: 'factory_no', name: 'factory_no' },
+                        { data: 'factory_name', name: 'factory_name' },
                         { data: 'lot_no', name: 'lot_no' },
                         { data: 'pobuyer_no', name: 'pobuyer_no' },
                         { data: 'dcpo_dzn', name: 'dcpo_dzn' },
@@ -891,7 +954,7 @@
                         {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                         { data: 'pobuyer_no', name: 'pobuyer_no' },
                         { data: 'market_name', name: 'market_name' },
-                        { data: 'ship_name', name: 'ship_name' },
+                        { data: 'shipmode_name', name: 'shipmode_name' },
                         { data: 'ship_qty', name: 'ship_qty' },
                         { data: 'ship_date', name: 'ship_date' },
                         { data: 'remark', name: 'remark' },
@@ -900,14 +963,38 @@
                 });
             });
             $.get(jsonFab, function (data) {
-                    $('#order_list-fabmill_name').text(data[0].fabmill_name);
-                    $('#order_list-fabrication').text(data[0].fabrication);
-                    $('#order_list-po_fab').text(data[0].po_fab);
-                    $('#order_list-etd').text(data[0].etd);
+                var link;
+                if (data.length > 0) {
+                    $('#order_list-fabmill_name').text(data[0]?.fabmill_name);
+                    $('#order_list-fabrication').text(data[0]?.fabrication);
+                    $('#order_list-po_fab').text(data[0]?.po_fab);
+                    $('#order_list-etd').text(data[0]?.etd);
+                    $(document).ready(function() {
+                        link = "/fabrication/find/" + data[0]?.id;
+                        $('#updateFabricationLink').text("Update Fabrication");
+                        $('#updateFabricationLink').attr('href', link);
+                    });
+                } else {
+                    link = "/fabrication/create/";
+                    $('#updateFabricationLink').text("Create Fabrication");
+                    $('#updateFabricationLink').attr('href', link);
+                    $('#order_list-fabmill_name').text("");
+                    $('#order_list-fabrication').text("");
+                    $('#order_list-po_fab').text("");
+                    $('#order_list-etd').text("");
+                }
             });
             $.get(jsonStyle, function (data) {
+                if (data.length > 0) {
                     $('#order_list-style_name').val(data[0].style_name);
                     $('#order_list-style_desc').val(data[0].style_desc);
+                    $(document).ready(function() {
+                        var link = "/style/find/" + data[0].id;
+                        $('#updateSketchLink').attr('href', link);
+                    });
+                } else {
+
+                }
             });
         });
     });

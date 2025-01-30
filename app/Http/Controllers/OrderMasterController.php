@@ -15,6 +15,7 @@ use App\Models\ProductionPlanning;
 use App\Models\PurchaseOrder;
 use App\Models\RafProduction;
 use App\Models\Season;
+use App\Models\SetupIncrement;
 use App\Models\Shipment;
 use App\Models\Style;
 use App\Models\WashType;
@@ -44,29 +45,30 @@ class OrderMasterController extends Controller
     }
 
     public function create() {
-        $ordermasters = OrderMaster::all()->last();
+        $setupincements = SetupIncrement::all()->where('models','=','OrderMaster')->last();
         $seasons = Season::all();
         $buyers = Buyer::all();
         $brands = Brand::all();
         $styles = Style::all();
         $followups = FollowUp::all();
         $pos = PurchaseOrder::all();
-        return view('ordermaster.create', compact('ordermasters','seasons','buyers','brands','styles','followups','pos'));
+        return view('ordermaster.create', compact('setupincements','seasons','buyers','brands','styles','followups','pos'));
     }
 
     public function showlist($order_trans) {
-        $orderlists = OrderList::select('order_list.factory_no', 'order_list.lot_no','order_list.pobuyer_no','order_list.ex_factory_date','order_list.vsl_date','order_list.dcpo_qty', DB::raw('round(order_list.dcpo_qty/12,2) as dcpo_dzn'), DB::raw('(sum(coalesce(if(raf_production.raf_dept = "DEP000000004", raf_production.raf_qty, 0),0))-order_list.dcpo_qty) as balance'), DB::raw('round(sum(if(raf_production.raf_dept = "DEP000000004", raf_production.raf_qty, 0)),2) as sum_raf_qty'))
+        $orderlists = OrderList::select('factory.factory_name','order_list.factory_no', 'order_list.lot_no','order_list.pobuyer_no','order_list.ex_factory_date','order_list.vsl_date','order_list.dcpo_qty', DB::raw('round(order_list.dcpo_qty/12,2) as dcpo_dzn'), DB::raw('(sum(coalesce(if(raf_production.raf_dept = "DEP000000004", raf_production.raf_qty, 0),0))-order_list.dcpo_qty) as balance'), DB::raw('round(sum(if(raf_production.raf_dept = "DEP000000004", raf_production.raf_qty, 0)),2) as sum_raf_qty'))
         ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
         ->leftJoin('raf_production','order_list.order_list', '=', 'raf_production.order_list')
+        ->leftJoin('factory','factory.factory_no', '=', 'order_list.factory_no')
         ->where('order_list.order_trans', '=', $order_trans)
-        ->groupBy('order_list.order_trans', 'order_list.factory_no', 'order_list.lot_no','order_list.pobuyer_no', 'order_list.ex_factory_date', 'order_list.vsl_date','order_list.dcpo_qty')
+        ->groupBy('order_list.order_trans', 'order_list.factory_no', 'order_list.lot_no','order_list.pobuyer_no', 'order_list.ex_factory_date', 'order_list.vsl_date','order_list.dcpo_qty','factory.factory_name')
         ->get();
         // return response()->json($orderlists);
         return DataTables::of($orderlists)->addIndexColumn()->make(true);
     }
 
     public function showrafproduction($order_trans) {
-        $rafproductions = RafProduction::select('*','order_list.*','order_master.*')
+        $rafproductions = RafProduction::select('raf_production.*','order_list.*','order_master.*')
         ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
         ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
         ->where('order_list.order_trans', '=', $order_trans)
@@ -195,9 +197,9 @@ class OrderMasterController extends Controller
     }
 
     public function showshipment($order_trans) {
-        $shipments = Shipment::select('shipment.*','market.market_name','ship_mode.ship_name','order_list.pobuyer_no')
+        $shipments = Shipment::select('shipment.*','market.market_name','ship_mode.shipmode_name','order_list.pobuyer_no')
         ->leftJoin('market', 'shipment.market_no', '=', 'market.market_no')
-        ->leftJoin('ship_mode', 'shipment.ship_no', '=', 'ship_mode.ship_no')
+        ->leftJoin('ship_mode', 'shipment.shipmode_no', '=', 'ship_mode.shipmode_no')
         ->leftJoin('order_list', 'shipment.order_list', '=', 'order_list.order_list')
         ->where('order_list.order_trans', '=', $order_trans)
         ->get();
@@ -206,7 +208,7 @@ class OrderMasterController extends Controller
     }
     
     public function showfab($order_trans) {
-        $fabrication = Fabrication::select('*', 'fabric_mill.*')
+        $fabrication = Fabrication::select('fabrication.*', 'fabric_mill.*')
         ->leftJoin('fabric_mill', 'fabric_mill.fabmill_no', '=', 'fabrication.fabmill_no')
         ->where('fabrication.order_trans', '=', $order_trans)
         ->get();
@@ -214,7 +216,7 @@ class OrderMasterController extends Controller
     }
 
     public function showstyle($order_trans) {
-        $style = Style::select('*', 'order_master.style_no')
+        $style = Style::select('style.*', 'order_master.style_no')
         ->leftJoin('order_master', 'order_master.style_no', '=', 'style.style_no')
         ->where('order_master.order_trans', '=', $order_trans)
         ->get();
@@ -260,6 +262,12 @@ class OrderMasterController extends Controller
         $fileName = $file->getClientOriginalName();
         $file->storeAs('', $fileName, 'sketch_uploads');
 
+        SetupIncrement::updateOrCreate([
+            'models' => 'OrderMaster'
+        ],[
+            'models' => 'OrderMaster',
+            'last_number' => $request->order_trans,
+        ]);
         OrderMaster::create([
             'order_trans' => $request->order_trans,
             'season_no' => $request->season_no,

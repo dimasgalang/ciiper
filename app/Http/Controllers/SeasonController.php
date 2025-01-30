@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\SeasonsImport;
 use App\Models\Season;
+use App\Models\SetupIncrement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -36,13 +37,19 @@ class SeasonController extends Controller
     }
 
     public function create() {
-        $seasons = Season::all()->last();
+        $setupincements = SetupIncrement::all()->where('models','=','Season')->last();
         $seasonscats = ['SUMMER', 'SPRING','FALL','WINTER'];
-        return view('season.create', compact('seasons', 'seasonscats'));
+        return view('season.create', compact('setupincements', 'seasonscats'));
     }
 
     public function store(Request $request)
     {
+        SetupIncrement::updateOrCreate([
+            'models' => 'Season'
+        ],[
+            'models' => 'Season',
+            'last_number' => $request->season_no,
+        ]);
         Season::create([
             'season_no' => $request->season_no,
             'season_cat' => $request->season_cat,

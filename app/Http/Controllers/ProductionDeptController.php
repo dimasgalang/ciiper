@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\ProductionDeptsImport;
 use App\Models\ProductionDept;
+use App\Models\SetupIncrement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
@@ -16,12 +17,18 @@ class ProductionDeptController extends Controller
     }
 
     public function create() {
-        $productiondepts = ProductionDept::all()->last();
-        return view('productiondept.create', compact('productiondepts'));
+        $setupincements = SetupIncrement::all()->where('models','=','ProductionDept')->last();
+        return view('productiondept.create', compact('setupincements'));
     }
 
     public function store(Request $request)
     {
+        SetupIncrement::updateOrCreate([
+            'models' => 'ProductionDept'
+        ],[
+            'models' => 'ProductionDept',
+            'last_number' => $request->dept_no,
+        ]);
         ProductionDept::create([
             'dept_no' => $request->dept_no,
             'dept_name' => $request->dept_name,

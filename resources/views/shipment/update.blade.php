@@ -16,17 +16,17 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Create Shipment</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Update Shipment</h1>
                 </div>
                 
 
                 <!-- Approach -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Form Create Shipment</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Update Shipment</h6>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="{{ route('shipment.store') }}">
+                        <form method="post" action="{{ route('shipment.update') }}" enctype="multipart/form-data">
                             @csrf
                             @if ($message = Session::get('success'))
                             <div class="alert alert-success alert-block">
@@ -56,69 +56,72 @@
                             </div>
                             @endif
                             <div>
+                                <input class="form-control" type="hidden" id="id" name="id" value="{{ $shipments->id }}" readonly>
+                            </div>
+                            <div>
                                 <label>Ship No :</label>
-                                @if($setupincements->last_number ?? '')
-                                <input class="form-control" type="text" id="ship_no" name="ship_no" value="{{ 'SHI' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
-                                @else
-                                <input class="form-control" type="text" id="ship_no" name="ship_no" value="{{ 'SHI' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
-                                @endif
+                                <input class="form-control" type="text" id="ship_no" name="ship_no" value="{{ $shipments->ship_no }}" readonly>
                             </div>
                             <br>
                             <div>
-                                <label>Master PO :</label>
+                                <label>Order Master / Master PO :</label>
                                 <select class="form-control" id="order_trans" name="order_trans">
                                     <option></option>
-                                    @foreach($ordermasters as $ordermaster)
-                                    <option value="{{ $ordermaster->order_trans }}">{{ $ordermaster->order_trans }} - {{ $ordermaster->po_master }}</option>
+                                    @foreach($orderlists as $orderlist)
+                                        <option value="{{ $orderlist->order_trans }}" selected>{{ $orderlist->order_trans }} - {{ $orderlist->po_master }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <br>
                             <div>
-                                <label>PO Buyer :</label>
-                                <select class="form-control" id="order_list" name="order_list" disabled required>
+                                <label>Order List / PO Buyer :</label>
+                                <select class="form-control" id="order_list" name="order_list" readonly>
                                     <option></option>
+                                    @foreach($orderlists as $orderlist)
+                                        <option value="{{ $orderlist->order_list }}" {{ $shipments->order_list == $orderlist->order_list  ? 'selected' : ''}}>{{ $orderlist->order_list }} - {{ $orderlist->pobuyer_no }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <br>
                             <div>
-                                <label>Market : </label>
-                                <select class="form-control" id="market_no" name="market_no" required>
+                                <label>Market :</label>
+                                <select class="form-control" id="market_no" name="market_no">
                                     <option></option>
                                     @foreach($markets as $market)
-                                    <option value="{{ $market->market_no }}">{{ $market->market_name }}</option>
+                                        <option value="{{ $market->market_no }}" {{ $shipments->market_no == $market->market_no  ? 'selected' : ''}}>{{ $market->market_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <br>
                             <div>
                                 <label>Ship Mode :</label>
-                                <select class="form-control" id="shipmode_no" name="shipmode_no" required>
+                                <select class="form-control" id="shipmode_no" name="shipmode_no">
                                     <option></option>
                                     @foreach($shipmodes as $shipmode)
-                                    <option value="{{ $shipmode->shipmode_no }}">{{ $shipmode->shipmode_name }}</option>
+                                        <option value="{{ $shipmode->shipmode_no }}" {{ $shipments->shipmode_no == $shipmode->shipmode_no  ? 'selected' : ''}}>{{ $shipmode->shipmode_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <br>
                             <div>
-                                <label id="ship_ready">Ship Qty :</label>
-                                <input class="form-control" type="number" id="ship_qty" name="ship_qty" min="1" max="1" required>
+                                <label>Ship Date :</label>
+                                <input class="form-control" type="date" id="ship_date" name="ship_date" value="{{ $shipments->ship_date }}" required>
                             </div>
                             <br>
                             <div>
-                                <label>Ship Date :</label>
-                                <input class="date form-control" type="date" id="ship_date" name="ship_date" required>
+                            <input class="form-control" type="hidden" id="ship_qty_temp" value="{{ $shipments->ship_qty }}">
+                                <label id="ship_left">Ship Qty :</label>
+                                <input class="form-control" type="number" id="ship_qty" name="ship_qty" value="{{ $shipments->ship_qty }}" required>
                             </div>
                             <br>
                             <div>
                                 <label>Remark :</label>
-                                <input class="form-control" type="text" id="remark" name="remark">
+                                <input class="form-control" type="text" id="remark" name="remark" value="{{ $shipments->remark }}">
                             </div>
                             <br>
                             <div class="row">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary btn-block">Create</button>
+                                    <button type="submit" class="btn btn-primary btn-block">Update</button>
                                 </div>
                             </div>
                         </form>
@@ -136,39 +139,8 @@
 @include('layout.footer')
 </body>
 <script type="text/javascript">
-    $("#order_trans").select2({
-          allowClear: true,
-          placeholder: 'Choose Master PO',
-    });
-    $(document).on("change", "#order_trans", function(e){
-        e.preventDefault();
-        var order_trans = $(this).val();
-        if (order_trans) {
-            $.ajax({
-                url: '/shipment/fetchorderlist/'+order_trans,
-                type: "GET",
-                dataType: "json",
-                success:function(data) {
-                    $('#order_list').empty();
-                    $('#order_list').append('<option></option>');
-                    $.each(data, function(key, value) {
-                        $('#order_list').append('<option value="'+ value.order_list +'">'+ value.lot_no + ' - ' + value.pobuyer_no +'</option>');
-                    });
-                    $('#order_list').removeAttr('disabled');
-                }
-            });
-        } else{
-            $('#order_list').empty();
-            $('#order_list').attr('disabled','disabled');
-        }
-    });
-    $("#order_list").select2({
-          allowClear: true,
-          placeholder: 'Choose PO Buyer',
-    });
-    $(document).on("change", "#order_list", function(e){
-        e.preventDefault();
-        var order_list = $(this).val();
+    $(document).ready(function(e) {
+        var ship_qty_temp = $('#ship_qty_temp').val();
         var order_list = document.getElementById('order_list').value;
         if (order_list) {
             $.ajax({
@@ -178,17 +150,29 @@
                 success:function(data) {
                     if (data.length > 0) {
                         $.each(data, function(key, value) {
-                                $('#ship_ready').text('Ship Qty : ' + (value.raf_packing - value.sum_ship_qty));
-                                $('#ship_qty').attr("max", (value.raf_packing - value.sum_ship_qty));
+                            var allowship = parseInt(ship_qty_temp) + parseInt(value.ship_left);
+                            $('#ship_left').text('Ship Qty : ' + allowship);
+                            $('#ship_qty').attr("max",allowship);
                         });
                     } else {
-                        $('#ship_ready').text('Ship Qty : ' + 0);
-                        $('#ship_qty').attr("max", 0);
+                        $('#ship_left').text('Ship Qty : ' + 0);
+                        $('#ship_qty').attr("max",0);
                     }
                 }
             });
         } else{
+            var allowship = parseInt(ship_qty) + parseInt(value.ship_left);
+            $('#ship_left').text('Ship Qty : ' + allowship);
+            $('#ship_qty').attr("max",allowship);
         }
+    });
+    $("#order_trans").select2({
+          allowClear: true,
+          placeholder: 'Choose Master PO',
+    });
+    $("#order_list").select2({
+          allowClear: true,
+          placeholder: 'Choose PO Buyer',
     });
     $("#market_no").select2({
           allowClear: true,

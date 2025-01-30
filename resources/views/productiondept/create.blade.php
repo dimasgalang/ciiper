@@ -57,8 +57,8 @@
                             @endif
                             <div>
                                 <label>Production Dept No :</label>
-                                @if($productiondepts->id ?? '')
-                                <input class="form-control" type="text" id="dept_no" name="dept_no" value="{{ 'DEP' . str_pad($productiondepts->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @if($setupincements->last_number ?? '')
+                                <input class="form-control" type="text" id="dept_no" name="dept_no" value="{{ 'DEP' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @else
                                 <input class="form-control" type="text" id="dept_no" name="dept_no" value="{{ 'DEP' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @endif

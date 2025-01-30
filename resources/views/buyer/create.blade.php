@@ -57,8 +57,8 @@
                             @endif
                             <div>
                                 <label>Buyer No :</label>
-                                @if($buyers->id ?? '')
-                                <input class="form-control" type="text" id="buyer_no" name="buyer_no" value="{{ 'BYR' . str_pad($buyers->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @if($setupincements->last_number ?? '')
+                                <input class="form-control" type="text" id="buyer_no" name="buyer_no" value="{{ 'BYR' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @else
                                 <input class="form-control" type="text" id="buyer_no" name="buyer_no" value="{{ 'BYR' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @endif

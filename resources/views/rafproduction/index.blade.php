@@ -63,8 +63,8 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Order List</th>
                                         <th>RAF No</th>
+                                        <th>Order List</th>
                                         <th>RAF Date</th>
                                         <th>RAF Dept</th>
                                         <th>RAF Qty</th>
@@ -76,13 +76,16 @@
                                     @foreach($rafproductions as $rafproduction)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $rafproduction->order_list }}</td>
                                         <td>{{ $rafproduction->raf_no }}</td>
+                                        <td>{{ $rafproduction->pobuyer_no }}</td>
                                         <td>{{ $rafproduction->raf_date }}</td>
                                         <td>{{ $rafproduction->dept_name }}</td>
                                         <td>{{ $rafproduction->raf_qty }}</td>
                                         <td>{{ $rafproduction->remark }}</td>
                                         <td align="center">
+                                            <a href="/rafproduction/find/{{ $rafproduction->id }}" class="btn btn-primary btn-circle btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $rafproduction->id }}" data-delete-name="{{ $rafproduction->rafproduction_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>

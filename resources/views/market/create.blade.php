@@ -57,8 +57,8 @@
                             @endif
                             <div>
                                 <label>Market No :</label>
-                                @if($markets->id ?? '')
-                                <input class="form-control" type="text" id="market_no" name="market_no" value="{{ 'MAR' . str_pad($markets->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @if($setupincements->last_number ?? '')
+                                <input class="form-control" type="text" id="market_no" name="market_no" value="{{ 'MAR' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @else
                                 <input class="form-control" type="text" id="market_no" name="market_no" value="{{ 'MAR' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @endif

@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ShipMode extends Model
+class SetupIncrement extends Model
 {
     use HasFactory;
-    public $table = "ship_mode";
+    public $table = "setup_increment";
     protected $fillable = [
-        'shipmode_no',
-        'shipmode_name',
+        'models',
+        'last_number',
     ];
 }

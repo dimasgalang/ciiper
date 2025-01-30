@@ -57,8 +57,8 @@
                             @endif
                             <div>
                                 <label>Wash Type No :</label>
-                                @if($washtypes->id ?? '')
-                                <input class="form-control" type="text" id="wash_no" name="wash_no" value="{{ 'WAS' . str_pad($washtypes->id + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @if($setupincements->last_number ?? '')
+                                <input class="form-control" type="text" id="wash_no" name="wash_no" value="{{ 'WAS' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @else
                                 <input class="form-control" type="text" id="wash_no" name="wash_no" value="{{ 'WAS' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @endif

@@ -9,6 +9,7 @@ use App\Models\Buyer;
 use App\Models\Fabrication;
 use App\Models\Factory;
 use App\Models\FollowUp;
+use App\Models\LogCiiper;
 use App\Models\OrderList;
 use App\Models\OrderMaster;
 use App\Models\RafProduction;
@@ -16,11 +17,14 @@ use App\Models\Season;
 use App\Models\SetupIncrement;
 use App\Models\Style;
 use App\Models\WashType;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class OrderListController extends Controller
 {
@@ -65,7 +69,8 @@ class OrderListController extends Controller
         Storage::delete($path);
 
         if($import) {
-            return redirect()->intended('orderlist/index')->with(['success' => 'Data Berhasil Diimport!']);
+            Alert::success('Import Successfully!', 'Order List data successfully imported!');
+            return redirect()->intended('orderlist/index');
         } else {
             return redirect()->intended('orderlist/index')->with(['error' => 'Data Gagal Diimport!']);
         }
@@ -89,6 +94,16 @@ class OrderListController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Order List ' . $request->order_list;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
         SetupIncrement::updateOrCreate([
             'models' => 'OrderList'
         ],[
@@ -109,17 +124,30 @@ class OrderListController extends Controller
             'line' => $request->line,
             'target_qty' => $request->target_qty,
             'production_day' => $request->production_day,
+            'smv' => $request->smv,
         ]);
 
+        Alert::success('Create Successfully!', 'Order List ' . $request->order_list . ' successfully created!');
         return redirect()
-            ->route('orderlist.create')
-            ->with('success', 'Order List berhasil ditambahkan!');
+            ->route('orderlist.create');
     }
 
     public function delete($id) {
         $orderlists = OrderList::find($id);    
         $orderlists->delete();
-        return redirect('orderlist/index')->with(['error' => 'Record Berhasil Dihapus!']);
+        
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Order List ' . $orderlists->order_list;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+        Alert::success('Delete Successfully!', 'Order List ' . $orderlists->order_list . ' successfully deleted!');
+        return redirect('orderlist/index');
     }
     
     public function finish(Request $request) {
@@ -130,7 +158,8 @@ class OrderListController extends Controller
 
         $orderlists->save();
 
-        return redirect('orderlist/index')->with(['success' => 'Status Order List berhasil diupdate menjadi Finish!']);
+        Alert::success('Finish Successfully!', 'Order List ' . $request->order_list . ' successfully finish!');
+        return redirect('orderlist/index');
     }
 
     public function find($id) {
@@ -153,6 +182,17 @@ class OrderListController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Order List ' . $request->order_list;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
         $orderlists = OrderList::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -164,6 +204,12 @@ class OrderListController extends Controller
             'dcpo_qty' => 'required|max:225|',
             'ex_factory_date' => 'required|max:225|',
             'vsl_date' => 'required|max:225|',
+            'wash_no' => 'required|max:225|',
+            'bordir_no' => 'required|max:225|',
+            'line' => 'required',
+            'target_qty' => 'required',
+            'production_day' => 'required',
+            'smv' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -181,11 +227,18 @@ class OrderListController extends Controller
             'dcpo_qty' => $request->dcpo_qty,
             'ex_factory_date' => $request->ex_factory_date,
             'vsl_date' => $request->vsl_date,
+            'wash_no' => $request->wash_no,
+            'bordir_no' => $request->bordir_no,
+            'line' => $request->line,
+            'target_qty' => $request->target_qty,
+            'production_day' => $request->production_day,
+            'smv' => $request->smv,
         ]);
 
         $orderlists->save();
 
-        return redirect('orderlist/index')->with(['success' => 'Order List berhasil diupdate!']);
+        Alert::success('Update Successfully!', 'Order List ' . $request->order_list . ' successfully updated!');
+        return redirect('orderlist/index');
     }
     
 

@@ -73,16 +73,10 @@
                             <div>
                                 <label>Role :</label>
                                 <select class="form-control" id="role_id" name="role_id">
-                                    <option></option>
                                     @foreach($roles as $role)
                                         <option value="{{ $role->id }}" {{ $modelhasroles[0]->role_id == $role->id  ? 'selected' : ''}}>{{ $role->name }}</option>
                                     @endforeach
                                 </select>
-                            </div>
-                            <br>
-                            <div>
-                                <label>Model Type :</label>
-                                <input class="form-control" type="text" id="model_type" name="model_type" value="{{ $modelhasroles[0]->model_type }}" readonly>
                             </div>
                             <br>
                             <div class="row">
@@ -108,7 +102,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 <script type="text/javascript">
-    $("#chatid").select2({
+    $("#role_id").select2({
           allowClear: true
     });
 </script>

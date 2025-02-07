@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Imports\ProductionPlanningsImport;
+use App\Models\LogCiiper;
 use App\Models\OrderList;
 use App\Models\OrderMaster;
 use App\Models\ProductionPlanning;
+use App\Models\SetupIncrement;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ProductionPlanningController extends Controller
 {
@@ -35,7 +40,8 @@ class ProductionPlanningController extends Controller
         Storage::delete($path);
 
         if($import) {
-            return redirect()->intended('productionplanning/index')->with(['success' => 'Data Berhasil Diimport!']);
+            Alert::success('Import Successfully!', 'Production Planning data successfully imported!');
+            return redirect()->intended('productionplanning/index');
         } else {
             return redirect()->intended('productionplanning/index')->with(['error' => 'Data Gagal Diimport!']);
         }
@@ -46,7 +52,8 @@ class ProductionPlanningController extends Controller
         ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
         ->get();
         $orderlists = OrderList::all();
-        return view('productionplanning.create', compact('ordermasters', 'orderlists'));
+        $setupincements = SetupIncrement::all()->where('models','=','ProductionPlanning')->last();
+        return view('productionplanning.create', compact('ordermasters', 'orderlists','setupincements'));
     }
 
     public function fetchorderlist($order_trans) {
@@ -59,7 +66,24 @@ class ProductionPlanningController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Production Planning ' . $request->plan_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
+        SetupIncrement::updateOrCreate([
+            'models' => 'ProductionPlanning'
+        ],[
+            'models' => 'ProductionPlanning',
+            'last_number' => $request->plan_no,
+        ]);
         ProductionPlanning::create([
+            'plan_no' => $request->plan_no,
             'order_trans' => $request->order_trans,
             'order_list' => $request->order_list,
             'has_sample' => $request->has_sample,
@@ -81,29 +105,60 @@ class ProductionPlanningController extends Controller
             'remark' => $request->remark,
         ]);
 
+        Alert::success('Create Successfully!', 'Production Planning ' . $request->plan_no . ' successfully created!');
         return redirect()
-            ->route('productionplanning.create')
-            ->with('success', 'Production Planning berhasil ditambahkan!');
+            ->route('productionplanning.create');
     }
 
     public function delete($id) {
         $productionplannings = ProductionPlanning::find($id);    
         $productionplannings->delete();
-        return redirect('productionplanning/index')->with(['error' => 'Record Berhasil Dihapus!']);
+        
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Production Planning ' . $productionplannings->plan_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+        Alert::success('Delete Successfully!', 'Production Planning ' . $productionplannings->plan_no . ' successfully deleted!');
+        return redirect('productionplanning/index');
     }
 
     public function find($id) {
         $productionplannings = ProductionPlanning::find($id);
-        $orderlists = OrderList::all();  
-        $ordermasters = OrderMaster::all();  
+        $orderlists = OrderList::select('order_list.order_list','order_list.pobuyer_no','production_planning.*')
+        ->leftJoin('production_planning','production_planning.order_list','=','order_list.order_list')
+        ->where('production_planning.id','=',$id)
+        ->get();
+        $ordermasters = OrderMaster::select('order_master.order_trans','purchase_order.po_master','production_planning.*')
+        ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
+        ->leftJoin('production_planning','order_master.order_trans','=','production_planning.order_trans')
+        ->where('production_planning.id','=',$id)
+        ->get(); 
         return view('productionplanning.update', compact('productionplannings','orderlists','ordermasters'));
     }
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Production Planning ' . $request->plan_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
         $productionplannings = ProductionPlanning::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
+            'plan_no' => 'required|max:225|',
             'order_trans' => 'required|max:225|',
             'order_list' => 'required|max:255',
             'has_sample' => 'required|max:255',
@@ -122,7 +177,6 @@ class ProductionPlanningController extends Controller
             'startsew_date' => 'required|max:255',
             'finishsew_date' => 'required|max:255',
             'finishpack_date' => 'required|max:255',
-            'remark' => 'required|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -132,6 +186,7 @@ class ProductionPlanningController extends Controller
         }
 
         $productionplannings->fill([
+            'plan_no' => $request->plan_no,
             'order_trans' => $request->order_trans,
             'order_list' => $request->order_list,
             'has_sample' => $request->has_sample,
@@ -155,6 +210,7 @@ class ProductionPlanningController extends Controller
 
         $productionplannings->save();
 
-        return redirect('productionplanning/index')->with(['success' => 'Production Planning berhasil diupdate!']);
+        Alert::success('Update Successfully!', 'Production Planning ' . $request->plan_no . ' successfully updated!');
+        return redirect('productionplanning/index');
     }
 }

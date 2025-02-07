@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Imports\SeasonsImport;
+use App\Models\LogCiiper;
 use App\Models\Season;
 use App\Models\SetupIncrement;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class SeasonController extends Controller
 {
@@ -30,7 +34,8 @@ class SeasonController extends Controller
         Storage::delete($path);
 
         if($import) {
-            return redirect()->intended('season/index')->with(['success' => 'Data Berhasil Diimport!']);
+            Alert::success('Import Successfully!', 'Season data successfully imported!');
+            return redirect()->intended('season/index');
         } else {
             return redirect()->intended('season/index')->with(['error' => 'Data Gagal Diimport!']);
         }
@@ -44,6 +49,17 @@ class SeasonController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Season ' . $request->season_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
+
         SetupIncrement::updateOrCreate([
             'models' => 'Season'
         ],[
@@ -56,15 +72,28 @@ class SeasonController extends Controller
             'season_year' => $request->season_year,
         ]);
 
+        Alert::success('Create Successfully!', 'Season ' . $request->season_no . ' successfully created!');
         return redirect()
-            ->route('season.create')
-            ->with('success', 'Season berhasil ditambahkan!');
+            ->route('season.create');
     }
 
     public function delete($id) {
         $seasons = Season::find($id);    
         $seasons->delete();
-        return redirect('season/index')->with(['error' => 'Record Berhasil Dihapus!']);
+        
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Season ' . $seasons->season_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+
+        Alert::success('Delete Successfully!', 'Season ' . $seasons->season_no . ' successfully deleted!');
+        return redirect('season/index');
     }
 
     public function find($id) {
@@ -75,6 +104,17 @@ class SeasonController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Season ' . $request->season_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
         $seasons = Season::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -97,6 +137,7 @@ class SeasonController extends Controller
 
         $seasons->save();
 
-        return redirect('season/index')->with(['success' => 'Season berhasil diupdate!']);
+        Alert::success('Update Successfully!', 'Season ' . $request->season_no . ' successfully updated!');
+        return redirect('season/index');
     }
 }

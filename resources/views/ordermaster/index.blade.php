@@ -3,6 +3,7 @@
 @include('layout.header')
 <body id="page-top">
 <!-- Page Wrapper -->
+@include('sweetalert::alert')
 <div id="wrapper">
 @include('layout.sidebar')
     <!-- Content Wrapper -->
@@ -63,7 +64,7 @@
                         </div>
                         @endif
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="font-size: 8;">
+                            <table class="table table-sm table-bordered" id="dataTable">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -96,9 +97,9 @@
                                         <td>{{ $ordermaster->qty_ocf }}</td>
                                         <td>{{ $ordermaster->sum_raf_qty }}</td>
                                         <td>{{ $ordermaster->fu_name }}</td>
-                                        <td><center><img id="sketch" src="{{ asset('/sketch/' . $ordermaster->sketch_file) }}" style="width: 200px;"></center></td>
+                                        <td class="text-center"><img id="sketch" src="{{ asset('/sketch/' . $ordermaster->sketch_file) }}" style="width: 200px;"></td>
                                         <td>{{ $ordermaster->remark }}</td>
-                                        <td>
+                                        <td class="text-center">
                                             <a href="/ordermaster/find/{{ $ordermaster->id }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
@@ -180,7 +181,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="tab">
-                            <button id="tabSketch" class="tablinks" onclick="openModal(event, 'Sketch')">Sketch</button>
+                            <button class="tablinks" onclick="openModal(event, 'Sketch')">Sketch</button>
                             <button class="tablinks" onclick="openModal(event, 'Order List')">Order List</button>
                             <button class="tablinks" onclick="openModal(event, 'Production Planning')">Production Planning</button>
                             <button class="tablinks" onclick="openModal(event, 'Cutting')">Cutting</button>
@@ -252,7 +253,7 @@
                                 </div> -->
                                 <div class="col-xl-12 col-md-6 mb-4">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-modal" id="table-orderlist" width="100%" cellspacing="0">
+                                        <table class="table table-bordered table-modal table-sm" id="table-orderlist" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -265,6 +266,7 @@
                                                     <th>Balance</th>
                                                     <th>Ex Factory</th>
                                                     <th>Vsl Date</th>
+                                                    <th>Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -295,10 +297,11 @@
                             <div class="row">
                                 <div class="col-xl-12 col-md-6 mb-4">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-modal" id="table-production-planning" width="100%" cellspacing="0">
+                                        <table class="table table-bordered table-modal table-sm" id="table-production-planning" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
+                                                    <th>PO Buyer</th>
                                                     <th>Sample</th>
                                                     <th>MI</th>
                                                     <th>Acc Fab Cart</th>
@@ -370,7 +373,7 @@
                             <div class="row">
                                 <div class="col-xl-12 col-md-6 mb-4">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-modal" id="table-raf-cutting" width="100%" cellspacing="0">
+                                        <table class="table table-bordered table-modal table-sm" id="table-raf-cutting" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -438,7 +441,7 @@
                             <div class="row">
                                 <div class="col-xl-12 col-md-6 mb-4">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-modal" id="table-raf-sewing" width="100%" cellspacing="0">
+                                        <table class="table table-bordered table-modal table-sm" id="table-raf-sewing" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -503,7 +506,7 @@
                             <div class="row">
                                 <div class="col-xl-12 col-md-6 mb-4">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-modal" id="table-raf-iron" width="100%" cellspacing="0">
+                                        <table class="table table-bordered table-modal table-sm" id="table-raf-iron" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -568,7 +571,7 @@
                             <div class="row">
                                 <div class="col-xl-12 col-md-6 mb-4">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-modal" id="table-raf-packing" width="100%" cellspacing="0">
+                                        <table class="table table-bordered table-modal table-sm" id="table-raf-packing" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -654,7 +657,7 @@
                             <div class="row">
                                 <div class="col-xl-12 col-md-6 mb-4">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-modal" id="table-shipment" width="100%" cellspacing="0">
+                                        <table class="table table-bordered table-modal table-sm" id="table-shipment" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -695,7 +698,7 @@
                         <div class="row">
                             <div class="col-xl-12 col-md-6 mb-4">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-modal" id="table-raf-production" width="100%" cellspacing="0">
+                                    <table class="table table-bordered table-modal table-sm" id="table-raf-production" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -776,13 +779,12 @@
             var sketchIMG = $(this).data('show-image');
             $('#sketch-PIC').attr('src', sketchIMG);
             $.get(jsonOrderList, function (data) {
-                $('#orderlistModal').modal('show');
                 $('#table-orderlist').DataTable({
                     destroy: true,
                     processing: true,
                     ajax: jsonOrderList,
                     columns: [
-                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                        { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                         { data: 'factory_name', name: 'factory_name' },
                         { data: 'lot_no', name: 'lot_no' },
                         { data: 'pobuyer_no', name: 'pobuyer_no' },
@@ -792,210 +794,213 @@
                         { data: 'balance', name: 'balance' },
                         { data: 'ex_factory_date', name: 'ex_factory_date' },
                         { data: 'vsl_date', name: 'vsl_date' },
+                        { data: 'statusbadge', name: 'statusbadge', orderable: false, searchable: false},
             
                     ]
                 });
-                $('#table-production-planning').DataTable({
-                    destroy: true,
-                    processing: true,
-                    ajax: jsonProductionPlanning,
-                    columns: [
-                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-                        { data: 'has_sample', name: 'has_sample' },
-                        { data: 'has_mi', name: 'has_mi' },
-                        { data: 'has_cart', name: 'has_cart' },
-                        { data: 'fab_date', name: 'fab_date' },
-                        { data: 'acc_date', name: 'acc_date' },
-                        { data: 'bordir_approve', name: 'bordir_approve' },
-                        { data: 'pattern_date', name: 'pattern_date' },
-                        { data: 'sampletest_date', name: 'sampletest_date' },
-                        { data: 'marker_date', name: 'marker_date' },
-                        { data: 'pilotrun_date', name: 'pilotrun_date' },
-                        { data: 'ppm_date', name: 'ppm_date' },
-                        { data: 'startcut_date', name: 'startcut_date' },
-                        { data: 'finishcut_date', name: 'finishcut_date' },
-                        { data: 'startsew_date', name: 'startsew_date' },
-                        { data: 'finishsew_date', name: 'finishsew_date' },
-                        { data: 'finishpack_date', name: 'finishpack_date' },
-                        { data: 'remark', name: 'remark' },
-            
-                    ]
-                });
-
-                $(function () {
-                    var tableCutting = $('#table-raf-cutting').DataTable({
+                    
+                $.get(jsonProductionPlanning, function (data) {
+                    $('#table-production-planning').DataTable({
                         destroy: true,
                         processing: true,
-                        serverSide: true,
-                        responsive: true,
-                        dom: 'rtip',
-                        ajax: {
-                            url: jsonRafCutting,
-                            data: function (d) {
-                                d.fromdateCutting = document.getElementById('fromdateCutting').value,
-                                d.todateCutting = document.getElementById('todateCutting').value,
-                                d.searchCutting = document.getElementById('searchCutting').value
-                            }
-                        },
+                        ajax: jsonProductionPlanning,
                         columns: [
-                            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-                            { data: 'lot_no', name: 'lot_no', orderable: false },
-                            { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
-                            { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
-                            { data: 'raf_date', name: 'raf_date', orderable: false },
-                            { data: 'raf_qty', name: 'raf_qty', orderable: false },
-                            { data: 'totalraf', name: 'totalraf', orderable: false },
-                            { data: 'balance', name: 'balance', orderable: false },
-                        ],
+                            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                            { data: 'pobuyer_no', name: 'pobuyer_no' },
+                            { data: 'samplebadge', name: 'samplebadge', orderable: false, searchable: false},
+                            { data: 'mibadge', name: 'mibadge', orderable: false, searchable: false},
+                            { data: 'cartbadge', name: 'cartbadge', orderable: false, searchable: false},
+                            { data: 'fab_date', name: 'fab_date' },
+                            { data: 'acc_date', name: 'acc_date' },
+                            { data: 'bordir_approve', name: 'bordir_approve' },
+                            { data: 'pattern_date', name: 'pattern_date' },
+                            { data: 'sampletest_date', name: 'sampletest_date' },
+                            { data: 'marker_date', name: 'marker_date' },
+                            { data: 'pilotrun_date', name: 'pilotrun_date' },
+                            { data: 'ppm_date', name: 'ppm_date' },
+                            { data: 'startcut_date', name: 'startcut_date' },
+                            { data: 'finishcut_date', name: 'finishcut_date' },
+                            { data: 'startsew_date', name: 'startsew_date' },
+                            { data: 'finishsew_date', name: 'finishsew_date' },
+                            { data: 'finishpack_date', name: 'finishpack_date' },
+                            { data: 'remark', name: 'remark' },
+                
+                        ]
                     });
-                    $('#filter-data-cutting').click(function(){
-                        tableCutting.draw();
+                    $.get(jsonRafCutting, function (data) {
+                        var tableCutting = $('#table-raf-cutting').DataTable({
+                            destroy: true,
+                            processing: true,
+                            serverSide: true,
+                            responsive: true,
+                            dom: 'rtip',
+                            ajax: {
+                                url: jsonRafCutting,
+                                data: function (d) {
+                                    d.fromdateCutting = document.getElementById('fromdateCutting').value,
+                                    d.todateCutting = document.getElementById('todateCutting').value,
+                                    d.searchCutting = document.getElementById('searchCutting').value
+                                }
+                            },
+                            columns: [
+                                {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                                { data: 'lot_no', name: 'lot_no', orderable: false },
+                                { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
+                                { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
+                                { data: 'raf_date', name: 'raf_date', orderable: false },
+                                { data: 'raf_qty', name: 'raf_qty', orderable: false },
+                                { data: 'totalraf', name: 'totalraf', orderable: false },
+                                { data: 'balance', name: 'balance', orderable: false },
+                            ],
+                        });
+                        $('#filter-data-cutting').click(function(){
+                            tableCutting.draw();
+                        });
+                        $.get(jsonRafSewing, function (data) {
+                            var tableSewing = $('#table-raf-sewing').DataTable({
+                                destroy: true,
+                                processing: true,
+                                serverSide: true,
+                                responsive: true,
+                                dom: 'rtip',
+                                ajax: {
+                                    url: jsonRafSewing,
+                                    data: function (d) {
+                                        d.fromdateSewing = document.getElementById('fromdateSewing').value,
+                                        d.todateSewing = document.getElementById('todateSewing').value,
+                                        d.searchSewing = document.getElementById('searchSewing').value
+                                    }
+                                },
+                                columns: [
+                                    {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                                    { data: 'lot_no', name: 'lot_no', orderable: false },
+                                    { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
+                                    { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
+                                    { data: 'raf_date', name: 'raf_date', orderable: false },
+                                    { data: 'raf_qty', name: 'raf_qty', orderable: false },
+                                    { data: 'totalraf', name: 'totalraf', orderable: false },
+                                    { data: 'balance', name: 'balance', orderable: false },
+                                ],
+                            });
+                            $('#filter-data-sewing').click(function(){
+                                tableSewing.draw();
+                            });
+                            $.get(jsonRafIron, function (data) {
+                                var tableIron = $('#table-raf-iron').DataTable({
+                                    destroy: true,
+                                    processing: true,
+                                    serverSide: true,
+                                    responsive: true,
+                                    dom: 'rtip',
+                                    ajax: {
+                                        url: jsonRafIron,
+                                        data: function (d) {
+                                            d.fromdateIron = document.getElementById('fromdateIron').value,
+                                            d.todateIron = document.getElementById('todateIron').value,
+                                            d.searchIron = document.getElementById('searchIron').value
+                                        }
+                                    },
+                                    columns: [
+                                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                                        { data: 'lot_no', name: 'lot_no', orderable: false },
+                                        { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
+                                        { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
+                                        { data: 'raf_date', name: 'raf_date', orderable: false },
+                                        { data: 'raf_qty', name: 'raf_qty', orderable: false },
+                                        { data: 'totalraf', name: 'totalraf', orderable: false },
+                                        { data: 'balance', name: 'balance', orderable: false },
+                                    ],
+                                });
+                                $('#filter-data-iron').click(function(){
+                                    tableIron.draw();
+                                });
+                                $.get(jsonRafPacking, function (data) {
+                                    var tablePacking = $('#table-raf-packing').DataTable({
+                                        destroy: true,
+                                        processing: true,
+                                        serverSide: true,
+                                        responsive: true,
+                                        dom: 'rtip',
+                                        ajax: {
+                                            url: jsonRafPacking,
+                                            data: function (d) {
+                                                d.fromdatePacking = document.getElementById('fromdatePacking').value,
+                                                d.todatePacking = document.getElementById('todatePacking').value,
+                                                d.searchPacking = document.getElementById('searchPacking').value
+                                            }
+                                        },
+                                        columns: [
+                                            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                                            { data: 'lot_no', name: 'lot_no', orderable: false },
+                                            { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
+                                            { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
+                                            { data: 'raf_date', name: 'raf_date', orderable: false },
+                                            { data: 'raf_qty', name: 'raf_qty', orderable: false },
+                                            { data: 'totalraf', name: 'totalraf', orderable: false },
+                                            { data: 'balance', name: 'balance', orderable: false },
+                                        ],
+                                    });
+                                    $('#filter-data-packing').click(function(){
+                                        tablePacking.draw();
+                                    });
+                                    $.get(jsonShipment, function (data) {
+                                        var tableShipment = $('#table-shipment').DataTable({
+                                            destroy: true,
+                                            processing: true,
+                                            ajax: jsonShipment,
+                                            columns: [
+                                                {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                                                { data: 'pobuyer_no', name: 'pobuyer_no' },
+                                                { data: 'market_name', name: 'market_name' },
+                                                { data: 'shipmode_name', name: 'shipmode_name' },
+                                                { data: 'ship_qty', name: 'ship_qty' },
+                                                { data: 'ship_date', name: 'ship_date' },
+                                                { data: 'remark', name: 'remark' },
+                                    
+                                            ]
+                                        });
+                                        $.get(jsonFab, function (data) {
+                                            var link;
+                                            if (data.length > 0) {
+                                                $('#order_list-fabmill_name').text(data[0]?.fabmill_name);
+                                                $('#order_list-fabrication').text(data[0]?.fabrication);
+                                                $('#order_list-po_fab').text(data[0]?.po_fab);
+                                                $('#order_list-etd').text(data[0]?.etd);
+                                                $(document).ready(function() {
+                                                    link = "/fabrication/find/" + data[0]?.id;
+                                                    $('#updateFabricationLink').text("Update Fabrication");
+                                                    $('#updateFabricationLink').attr('href', link);
+                                                });
+                                            } else {
+                                                link = "/fabrication/create/";
+                                                $('#updateFabricationLink').text("Create Fabrication");
+                                                $('#updateFabricationLink').attr('href', link);
+                                                $('#order_list-fabmill_name').text("");
+                                                $('#order_list-fabrication').text("");
+                                                $('#order_list-po_fab').text("");
+                                                $('#order_list-etd').text("");
+                                            }
+                                            $.get(jsonStyle, function (data) {
+                                                if (data.length > 0) {
+                                                    $('#order_list-style_name').val(data[0].style_name);
+                                                    $('#order_list-style_desc').val(data[0].style_desc);
+                                                    $(document).ready(function() {
+                                                        var link = "/style/find/" + data[0].id;
+                                                        $('#updateSketchLink').attr('href', link);
+                                                    });
+                                                } else {
+
+                                                }
+                                                $('#orderlistModal').modal('show');
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
                     });
                 });
-
-                $(function () {
-                    var tableSewing = $('#table-raf-sewing').DataTable({
-                        destroy: true,
-                        processing: true,
-                        serverSide: true,
-                        responsive: true,
-                        dom: 'rtip',
-                        ajax: {
-                            url: jsonRafSewing,
-                            data: function (d) {
-                                d.fromdateSewing = document.getElementById('fromdateSewing').value,
-                                d.todateSewing = document.getElementById('todateSewing').value,
-                                d.searchSewing = document.getElementById('searchSewing').value
-                            }
-                        },
-                        columns: [
-                            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-                            { data: 'lot_no', name: 'lot_no', orderable: false },
-                            { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
-                            { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
-                            { data: 'raf_date', name: 'raf_date', orderable: false },
-                            { data: 'raf_qty', name: 'raf_qty', orderable: false },
-                            { data: 'totalraf', name: 'totalraf', orderable: false },
-                            { data: 'balance', name: 'balance', orderable: false },
-                        ],
-                    });
-                    $('#filter-data-sewing').click(function(){
-                        tableSewing.draw();
-                    });
-                });
-
-                $(function () {
-                    var tableIron = $('#table-raf-iron').DataTable({
-                        destroy: true,
-                        processing: true,
-                        serverSide: true,
-                        responsive: true,
-                        dom: 'rtip',
-                        ajax: {
-                            url: jsonRafIron,
-                            data: function (d) {
-                                d.fromdateIron = document.getElementById('fromdateIron').value,
-                                d.todateIron = document.getElementById('todateIron').value,
-                                d.searchIron = document.getElementById('searchIron').value
-                            }
-                        },
-                        columns: [
-                            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-                            { data: 'lot_no', name: 'lot_no', orderable: false },
-                            { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
-                            { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
-                            { data: 'raf_date', name: 'raf_date', orderable: false },
-                            { data: 'raf_qty', name: 'raf_qty', orderable: false },
-                            { data: 'totalraf', name: 'totalraf', orderable: false },
-                            { data: 'balance', name: 'balance', orderable: false },
-                        ],
-                    });
-                    $('#filter-data-iron').click(function(){
-                        tableIron.draw();
-                    });
-                });
-
-                $(function () {
-                    var tablePacking = $('#table-raf-packing').DataTable({
-                        destroy: true,
-                        processing: true,
-                        serverSide: true,
-                        responsive: true,
-                        dom: 'rtip',
-                        ajax: {
-                            url: jsonRafPacking,
-                            data: function (d) {
-                                d.fromdatePacking = document.getElementById('fromdatePacking').value,
-                                d.todatePacking = document.getElementById('todatePacking').value,
-                                d.searchPacking = document.getElementById('searchPacking').value
-                            }
-                        },
-                        columns: [
-                            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-                            { data: 'lot_no', name: 'lot_no', orderable: false },
-                            { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
-                            { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
-                            { data: 'raf_date', name: 'raf_date', orderable: false },
-                            { data: 'raf_qty', name: 'raf_qty', orderable: false },
-                            { data: 'totalraf', name: 'totalraf', orderable: false },
-                            { data: 'balance', name: 'balance', orderable: false },
-                        ],
-                    });
-                    $('#filter-data-packing').click(function(){
-                        tablePacking.draw();
-                    });
-                });
-
-                $('#table-shipment').DataTable({
-                    destroy: true,
-                    processing: true,
-                    ajax: jsonShipment,
-                    columns: [
-                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-                        { data: 'pobuyer_no', name: 'pobuyer_no' },
-                        { data: 'market_name', name: 'market_name' },
-                        { data: 'shipmode_name', name: 'shipmode_name' },
-                        { data: 'ship_qty', name: 'ship_qty' },
-                        { data: 'ship_date', name: 'ship_date' },
-                        { data: 'remark', name: 'remark' },
-            
-                    ]
-                });
-            });
-            $.get(jsonFab, function (data) {
-                var link;
-                if (data.length > 0) {
-                    $('#order_list-fabmill_name').text(data[0]?.fabmill_name);
-                    $('#order_list-fabrication').text(data[0]?.fabrication);
-                    $('#order_list-po_fab').text(data[0]?.po_fab);
-                    $('#order_list-etd').text(data[0]?.etd);
-                    $(document).ready(function() {
-                        link = "/fabrication/find/" + data[0]?.id;
-                        $('#updateFabricationLink').text("Update Fabrication");
-                        $('#updateFabricationLink').attr('href', link);
-                    });
-                } else {
-                    link = "/fabrication/create/";
-                    $('#updateFabricationLink').text("Create Fabrication");
-                    $('#updateFabricationLink').attr('href', link);
-                    $('#order_list-fabmill_name').text("");
-                    $('#order_list-fabrication').text("");
-                    $('#order_list-po_fab').text("");
-                    $('#order_list-etd').text("");
-                }
-            });
-            $.get(jsonStyle, function (data) {
-                if (data.length > 0) {
-                    $('#order_list-style_name').val(data[0].style_name);
-                    $('#order_list-style_desc').val(data[0].style_desc);
-                    $(document).ready(function() {
-                        var link = "/style/find/" + data[0].id;
-                        $('#updateSketchLink').attr('href', link);
-                    });
-                } else {
-
-                }
-            });
+            }); 
         });
     });
 </script>
@@ -1015,5 +1020,19 @@ function openModal(evt, tabName) {
   document.getElementById(tabName).style.display = "block";
   evt.currentTarget.className += " active";
 }
+$('#orderlistModal').on('hidden.bs.modal', function (e) {
+    $("#searchCutting").val('');
+    $("#searchSewing").val('');
+    $("#searchIron").val('');
+    $("#searchPacking").val('');
+    // $('#table-orderlist').dataTable().fnDestroy();
+    // $('#table-production-planning').dataTable().fnDestroy();
+    // $('#table-raf-cutting').dataTable().fnDestroy();
+    // $('#table-raf-sewing').dataTable().fnDestroy();
+    // $('#table-raf-iron').dataTable().fnDestroy();
+    // $('#table-raf-packing').dataTable().fnDestroy();
+    // $('#table-shipment').dataTable().fnDestroy();
+})
+
 </script>
 </html>

@@ -3,6 +3,7 @@
 @include('layout.header')
 <body id="page-top">
 <!-- Page Wrapper -->
+@include('sweetalert::alert')
 <div id="wrapper">
 @include('layout.sidebar')
     <!-- Content Wrapper -->
@@ -57,12 +58,13 @@
                         </div>
                         @endif
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
                                         <th>Name</th>
                                         <th>Email</th>
+                                        <th>Role</th>
                                         <th>Created At</th>
                                         <th>Updated At</th>
                                         <th>Action</th>
@@ -74,9 +76,10 @@
                                         <td>{{ $user->id }}</td>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
+                                        <td>{{ $user->role }}</td>
                                         <td>{{ $user->created_at }}</td>
                                         <td>{{ $user->updated_at }}</td>
-                                        <td align="center">
+                                        <td class="text-center">
                                             <a href="/user/assign/{{ $user->id }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-key"></i>
                                             </a>

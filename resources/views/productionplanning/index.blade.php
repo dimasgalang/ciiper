@@ -3,6 +3,7 @@
 @include('layout.header')
 <body id="page-top">
 <!-- Page Wrapper -->
+@include('sweetalert::alert')
 <div id="wrapper">
 @include('layout.sidebar')
     <!-- Content Wrapper -->
@@ -59,7 +60,7 @@
                         </div>
                         @endif
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -88,43 +89,43 @@
                                 <tbody>
                                     @foreach($productionplannings as $productionplanning)
                                     <tr>
-                                        <td>{{ $productionplanning->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $productionplanning->po_master }}</td>
                                         <td>{{ $productionplanning->pobuyer_no }}</td>
                                         @if($productionplanning->has_sample == 'Yes')
-                                             <td align="center">
+                                             <td class="text-center">
                                                 <a class="btn btn-success btn-circle btn-sm">
                                                     <i class="fas fa-check"></i>
                                                 </a>
                                             </td>
                                         @else
-                                            <td align="center">
+                                            <td class="text-center">
                                                 <a class="btn btn-danger btn-circle btn-sm">
                                                     <i class="fas fa-times"></i>
                                                 </a>
                                             </td>
                                         @endif
                                         @if($productionplanning->has_mi == 'Yes')
-                                             <td align="center">
+                                             <td class="text-center">
                                                 <a class="btn btn-success btn-circle btn-sm">
                                                     <i class="fas fa-check"></i>
                                                 </a>
                                             </td>
                                         @else
-                                            <td align="center">
+                                            <td class="text-center">
                                                 <a class="btn btn-danger btn-circle btn-sm">
                                                     <i class="fas fa-times"></i>
                                                 </a>
                                             </td>
                                         @endif
                                         @if($productionplanning->has_cart == 'Yes')
-                                             <td align="center">
+                                             <td class="text-center">
                                                 <a class="btn btn-success btn-circle btn-sm">
                                                     <i class="fas fa-check"></i>
                                                 </a>
                                             </td>
                                         @else
-                                            <td align="center">
+                                            <td class="text-center">
                                                 <a class="btn btn-danger btn-circle btn-sm">
                                                     <i class="fas fa-times"></i>
                                                 </a>
@@ -144,7 +145,7 @@
                                         <td>{{ $productionplanning->finishsew_date }}</td>
                                         <td>{{ $productionplanning->finishpack_date }}</td>
                                         <td>{{ $productionplanning->remark }}</td>
-                                        <td align="center">
+                                        <td class="text-center">
                                             <a href="/productionplanning/find/{{ $productionplanning->id }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>

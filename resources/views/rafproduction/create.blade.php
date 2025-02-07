@@ -3,6 +3,7 @@
 @include('layout.header')
 <body id="page-top">
 <!-- Page Wrapper -->
+@include('sweetalert::alert')
 <div id="wrapper">
 @include('layout.sidebar')
     <!-- Content Wrapper -->
@@ -92,7 +93,7 @@
                             </div>
                             <br>
                             <div>
-                                <label>RAF Date :</label>
+                                <label id="raf_plan_date">RAF Date :</label>
                                 <input class="date form-control" type="date" id="raf_date" name="raf_date" required>
                             </div>
                             <br>
@@ -190,6 +191,25 @@
                     } else {
                         $('#raf_left').text('RAF Qty : ' + 0);
                         $('#raf_qty').attr("max",0);
+                    }
+                }
+            });
+            $.ajax({
+                url: '/rafproduction/fetchplanningdate/'+order_list+'/'+raf_dept,
+                type: "GET",
+                dataType: "json",
+                success:function(data) {
+                    if (data.length > 0) {
+                        $.each(data, function(key, value) {
+                            $('#raf_plan_date').text('RAF Date : Min = ' + value.startdate + ', Max = ' + value.finishdate);
+                            $('#raf_date').attr("max",value.finishdate);
+                            $('#raf_date').attr("min",value.startdate);
+                            $('#raf_date').val(value.startdate);
+                        });
+                    } else {
+                        $('#raf_plan_date').text('RAF Date : ');
+                        $('#raf_date').removeAttribute("min");
+                        $('#raf_date').removeAttribute("max");
                     }
                 }
             });

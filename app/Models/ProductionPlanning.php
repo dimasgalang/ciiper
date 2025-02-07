@@ -10,6 +10,7 @@ class ProductionPlanning extends Model
     use HasFactory;
     public $table = "production_planning";
     protected $fillable = [
+        'plan_no',
         'order_trans',
         'order_list',
         'has_sample',

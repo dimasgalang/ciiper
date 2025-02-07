@@ -31,13 +31,14 @@ class AppServiceProvider extends ServiceProvider
             return Str::startsWith($route->uri, 'api/');
         });
 
-        $client = new Client();
-        $apiUrl = "https://zenquotes.io/api/quotes/";
-        $response = $client->get($apiUrl);
-        $quote = json_decode($response->getBody(), true);
+        // $client = new Client();
+        // $apiUrl = "https://zenquotes.io/api/quotes/";
+        // $response = $client->get($apiUrl);
+        // $quote = json_decode($response->getBody(), true);
 
         date_default_timezone_set('Asia/Jakarta');
-        $logs = LogCiiper::all()->take(5);
-        View::share(['logs' => $logs, 'quotes' => $quote]);
+        $logs = LogCiiper::orderBy('created_at', 'desc')->get()->take(5);
+        // View::share(['logs' => $logs, 'quotes' => $quote]);
+        View::share(['logs' => $logs]);
     }
 }

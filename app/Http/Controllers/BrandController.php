@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use App\Imports\BrandsImport;
 use App\Models\Brand;
 use App\Models\Buyer;
+use App\Models\LogCiiper;
 use App\Models\SetupIncrement;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class BrandController extends Controller
 {
@@ -33,7 +37,8 @@ class BrandController extends Controller
         Storage::delete($path);
 
         if($import) {
-            return redirect()->intended('brand/index')->with(['success' => 'Data Berhasil Diimport!']);
+            Alert::success('Import Successfully!', 'Brand data successfully imported!');
+            return redirect()->intended('brand/index');
         } else {
             return redirect()->intended('brand/index')->with(['error' => 'Data Gagal Diimport!']);
         }
@@ -48,6 +53,16 @@ class BrandController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Brand ' . $request->brand_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
         SetupIncrement::updateOrCreate([
             'models' => 'Brand'
         ],[
@@ -61,15 +76,27 @@ class BrandController extends Controller
             'brand_gender' => $request->brand_gender,
         ]);
 
+        Alert::success('Create Successfully!', 'Brand ' . $request->brand_no . ' successfully created!');
         return redirect()
-            ->route('brand.create')
-            ->with('success', 'Brand berhasil ditambahkan!');
+            ->route('brand.create');
     }
 
     public function delete($id) {
         $brands = Brand::find($id);    
         $brands->delete();
-        return redirect('brand/index')->with(['error' => 'Record Berhasil Dihapus!']);
+        
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Brand ' . $brands->brand_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+        Alert::success('Delete Successfully!', 'Brand ' . $brands->brand_no . ' successfully deleted!');
+        return redirect('brand/index');
     }
 
     public function find($id) {
@@ -80,6 +107,17 @@ class BrandController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Brand ' . $request->brand_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
         $brands = Brand::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -104,6 +142,7 @@ class BrandController extends Controller
 
         $brands->save();
 
-        return redirect()->intended('brand/index')->with(['success' => 'Update Brand Berhasil!']);
+        Alert::success('Update Successfully!', 'Brand ' . $request->brand_no . ' successfully updated!');
+        return redirect()->intended('brand/index');
     }
 }

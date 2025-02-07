@@ -3,6 +3,7 @@
 @include('layout.header')
 <body id="page-top">
 <!-- Page Wrapper -->
+@include('sweetalert::alert')
 <div id="wrapper">
 @include('layout.sidebar')
     <!-- Content Wrapper -->

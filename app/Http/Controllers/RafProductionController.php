@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LogCiiper;
 use App\Models\OrderList;
 use App\Models\OrderMaster;
 use App\Models\ProductionDept;
+use App\Models\ProductionPlanning;
 use App\Models\RafProduction;
 use App\Models\SetupIncrement;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class RafProductionController extends Controller
 {
@@ -46,6 +51,18 @@ class RafProductionController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated RAF Production ' . $request->raf_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+
         $rafproductions = RafProduction::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -75,12 +92,13 @@ class RafProductionController extends Controller
 
         $rafproductions->save();
 
-        return redirect('rafproduction/index')->with(['success' => 'RAF Production berhasil diupdate!']);
+        Alert::success('Update Successfully!', 'RAF Production ' . $request->raf_no . ' successfully updated!');
+        return redirect('rafproduction/index');
     }
 
     public function fetchorderlist($order_trans) {
-        $orderlists   = OrderList::select('*', 'order_master.*')
-        ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
+        $orderlists   = OrderList::select('order_list.*','production_planning.*')
+        ->join('production_planning', 'order_list.order_list', '=', 'production_planning.order_list')
         ->where('order_list.order_trans', '=', $order_trans)
         ->get();
         return response()->json($orderlists);
@@ -128,8 +146,43 @@ class RafProductionController extends Controller
         }
     }
 
+    public function fetchplanningdate($order_list, $raf_dept) {
+        if ($raf_dept == 'DEP000000001') {
+            $productionplannings = ProductionPlanning::select('production_planning.order_list','production_planning.startcut_date as startdate', 'production_planning.finishcut_date as finishdate')
+            ->where('production_planning.order_list', '=', $order_list)
+            ->get();
+            return response()->json($productionplannings);
+        } else if ($raf_dept == 'DEP000000002') {
+            $productionplannings = ProductionPlanning::select('production_planning.order_list','production_planning.startsew_date as startdate', 'production_planning.finishsew_date as finishdate')
+            ->where('production_planning.order_list', '=', $order_list)
+            ->get();
+            return response()->json($productionplannings);
+        } else if ($raf_dept == 'DEP000000003') {
+            $productionplannings = ProductionPlanning::select('production_planning.order_list','production_planning.startsew_date as startdate', 'production_planning.finishsew_date as finishdate')
+            ->where('production_planning.order_list', '=', $order_list)
+            ->get();
+            return response()->json($productionplannings);
+        } else if ($raf_dept == 'DEP000000004') {
+            $productionplannings = ProductionPlanning::select('production_planning.order_list','production_planning.startsew_date as startdate', 'production_planning.finishpack_date as finishdate')
+            ->where('production_planning.order_list', '=', $order_list)
+            ->get();
+            return response()->json($productionplannings);
+        }
+    }
+
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created RAF Production ' . $request->raf_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
+
         SetupIncrement::updateOrCreate([
             'models' => 'RafProduction'
         ],[
@@ -146,14 +199,27 @@ class RafProductionController extends Controller
             'remark' => $request->remark,
         ]);
 
+        Alert::success('Create Successfully!', 'RAF Production ' . $request->raf_no . ' successfully created!');
         return redirect()
-            ->route('rafproduction.create')
-            ->with('success', 'RAF Production berhasil ditambahkan!');
+            ->route('rafproduction.create');
     }
 
     public function delete($id) {
         $rafproduction = RafProduction::find($id);    
         $rafproduction->delete();
-        return redirect('rafproduction/index')->with(['error' => 'Record Berhasil Dihapus!']);
+        
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted RAF Production ' . $rafproduction->raf_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+
+        Alert::success('Delete Successfully!', 'RAF Production ' . $rafproduction->raf_no . ' successfully deleted!');
+        return redirect('rafproduction/index');
     }
 }

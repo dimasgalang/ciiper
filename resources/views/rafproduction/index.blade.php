@@ -3,6 +3,7 @@
 @include('layout.header')
 <body id="page-top">
 <!-- Page Wrapper -->
+@include('sweetalert::alert')
 <div id="wrapper">
 @include('layout.sidebar')
     <!-- Content Wrapper -->
@@ -59,7 +60,7 @@
                         </div>
                         @endif
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -82,11 +83,11 @@
                                         <td>{{ $rafproduction->dept_name }}</td>
                                         <td>{{ $rafproduction->raf_qty }}</td>
                                         <td>{{ $rafproduction->remark }}</td>
-                                        <td align="center">
+                                        <td class="text-center">
                                             <a href="/rafproduction/find/{{ $rafproduction->id }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $rafproduction->id }}" data-delete-name="{{ $rafproduction->rafproduction_name }}" data-toggle="modal" data-target="#deleteModal">
+                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $rafproduction->id }}" data-delete-name="{{ $rafproduction->raf_no }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>

@@ -30,7 +30,13 @@ class OrderListsImport implements ToModel, WithStartRow
             'dcpo_qty' => $row[6],
             'ex_factory_date' => $row[7],
             'vsl_date' => $row[8],
-            'status' => $row[9],
+            'wash_no' => $row[9],
+            'bordir_no' => $row[10],
+            'line' => $row[11],
+            'target_qty' => $row[12],
+            'production_day' => $row[13],
+            'smv' => $row[14],
+            'status' => $row[15],
         ]);
     }
 }

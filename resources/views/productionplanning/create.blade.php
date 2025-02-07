@@ -3,6 +3,7 @@
 @include('layout.header')
 <body id="page-top">
 <!-- Page Wrapper -->
+@include('sweetalert::alert')
 <div id="wrapper">
 @include('layout.sidebar')
     <!-- Content Wrapper -->
@@ -56,6 +57,15 @@
                             </div>
                             @endif
                             <div>
+                                <label>Plan No :</label>
+                                @if($setupincements->last_number ?? '')
+                                <input class="form-control" type="text" id="plan_no" name="plan_no" value="{{ 'PPL' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @else
+                                <input class="form-control" type="text" id="plan_no" name="plan_no" value="{{ 'PPL' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @endif
+                            </div>
+                            <br>
+                            <div>
                                 <label>Order Master :</label>
                                 <select class="form-control" id="order_trans" name="order_trans">
                                     <option></option>
@@ -71,102 +81,116 @@
                                     <option></option>
                                 </select>
                             </div>
-                            <br>
-                            <div>
-                                <label>Sample :</label>
-                                <select class="form-control" id="has_sample" name="has_sample">
-                                    <option></option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
+                            <br><hr>
+                            <h3>Cart</h3>
+                            <div class="row">
+                                <div class="col-xl-4">
+                                    <div>
+                                        <label>Sample :</label>
+                                        <select class="form-control" id="has_sample" name="has_sample">
+                                            <option></option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4">
+                                    <div>
+                                        <label>MI :</label>
+                                        <select class="form-control" id="has_mi" name="has_mi">
+                                            <option></option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4">
+                                    <div>
+                                        <label>Cart :</label>
+                                        <select class="form-control" id="has_cart" name="has_cart">
+                                            <option></option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                            <br>
-                            <div>
-                                <label>MI :</label>
-                                <select class="form-control" id="has_mi" name="has_mi">
-                                    <option></option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
-                            </div>
-                            <br>
-                            <div>
-                                <label>Cart :</label>
-                                <select class="form-control" id="has_cart" name="has_cart">
-                                    <option></option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
-                                </select>
-                            </div>
-                            <br>
-                            <div>
-                                <label>Fabric :</label>
-                                <input class="form-control" type="date" id="fab_date" name="fab_date" required>
-                            </div>
-                            <br>
-                            <div>
-                                <label>Acc :</label>
-                                <input class="form-control" type="date" id="acc_date" name="acc_date" required>
-                            </div>
-                            <br>
-                            <div>
-                                <label>Bordir Approve :</label>
-                                <input class="form-control" type="date" id="bordir_approve" name="bordir_approve" required>
-                            </div>
-                            <br>
-                            <div>
-                                <label>Pattern :</label>
-                                <input class="form-control" type="date" id="pattern_date" name="pattern_date" required>
-                            </div>
-                            <br>
-                            <div>
-                                <label>Sample Test :</label>
-                                <input class="form-control" type="date" id="sampletest_date" name="sampletest_date" required>
-                            </div>
-                            <br>
-                            <div>
-                                <label>Marker :</label>
-                                <input class="form-control" type="date" id="marker_date" name="marker_date" required>
-                            </div>
-                            <br>
-                            <div>
-                                <label>Pilot Run :</label>
-                                <input class="form-control" type="date" id="pilotrun_date" name="pilotrun_date" required>
-                            </div>
-                            <br>
-                            <div>
-                                <label>PPM :</label>
-                                <input class="form-control" type="date" id="ppm_date" name="ppm_date" required>
-                            </div>
-                            <br>
-                            <div>
-                                <label>Start Cutting :</label>
-                                <input class="form-control" type="date" id="startcut_date" name="startcut_date" required>
-                            </div>
-                            <br>
-                            <div>
-                                <label>Finish Cutting :</label>
-                                <input class="form-control" type="date" id="finishcut_date" name="finishcut_date" required>
-                            </div>
-                            <br>
-                            <div>
-                                <label>Start Sewing :</label>
-                                <input class="form-control" type="date" id="startsew_date" name="startsew_date" required>
-                            </div>
-                            <br>
-                            <div>
-                                <label>Finish Sewing :</label>
-                                <input class="form-control" type="date" id="finishsew_date" name="finishsew_date" required>
-                            </div>
-                            <br>
-                            <div>
-                                <label>Finish Packing :</label>
-                                <input class="form-control" type="date" id="finishpack_date" name="finishpack_date" required>
+                            <br><hr>
+                            <h3>Planning Date</h3>
+                            <div class="row">
+                                <div class="col-xl-4">
+                                    <div>
+                                        <label>Fabric :</label>
+                                        <input class="form-control" type="date" id="fab_date" name="fab_date" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Acc :</label>
+                                        <input class="form-control" type="date" id="acc_date" name="acc_date" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Bordir Approve :</label>
+                                        <input class="form-control" type="date" id="bordir_approve" name="bordir_approve" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Pattern :</label>
+                                        <input class="form-control" type="date" id="pattern_date" name="pattern_date" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Sample Test :</label>
+                                        <input class="form-control" type="date" id="sampletest_date" name="sampletest_date" required>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4">
+                                    <div>
+                                        <label>Marker :</label>
+                                        <input class="form-control" type="date" id="marker_date" name="marker_date" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Pilot Run :</label>
+                                        <input class="form-control" type="date" id="pilotrun_date" name="pilotrun_date" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>PPM :</label>
+                                        <input class="form-control" type="date" id="ppm_date" name="ppm_date" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Start Cutting :</label>
+                                        <input class="form-control" type="date" id="startcut_date" name="startcut_date" required>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4">
+                                    <div>
+                                        <label>Finish Cutting :</label>
+                                        <input class="form-control" type="date" id="finishcut_date" name="finishcut_date" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Start Sewing :</label>
+                                        <input class="form-control" type="date" id="startsew_date" name="startsew_date" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Finish Sewing :</label>
+                                        <input class="form-control" type="date" id="finishsew_date" name="finishsew_date" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Finish Packing :</label>
+                                        <input class="form-control" type="date" id="finishpack_date" name="finishpack_date" required>
+                                    </div>
+                                </div>
                             </div>
                             <br>
                             <div>
                                 <label>Remark :</label>
-                                <input class="form-control" type="text" id="remark" name="remark" required>
+                                <input class="form-control" type="text" id="remark" name="remark">
                             </div>
                             <br>
                             <div class="row">

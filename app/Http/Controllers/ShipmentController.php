@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LogCiiper;
 use App\Models\Market;
 use App\Models\OrderList;
 use App\Models\OrderMaster;
@@ -9,9 +10,12 @@ use App\Models\RafProduction;
 use App\Models\SetupIncrement;
 use App\Models\Shipment;
 use App\Models\ShipMode;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ShipmentController extends Controller
 {
@@ -50,6 +54,17 @@ class ShipmentController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Shipment ' . $request->ship_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
         $shipments = RafProduction::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -79,7 +94,8 @@ class ShipmentController extends Controller
 
         $shipments->save();
 
-        return redirect('shipment/index')->with(['success' => 'Shipment berhasil diupdate!']);
+        Alert::success('Update Successfully!', 'Shipment ' . $request->ship_no . ' successfully updated!');
+        return redirect('shipment/index');
     }
     
     public function fetchorderlist($order_trans) {
@@ -101,6 +117,17 @@ class ShipmentController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Shipment ' . $request->ship_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
+
         SetupIncrement::updateOrCreate([
             'models' => 'Shipment'
         ],[
@@ -117,8 +144,26 @@ class ShipmentController extends Controller
             'remark' => $request->remark,
         ]);
 
+        Alert::success('Create Successfully!', 'Shipment ' . $request->ship_no . ' successfully created!');
         return redirect()
-            ->route('shipment.create')
-            ->with('success', 'Shipment berhasil ditambahkan!');
+            ->route('shipment.create');
+    }
+
+    public function delete($id) {
+        $shipments = Shipment::find($id);    
+        $shipments->delete();
+
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Shipment ' . $shipments->bordir_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+        Alert::success('Delete Successfully!', 'Shipment ' . $shipments->ship_no . ' successfully deleted!');
+        return redirect('shipment/index');
     }
 }

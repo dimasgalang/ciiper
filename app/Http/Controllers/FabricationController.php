@@ -5,12 +5,16 @@ namespace App\Http\Controllers;
 use App\Imports\FabricationsImport;
 use App\Models\Fabrication;
 use App\Models\FabricMill;
+use App\Models\LogCiiper;
 use App\Models\OrderMaster;
 use App\Models\SetupIncrement;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class FabricationController extends Controller
 {
@@ -36,7 +40,8 @@ class FabricationController extends Controller
         Storage::delete($path);
 
         if($import) {
-            return redirect()->intended('fabrication/index')->with(['success' => 'Data Berhasil Diimport!']);
+            Alert::success('Import Successfully!', 'Fabrication data successfully imported!');
+            return redirect()->intended('fabrication/index');
         } else {
             return redirect()->intended('fabrication/index')->with(['error' => 'Data Gagal Diimport!']);
         }
@@ -53,6 +58,16 @@ class FabricationController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Fabrication ' . $request->fab_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
         SetupIncrement::updateOrCreate([
             'models' => 'Fabrication'
         ],[
@@ -68,15 +83,27 @@ class FabricationController extends Controller
             'etd' => $request->etd,
         ]);
 
+        Alert::success('Create Successfully!', 'Fabrication ' . $request->fab_no . ' successfully created!');
         return redirect()
-            ->route('fabrication.create')
-            ->with('success', 'Fabrication berhasil ditambahkan!');
+            ->route('fabrication.create');
     }
 
     public function delete($id) {
         $fabrication = Fabrication::find($id);    
         $fabrication->delete();
-        return redirect('fabrication/index')->with(['error' => 'Record Berhasil Dihapus!']);
+        
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Fabrication ' . $fabrication->fab_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+        Alert::success('Delete Successfully!', 'Fabrication ' . $fabrication->fab_no . ' successfully deleted!');
+        return redirect('fabrication/index');
     }
 
     public function find($id) {
@@ -92,6 +119,17 @@ class FabricationController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Fabrication ' . $request->fab_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
         $fabrications = Fabrication::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -120,6 +158,7 @@ class FabricationController extends Controller
 
         $fabrications->save();
 
-        return redirect('fabrication/index')->with(['success' => 'Fabrication berhasil diupdate!']);
+        Alert::success('Update Successfully!', 'Fabrication ' . $request->fab_no . ' successfully updated!');
+        return redirect('fabrication/index');
     }
 }

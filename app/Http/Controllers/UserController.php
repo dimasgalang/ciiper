@@ -10,13 +10,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class UserController extends Controller
 {
     public function delete($id) {
         $users = User::find($id);    
         $users->delete();
-        return redirect()->intended('listuser')->with(['error' => 'Record Berhasil Dihapus!']);
+        Alert::success('Delete Successfully!', 'User ' . $users->name . ' successfully deleted!');
+        return redirect()->intended('listuser');
     }
 
     public function detail($id) {
@@ -48,7 +50,8 @@ class UserController extends Controller
             ]
         );
 
-        return redirect()->intended('listuser')->with(['success' => 'Assign Role User Berhasil!']);
+        Alert::success('Assign Successfully!', 'User successfully assigned!');
+        return redirect()->intended('listuser');
     }
 
     public function update(Request $request)
@@ -73,7 +76,8 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->intended('listuser')->with(['success' => 'Update User Berhasil!']);
+        Alert::success('Update Successfully!', 'User ' . $request->name . ' successfully updated!');
+        return redirect()->intended('listuser');
     }
 
     public function import(Request $request)
@@ -89,7 +93,8 @@ class UserController extends Controller
         Storage::delete($path);
 
         if($import) {
-            return redirect()->intended('listuser')->with(['success' => 'Data Berhasil Diimport!']);
+            Alert::success('Import Successfully!', 'User data successfully imported!');
+            return redirect()->intended('listuser');
         } else {
             return redirect()->intended('listuser')->with(['error' => 'Data Gagal Diimport!']);
         }

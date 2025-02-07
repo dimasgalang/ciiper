@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Imports\BordirTypesImport;
 use App\Models\BordirType;
+use App\Models\LogCiiper;
 use App\Models\SetupIncrement;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class BordirTypeController extends Controller
 {
@@ -30,6 +34,7 @@ class BordirTypeController extends Controller
         Storage::delete($path);
 
         if($import) {
+            Alert::success('Import Successfully!', 'Bordir type data successfully imported!');
             return redirect()->intended('bordirtype/index')->with(['success' => 'Data Berhasil Diimport!']);
         } else {
             return redirect()->intended('bordirtype/index')->with(['error' => 'Data Gagal Diimport!']);
@@ -43,6 +48,16 @@ class BordirTypeController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Bordir Type ' . $request->bordir_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
         SetupIncrement::updateOrCreate([
             'models' => 'BordirType'
         ],[
@@ -54,15 +69,27 @@ class BordirTypeController extends Controller
             'bordir_type' => $request->bordir_type,
         ]);
 
+        Alert::success('Create Successfully!', 'Bordir Type ' . $request->bordir_no . ' successfully created!');
         return redirect()
-            ->route('bordirtype.create')
-            ->with('success', 'Bordir Type berhasil ditambahkan!');
+            ->route('bordirtype.create');
     }
 
     public function delete($id) {
         $bordirtypes = BordirType::find($id);    
         $bordirtypes->delete();
-        return redirect('bordirtype/index')->with(['error' => 'Record Berhasil Dihapus!']);
+
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Bordir Type ' . $bordirtypes->bordir_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+        Alert::success('Delete Successfully!', 'Bordir type ' . $bordirtypes->bordir_no . ' successfully deleted!');
+        return redirect('bordirtype/index');
     }
 
     public function find($id) {
@@ -72,6 +99,16 @@ class BordirTypeController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Bordir Type ' . $request->bordir_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
         $bordirtypes = BordirType::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -92,6 +129,7 @@ class BordirTypeController extends Controller
 
         $bordirtypes->save();
 
-        return redirect('bordirtype/index')->with(['success' => 'Bordir Type berhasil diupdate!']);
+        Alert::success('Update Successfully!', 'Bordir type ' . $bordirtypes->bordir_no . ' successfully updated!');
+        return redirect('bordirtype/index');
     }
 }

@@ -54,19 +54,19 @@
         </a>
         <div id="collapseMaster" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('buyer.index') }}">Buyer</a>
+                <a class="collapse-item" href="{{ route('bordirtype.index') }}">Bordir Type</a>
                 <a class="collapse-item" href="{{ route('brand.index') }}">Brand</a>
-                <a class="collapse-item" href="{{ route('style.index') }}">Style</a>
-                <a class="collapse-item" href="{{ route('season.index') }}">Season</a>
-                <a class="collapse-item" href="{{ route('po.index') }}">Purchase Order</a>
+                <a class="collapse-item" href="{{ route('buyer.index') }}">Buyer</a>
                 <a class="collapse-item" href="{{ route('fabricmill.index') }}">Fabric Mill</a>
                 <a class="collapse-item" href="{{ route('factory.index') }}">Factory</a>
-                <a class="collapse-item" href="{{ route('shipmode.index') }}">Ship Mode</a>
+                <a class="collapse-item" href="{{ route('followup.index') }}">Follow Up</a>
                 <a class="collapse-item" href="{{ route('market.index') }}">Market</a>
                 <a class="collapse-item" href="{{ route('productiondept.index') }}">Production Dept</a>
-                <a class="collapse-item" href="{{ route('followup.index') }}">Follow Up</a>
+                <a class="collapse-item" href="{{ route('po.index') }}">Purchase Order</a>
+                <a class="collapse-item" href="{{ route('season.index') }}">Season</a>
+                <a class="collapse-item" href="{{ route('shipmode.index') }}">Ship Mode</a>
+                <a class="collapse-item" href="{{ route('style.index') }}">Style</a>
                 <a class="collapse-item" href="{{ route('washtype.index') }}">Wash Type</a>
-                <a class="collapse-item" href="{{ route('bordirtype.index') }}">Bordir Type</a>
             </div>
         </div>
     </li>
@@ -81,10 +81,10 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('ordermaster.index') }}">Order Master</a>
                 <a class="collapse-item" href="{{ route('orderlist.index') }}">Order List</a>
+                <a class="collapse-item" href="{{ route('productionplanning.index') }}">Production Planning</a>
                 <a class="collapse-item" href="{{ route('fabrication.index') }}">Fabrication</a>
                 <a class="collapse-item" href="{{ route('rafproduction.index') }}">RAF Production</a>
                 <a class="collapse-item" href="{{ route('shipment.index') }}">Shipment</a>
-                <a class="collapse-item" href="{{ route('productionplanning.index') }}">Production Planning</a>
             </div>
         </div>
     </li>
@@ -169,19 +169,19 @@
             </div>
         </div>
     </li> -->
-    <li class="nav-item">
+    <!-- <li class="nav-item">
         <a class="nav-link" href="/docs/api" target="_blank">
             <i class="fas fa-fw fa-table"></i>
             <span>API Docs</span></a>
-    </li>
+    </li> -->
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 
     <!-- Sidebar Toggler (Sidebar) -->
-    <div class="text-center d-none d-md-inline">
+    <!-- <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div>
+    </div> -->
 
 </ul>
 <!-- End of Sidebar -->

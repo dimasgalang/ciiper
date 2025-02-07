@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Imports\PurchaseOrdersImport;
+use App\Models\LogCiiper;
 use App\Models\PurchaseOrder;
 use App\Models\SetupIncrement;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PurchaseOrderController extends Controller
 {
@@ -30,7 +34,8 @@ class PurchaseOrderController extends Controller
         Storage::delete($path);
 
         if($import) {
-            return redirect()->intended('po/index')->with(['success' => 'Data Berhasil Diimport!']);
+            Alert::success('Import Successfully!', 'Purchase Order data successfully imported!');
+            return redirect()->intended('po/index');
         } else {
             return redirect()->intended('po/index')->with(['error' => 'Data Gagal Diimport!']);
         }
@@ -46,6 +51,17 @@ class PurchaseOrderController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Purchase Order ' . $request->po_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
+
         SetupIncrement::updateOrCreate([
             'models' => 'PurchaseOrder'
         ],[
@@ -58,15 +74,28 @@ class PurchaseOrderController extends Controller
             'po_desc' => $request->po_desc,
         ]);
 
+        Alert::success('Create Successfully!', 'Purchase Order ' . $request->po_no . ' successfully created!');
         return redirect()
-            ->route('po.create')
-            ->with('success', 'Master PO berhasil ditambahkan!');
+            ->route('po.create');
     }
 
     public function delete($id) {
         $pos = PurchaseOrder::find($id);    
         $pos->delete();
-        return redirect('po/index')->with(['error' => 'Record Berhasil Dihapus!']);
+        
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Purchase Order ' . $pos->po_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+
+        Alert::success('Delete Successfully!', 'Purchase Order ' . $pos->po_no . ' successfully deleted!');
+        return redirect('po/index');
     }
 
     public function find($id) {
@@ -76,6 +105,17 @@ class PurchaseOrderController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Purchase Order ' . $request->po_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
         $pos = PurchaseOrder::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -98,6 +138,7 @@ class PurchaseOrderController extends Controller
 
         $pos->save();
 
-        return redirect('po/index')->with(['success' => 'Master PO berhasil diupdate!']);
+        Alert::success('Update Successfully!', 'Purchase Order ' . $request->po_no . ' successfully update!');
+        return redirect('po/index');
     }
 }

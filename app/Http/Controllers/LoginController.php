@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class LoginController extends Controller
 {
@@ -36,7 +37,9 @@ class LoginController extends Controller
                 'icon' => 'link',
                 'color' => 'bg-success',
             ]);
-            return redirect()->intended('/home')->with(['success' => 'Berhasil Login!']);
+
+            Alert::success('Login Successfully!', 'Welcome To Chutex Sistem');
+            return redirect()->intended('/home');
         };
 
         return back()->withErrors([
@@ -58,6 +61,7 @@ class LoginController extends Controller
             'icon' => 'unlink',
             'color' => 'bg-danger',
         ]);
-        return redirect('/login')->with(['success' => 'Berhasil Logout!']);
+        Alert::success('Logout Successfully!', 'See You Next Time');
+        return redirect('/login');
     }
 }

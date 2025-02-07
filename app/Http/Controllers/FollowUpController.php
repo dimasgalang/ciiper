@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Imports\FollowUpsImport;
 use App\Models\FollowUp;
+use App\Models\LogCiiper;
 use App\Models\SetupIncrement;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class FollowUpController extends Controller
 {
@@ -30,7 +34,8 @@ class FollowUpController extends Controller
         Storage::delete($path);
 
         if($import) {
-            return redirect()->intended('followup/index')->with(['success' => 'Data Berhasil Diimport!']);
+            Alert::success('Import Successfully!', 'Follow Up data successfully imported!');
+            return redirect()->intended('followup/index');
         } else {
             return redirect()->intended('followup/index')->with(['error' => 'Data Gagal Diimport!']);
         }
@@ -43,6 +48,16 @@ class FollowUpController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Follow Up ' . $request->fu_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
         SetupIncrement::updateOrCreate([
             'models' => 'FollowUp'
         ],[
@@ -55,15 +70,27 @@ class FollowUpController extends Controller
             'fu_name' => $request->fu_name,
         ]);
 
+        Alert::success('Create Successfully!', 'Follow Up ' . $request->fu_no . ' successfully created!');
         return redirect()
-            ->route('followup.create')
-            ->with('success', 'Follow Up berhasil ditambahkan!');
+            ->route('followup.create');
     }
 
     public function delete($id) {
         $followups = FollowUp::find($id);    
         $followups->delete();
-        return redirect('followup/index')->with(['error' => 'Record Berhasil Dihapus!']);
+        
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Follow Up ' . $followups->fu_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+        Alert::success('Delete Successfully!', 'Follow Up ' . $followups->fu_no . ' successfully deleted!');
+        return redirect('followup/index');
     }
 
     public function find($id) {
@@ -73,6 +100,17 @@ class FollowUpController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Follow Up ' . $request->fu_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
         $followups = FollowUp::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -93,6 +131,7 @@ class FollowUpController extends Controller
 
         $followups->save();
 
-        return redirect('followup/index')->with(['success' => 'Follow Up berhasil diupdate!']);
+        Alert::success('Update Successfully!', 'Follow Up ' . $request->fu_no . ' successfully updated!');
+        return redirect('followup/index');
     }
 }

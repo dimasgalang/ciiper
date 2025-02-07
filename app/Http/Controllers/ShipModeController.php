@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Imports\ShipModesImport;
+use App\Models\LogCiiper;
 use App\Models\SetupIncrement;
 use App\Models\ShipMode;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ShipModeController extends Controller
 {
@@ -30,7 +34,8 @@ class ShipModeController extends Controller
         Storage::delete($path);
 
         if($import) {
-            return redirect()->intended('shipmode/index')->with(['success' => 'Data Berhasil Diimport!']);
+            Alert::success('Import Successfully!', 'Ship Mode data successfully imported!');
+            return redirect()->intended('shipmode/index');
         } else {
             return redirect()->intended('shipmode/index')->with(['error' => 'Data Gagal Diimport!']);
         }
@@ -43,6 +48,17 @@ class ShipModeController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Ship Mode ' . $request->shipmode_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
+
         SetupIncrement::updateOrCreate([
             'models' => 'ShipMode'
         ],[
@@ -54,15 +70,28 @@ class ShipModeController extends Controller
             'shipmode_name' => $request->shipmode_name,
         ]);
 
+        Alert::success('Create Successfully!', 'Ship Mode ' . $request->shipmode_no . ' successfully created!');
         return redirect()
-            ->route('shipmode.create')
-            ->with('success', 'Ship Mode berhasil ditambahkan!');
+            ->route('shipmode.create');
     }
 
     public function delete($id) {
         $shipmodes = ShipMode::find($id);    
         $shipmodes->delete();
-        return redirect('shipmode/index')->with(['error' => 'Record Berhasil Dihapus!']);
+        
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Ship Mode ' . $shipmodes->shipmode_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+
+        Alert::success('Delete Successfully!', 'Ship Mode ' . $shipmodes->shipmode_no . ' successfully deleted!');
+        return redirect('shipmode/index');
     }
 
     public function find($id) {
@@ -72,6 +101,17 @@ class ShipModeController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Ship Mode ' . $request->shipmode_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
         $shipmodes = ShipMode::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -92,6 +132,7 @@ class ShipModeController extends Controller
 
         $shipmodes->save();
 
-        return redirect('shipmode/index')->with(['success' => 'Ship Mode berhasil diupdate!']);
+        Alert::success('Update Successfully!', 'Ship Mode ' . $request->shipmode_no . ' successfully updated!');
+        return redirect('shipmode/index');
     }
 }

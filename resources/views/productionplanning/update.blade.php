@@ -59,11 +59,16 @@
                                 <input class="form-control" type="hidden" id="id" name="id" value="{{ $productionplannings->id }}" readonly>
                             </div>
                             <div>
+                                <label>Plan No :</label>
+                                <input class="form-control" type="text" id="plan_no" name="plan_no" value="{{ $productionplannings->plan_no }}" required readonly>
+                            </div>
+                            <br>
+                            <div>
                                 <label>Order Trans :</label>
                                 <select class="form-control" id="order_trans" name="order_trans">
                                     <option></option>
                                     @foreach($ordermasters as $ordermaster)
-                                        <option value="{{ $ordermaster->order_trans }}" {{ $productionplannings->order_trans == $ordermaster->order_trans  ? 'selected' : ''}}>{{ $ordermaster->order_trans }}</option>
+                                        <option value="{{ $ordermaster->order_trans }}" {{ $productionplannings->order_trans == $ordermaster->order_trans  ? 'selected' : ''}}>{{ $ordermaster->order_trans }} - {{ $ordermaster->po_master }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -73,7 +78,7 @@
                                 <select class="form-control" id="order_list" name="order_list">
                                     <option></option>
                                     @foreach($orderlists as $orderlist)
-                                        <option value="{{ $orderlist->order_list }}" {{ $productionplannings->order_list == $orderlist->order_list  ? 'selected' : ''}}>{{ $orderlist->order_list }}</option>
+                                        <option value="{{ $orderlist->order_list }}" {{ $productionplannings->order_list == $orderlist->order_list  ? 'selected' : ''}}>{{ $orderlist->order_list }} - {{ $orderlist->pobuyer_no }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -172,7 +177,7 @@
                             <br>
                             <div>
                                 <label>Remark :</label>
-                                <input class="form-control" type="text" id="remark" name="remark" value="{{ $productionplannings->remark }}" required>
+                                <input class="form-control" type="text" id="remark" name="remark" value="{{ $productionplannings->remark }}">
                             </div>
                             <br>
                             <div class="row">

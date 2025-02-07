@@ -7,7 +7,7 @@
     </button>
 
     <!-- Topbar Search -->
-    <form
+    <!-- <form
         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
         <div class="input-group">
             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
@@ -18,9 +18,14 @@
                 </button>
             </div>
         </div>
-    </form>
-
-    <marquee style="margin-left: 15px;">{{ $quotes[0]['q'] . ' - ' . $quotes[0]['a'] }}</marquee>
+    </form> -->
+    
+    <div class="text-center d-none d-md-inline">
+        <!-- Counter - Alerts -->
+        <button class="border-0" id="sidebarToggle" style="background-color: transparent;">
+            <i class="fas fa-bars fa-fw"></i>
+        </button>
+    </div>
 
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
@@ -79,6 +84,14 @@
                 <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
             </div>
         </li>
+
+        <!-- <li class="nav-item dropdown no-arrow mx-1">
+            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-expand-arrows-alt fa-fw"></i>
+                <span class="badge badge-danger badge-counter" onclick="openFullscreen();"></span>
+            </a>
+        </li> -->
 
         <div class="topbar-divider d-none d-sm-block"></div>
 

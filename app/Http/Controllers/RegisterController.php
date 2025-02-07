@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class RegisterController extends Controller
 {
@@ -39,7 +40,8 @@ class RegisterController extends Controller
         if (Auth::attempt(['email' => $user->email, 'password' => $request->password])) {
             $request->session()->regenerate();
 
-            return redirect()->intended('home')->with(['success' => 'Registrasi Berhasil!']);
+            Alert::success('Create Successfully!', 'User ' . $request->name . ' successfully created!');
+            return redirect()->intended('home');
         }
     }
 
@@ -56,6 +58,7 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->intended('listuser')->with(['success' => 'Registrasi Berhasil!']);
+        Alert::success('Create Successfully!', 'User ' . $request->name . ' successfully created!');
+        return redirect()->intended('listuser');
     }
 }

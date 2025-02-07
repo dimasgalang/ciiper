@@ -2,6 +2,7 @@
 <html lang="en">
 @include('layout.header')
 <body class="bg-gradient-primary">
+    @include('sweetalert::alert')
 
     <div class="container container-center">
         <div class="text-center">

@@ -3,6 +3,7 @@
 @include('layout.header')
 <body id="page-top">
 <!-- Page Wrapper -->
+@include('sweetalert::alert')
 <div id="wrapper">
 @include('layout.sidebar')
     <!-- Content Wrapper -->
@@ -132,6 +133,11 @@
                             <div>
                                 <label>Line :</label>
                                 <input class="date form-control" type="number" id="line" name="line" required>
+                            </div>
+                            <br>
+                            <div>
+                                <label>SMV :</label>
+                                <input class="date form-control" type="number" id="smv" name="smv" required>
                             </div>
                             <br>
                             <div>

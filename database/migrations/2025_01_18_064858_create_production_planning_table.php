@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('production_planning', function (Blueprint $table) {
             $table->id();
+            $table->string('plan_no');
             $table->string('order_trans');
             $table->string('order_list');
             $table->string('has_sample');

@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('line');
             $table->integer('target_qty');
             $table->integer('production_day');
+            $table->double('smv');
             $table->string('status')->nullable();
             $table->timestamps();
         });

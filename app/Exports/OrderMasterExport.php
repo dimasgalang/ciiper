@@ -32,7 +32,7 @@ class OrderMasterExport implements FromCollection, WithHeadings, WithStrictNullC
 
     public function collection()
     {
-        return OrderMaster::select('order_master.id','order_master.order_trans','season.season_cat','season.season_year','buyer.buyer_name', 'brand.brand_name', 'style_name','purchase_order.po_master','order_master.qty_order','order_master.qty_ocf', DB::raw('round(sum(if(raf_production.raf_dept = "DEP000000004", raf_production.raf_qty, 0)),2) as sum_raf_qty'),'order_master.qty_sbd','followup.fu_name','order_master.sketch_file','order_master.remark', DB::raw('ROW_NUMBER() OVER (ORDER BY order_master.id) AS row_num'))
+        return OrderMaster::select('order_master.id','order_master.order_trans','season.season_cat','season.season_year','buyer.buyer_name', 'brand.brand_name', 'style_name','purchase_order.po_master','order_master.qty_order','order_master.qty_ocf', DB::raw('round(sum(if(raf_production.raf_dept = "DEP000000004", raf_production.raf_qty, 0)),2) as qty_gmt'),'order_master.qty_sbd','followup.fu_name','order_master.sketch_file','order_master.remark', DB::raw('ROW_NUMBER() OVER (ORDER BY order_master.id) AS row_num'))
         ->leftJoin('season', 'order_master.season_no', '=', 'season.season_no')
         ->leftJoin('buyer', 'order_master.buyer_no', '=', 'buyer.buyer_no')
         ->leftJoin('brand', 'order_master.brand_no', '=', 'brand.brand_no')

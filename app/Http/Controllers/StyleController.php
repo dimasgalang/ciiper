@@ -7,10 +7,14 @@ use App\Imports\StylesImport;
 use App\Models\Brand;
 use App\Models\Style;
 use App\Models\Buyer;
+use App\Models\LogCiiper;
 use App\Models\SetupIncrement;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class StyleController extends Controller
 {
@@ -34,7 +38,8 @@ class StyleController extends Controller
         Storage::delete($path);
 
         if($import) {
-            return redirect()->intended('style/index')->with(['success' => 'Data Berhasil Diimport!']);
+            Alert::success('Import Successfully!', 'Style data successfully imported!');
+            return redirect()->intended('style/index');
         } else {
             return redirect()->intended('style/index')->with(['error' => 'Data Gagal Diimport!']);
         }
@@ -48,6 +53,17 @@ class StyleController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Style ' . $request->style_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
+
         SetupIncrement::updateOrCreate([
             'models' => 'Style'
         ],[
@@ -61,15 +77,28 @@ class StyleController extends Controller
             'style_desc' => $request->style_desc,
         ]);
 
+        Alert::success('Create Successfully!', 'Style ' . $request->style_no . ' successfully created!');
         return redirect()
-            ->route('style.create')
-            ->with('success', 'Style berhasil ditambahkan!');
+            ->route('style.create');
     }
 
     public function delete($id) {
-        $buyers = Style::find($id);    
-        $buyers->delete();
-        return redirect('style/index')->with(['error' => 'Record Berhasil Dihapus!']);
+        $styles = Style::find($id);    
+        $styles->delete();
+        
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Style ' . $styles->style_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+
+        Alert::success('Delete Successfully!', 'Style ' . $styles->style_no . ' successfully deleted!');
+        return redirect('style/index');
     }
 
     public function find($id) {
@@ -79,6 +108,18 @@ class StyleController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Style ' . $request->style_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+
         $styles = Style::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -103,6 +144,7 @@ class StyleController extends Controller
 
         $styles->save();
 
-        return redirect('style/index')->with(['success' => 'Style berhasil diupdate!']);
+        Alert::success('Update Successfully!', 'Style ' . $request->style_no . ' successfully updated!');
+        return redirect('style/index');
     }
 }

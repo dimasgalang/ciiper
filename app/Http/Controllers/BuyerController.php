@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Imports\BuyersImport;
 use App\Models\Buyer;
+use App\Models\LogCiiper;
 use App\Models\SetupIncrement;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class BuyerController extends Controller
 {
@@ -30,7 +34,8 @@ class BuyerController extends Controller
         Storage::delete($path);
 
         if($import) {
-            return redirect()->intended('buyer/index')->with(['success' => 'Data Berhasil Diimport!']);
+            Alert::success('Import Successfully!', 'Buyer data successfully imported!');
+            return redirect()->intended('buyer/index');
         } else {
             return redirect()->intended('buyer/index')->with(['error' => 'Data Gagal Diimport!']);
         }
@@ -43,6 +48,17 @@ class BuyerController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Buyer ' . $request->buyer_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
+
         SetupIncrement::updateOrCreate([
             'models' => 'Buyer'
         ],[
@@ -56,15 +72,28 @@ class BuyerController extends Controller
             'buyer_contact' => $request->buyer_contact,
         ]);
 
+        Alert::success('Create Successfully!', 'Buyer ' . $request->buyer_no . ' successfully created!');
         return redirect()
-            ->route('buyer.create')
-            ->with('success', 'Buyer berhasil ditambahkan!');
+            ->route('buyer.create');
     }
 
     public function delete($id) {
         $buyers = Buyer::find($id);    
         $buyers->delete();
-        return redirect('buyer/index')->with(['error' => 'Record Berhasil Dihapus!']);
+        
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Buyer ' . $buyers->buyer_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+        
+        Alert::success('Delete Successfully!', 'Buyer ' . $buyers->buyer_no . ' successfully deleted!');
+        return redirect('buyer/index');
     }
 
     public function find($id) {
@@ -74,13 +103,22 @@ class BuyerController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Buyer ' . $request->buyer_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+        
         $buyers = Buyer::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
             'buyer_no' => 'required|max:255',
             'buyer_name' => 'required|max:225|',
-            'buyer_address' => 'required|max:225|',
-            'buyer_contact' => 'required|max:225|',
         ]);
 
         if ($validator->fails()) {
@@ -98,6 +136,7 @@ class BuyerController extends Controller
 
         $buyers->save();
 
-        return redirect()->intended('buyer/index')->with(['success' => 'Update Buyer Berhasil!']);
+        Alert::success('Update Successfully!', 'Buyer ' . $request->buyer_no . ' successfully updated!');
+        return redirect()->intended('buyer/index');
     }
 }

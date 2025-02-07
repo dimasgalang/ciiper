@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Imports\ProductionDeptsImport;
+use App\Models\LogCiiper;
 use App\Models\ProductionDept;
 use App\Models\SetupIncrement;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ProductionDeptController extends Controller
 {
@@ -23,6 +27,16 @@ class ProductionDeptController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Production Dept ' . $request->dept_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
         SetupIncrement::updateOrCreate([
             'models' => 'ProductionDept'
         ],[
@@ -34,15 +48,28 @@ class ProductionDeptController extends Controller
             'dept_name' => $request->dept_name,
         ]);
 
+        Alert::success('Create Successfully!', 'Production Dept ' . $request->dept_no . ' successfully created!');
         return redirect()
-            ->route('productiondept.create')
-            ->with('success', 'Production Dept berhasil ditambahkan!');
+            ->route('productiondept.create');
     }
 
     public function delete($id) {
         $productiondepts = ProductionDept::find($id);    
         $productiondepts->delete();
-        return redirect('productiondept/index')->with(['error' => 'Record Berhasil Dihapus!']);
+        
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Production Dept ' . $productiondepts->dept_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+
+        Alert::success('Delete Successfully!', 'Production Dept ' . $productiondepts->dept_no . ' successfully deleted!');
+        return redirect('productiondept/index');
     }
 
     public function import(Request $request)
@@ -57,7 +84,8 @@ class ProductionDeptController extends Controller
         $import = Excel::import(new ProductionDeptsImport(), storage_path('app/public/excel/'.$nama_file));
 
         if($import) {
-            return redirect()->intended('productiondept/index')->with(['success' => 'Data Berhasil Diimport!']);
+            Alert::success('Import Successfully!', 'Production Dept data successfully imported!');
+            return redirect()->intended('productiondept/index');
         } else {
             return redirect()->intended('productiondept/index')->with(['error' => 'Data Gagal Diimport!']);
         }
@@ -70,6 +98,17 @@ class ProductionDeptController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Production Dept ' . $request->dept_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
         $productiondepts = ProductionDept::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -90,6 +129,7 @@ class ProductionDeptController extends Controller
 
         $productiondepts->save();
 
-        return redirect('productiondept/index')->with(['success' => 'Market berhasil diupdate!']);
+        Alert::success('Update Successfully!', 'Production Dept ' . $request->dept_no . ' successfully updated!');
+        return redirect('productiondept/index');
     }
 }

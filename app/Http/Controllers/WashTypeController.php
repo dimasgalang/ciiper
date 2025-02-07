@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Imports\WashTypesImport;
+use App\Models\LogCiiper;
 use App\Models\SetupIncrement;
 use App\Models\WashType;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class WashTypeController extends Controller
 {
@@ -30,7 +34,8 @@ class WashTypeController extends Controller
         Storage::delete($path);
 
         if($import) {
-            return redirect()->intended('washtype/index')->with(['success' => 'Data Berhasil Diimport!']);
+            Alert::success('Import Successfully!', 'Wash Type data successfully imported!');
+            return redirect()->intended('washtype/index');
         } else {
             return redirect()->intended('washtype/index')->with(['error' => 'Data Gagal Diimport!']);
         }
@@ -43,6 +48,16 @@ class WashTypeController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Wash Type ' . $request->wash_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
         SetupIncrement::updateOrCreate([
             'models' => 'WashType'
         ],[
@@ -54,15 +69,27 @@ class WashTypeController extends Controller
             'wash_type' => $request->wash_type,
         ]);
 
+        Alert::success('Create Successfully!', 'Wash Type ' . $request->wash_no . ' successfully created!');
         return redirect()
-            ->route('washtype.create')
-            ->with('success', 'Wash Type berhasil ditambahkan!');
+            ->route('washtype.create');
     }
 
     public function delete($id) {
         $washtypes = WashType::find($id);    
         $washtypes->delete();
-        return redirect('washtype/index')->with(['error' => 'Record Berhasil Dihapus!']);
+        
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Wash Type ' . $washtypes->wash_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+        Alert::success('Delete Successfully!', 'Wash Type ' . $washtypes->wash_no . ' successfully deleted!');
+        return redirect('washtype/index');
     }
 
     public function find($id) {
@@ -72,6 +99,16 @@ class WashTypeController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Wash Type ' . $request->wash_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
         $washtypes = WashType::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -92,6 +129,7 @@ class WashTypeController extends Controller
 
         $washtypes->save();
 
-        return redirect('washtype/index')->with(['success' => 'Wash Type berhasil diupdate!']);
+        Alert::success('Update Successfully!', 'Wash Type ' . $request->wash_no . ' successfully updated!');
+        return redirect('washtype/index');
     }
 }

@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Imports\FactorysImport;
 use App\Models\Factory;
+use App\Models\LogCiiper;
 use App\Models\SetupIncrement;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class FactoryController extends Controller
 {
@@ -30,7 +34,8 @@ class FactoryController extends Controller
         Storage::delete($path);
 
         if($import) {
-            return redirect()->intended('factory/index')->with(['success' => 'Data Berhasil Diimport!']);
+            Alert::success('Import Successfully!', 'Factory data successfully imported!');
+            return redirect()->intended('factory/index');
         } else {
             return redirect()->intended('factory/index')->with(['error' => 'Data Gagal Diimport!']);
         }
@@ -43,6 +48,16 @@ class FactoryController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Factory ' . $request->factory_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
         SetupIncrement::updateOrCreate([
             'models' => 'Factory'
         ],[
@@ -54,15 +69,27 @@ class FactoryController extends Controller
             'factory_name' => $request->factory_name,
         ]);
 
+        Alert::success('Create Successfully!', 'Factory ' . $request->factory_no . ' successfully created!');
         return redirect()
-            ->route('factory.create')
-            ->with('success', 'Factory berhasil ditambahkan!');
+            ->route('factory.create');
     }
 
     public function delete($id) {
         $factorys = Factory::find($id);    
         $factorys->delete();
-        return redirect('factory/index')->with(['error' => 'Record Berhasil Dihapus!']);
+        
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Factory ' . $factorys->factory_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+        Alert::success('Delete Successfully!', 'Factory ' . $factorys->factory_no . ' successfully deleted!');
+        return redirect('factory/index');
     }
 
     public function find($id) {
@@ -72,6 +99,28 @@ class FactoryController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Factory ' . $request->factory_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Factory ' . $request->factory_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
+
         $factorys = Factory::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -92,6 +141,7 @@ class FactoryController extends Controller
 
         $factorys->save();
 
-        return redirect('factory/index')->with(['success' => 'Factory berhasil diupdate!']);
+        Alert::success('Update Successfully!', 'Factory ' . $request->factory_no . ' successfully updated!');
+        return redirect('factory/index');
     }
 }

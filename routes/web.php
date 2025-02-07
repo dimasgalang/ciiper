@@ -42,12 +42,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', [HomeController::class, 'landing'])->name('/');
+
 //Auth
 Route::group(['middleware' => 'guest'], function () {
-    Route::get('/', function () {
-        return view('welcome');
-    });
-
     Route::get('/register', [RegisterController::class, 'index'])->name('register');
     Route::post('/register/guest', [RegisterController::class, 'store'])->name('register.guest');
     
@@ -212,6 +210,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/rafproduction/update', [RafProductionController::class, 'update'])->name('rafproduction.update');
     Route::get('/rafproduction/fetchorderlist/{order_trans}', [RafProductionController::class, 'fetchorderlist'])->name('rafproduction.fetchorderlist');
     Route::get('/rafproduction/fetchrafleft/{order_list}/{raf_dept}', [RafProductionController::class, 'fetchrafleft'])->name('rafproduction.fetchrafleft');
+    Route::get('/rafproduction/fetchplanningdate/{order_list}/{raf_dept}', [RafProductionController::class, 'fetchplanningdate'])->name('rafproduction.fetchplanningdate');
     
     //Ship Mode
     Route::get('/shipmode/index', [ShipModeController::class, 'index'])->name('shipmode.index');

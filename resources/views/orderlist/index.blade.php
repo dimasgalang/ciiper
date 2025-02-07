@@ -3,6 +3,7 @@
 @include('layout.header')
 <body id="page-top">
 <!-- Page Wrapper -->
+@include('sweetalert::alert')
 <div id="wrapper">
 @include('layout.sidebar')
     <!-- Content Wrapper -->
@@ -59,12 +60,12 @@
                         </div>
                         @endif
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Master PO</th>
                                         <th>Order List</th>
+                                        <th>Master PO</th>
                                         <th>Factory</th>
                                         <th>Lot</th>
                                         <th>PO Buyer</th>
@@ -74,6 +75,10 @@
                                         <th>Vsl Date</th>
                                         <th>Wash Type</th>
                                         <th>Bordir Type</th>
+                                        <th>Line</th>
+                                        <th>SMV</th>
+                                        <th>Target Qty</th>
+                                        <th>Production Day</th>
                                         <th>Status</th>
                                         <!-- <th>Fabric Mill</th>
                                         <th>Fabrication</th>
@@ -85,9 +90,9 @@
                                 <tbody>
                                     @foreach($orderlists as $orderlist)
                                     <tr>
-                                        <td>{{ $orderlist->id }}</td>
-                                        <td>{{ $orderlist->po_master }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $orderlist->order_list }}</td>
+                                        <td>{{ $orderlist->po_master }}</td>
                                         <td>{{ $orderlist->factory_name }}</td>
                                         <td>{{ $orderlist->lot_no }}</td>
                                         <td>{{ $orderlist->pobuyer_no }}</td>
@@ -97,25 +102,28 @@
                                         <td>{{ $orderlist->vsl_date }}</td>
                                         <td>{{ $orderlist->wash_type }}</td>
                                         <td>{{ $orderlist->bordir_type }}</td>
+                                        <td>{{ $orderlist->line }}</td>
+                                        <td>{{ $orderlist->smv }}</td>
+                                        <td>{{ $orderlist->target_qty }}</td>
+                                        <td>{{ $orderlist->production_day }}</td>
                                         @if($orderlist->status == 'Finish')
-                                             <td align="center">
+                                             <td class="text-center">
                                                 <a class="btn btn-success btn-circle btn-sm">
                                                     <i class="fas fa-check"></i>
                                                 </a>
                                             </td>
                                         @else
-                                            <td align="center">
+                                            <td class="text-center">
                                                 <a class="btn btn-danger btn-circle btn-sm">
                                                     <i class="fas fa-times"></i>
                                                 </a>
                                             </td>
                                         @endif
-                                        <td>
+                                        <td class="text-center">
                                             @if($orderlist->status !== 'Finish')
                                             <a class="btn btn-success btn-circle btn-sm btn-change-record" data-change-link="change/{{ $orderlist->id }}" data-change-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#changeModal">
                                                 <i class="fas fa-check-square"></i>
                                             </a>
-                                            @endif
                                             <a href="/orderlist/find/{{ $orderlist->id }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
@@ -125,6 +133,14 @@
                                             <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $orderlist->id }}" data-delete-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a>
+                                            @else
+                                            <a id="show-detail" class="btn btn-primary btn-circle btn-sm btn-show-detail" data-url="{{ route('orderlist.fab', $orderlist->order_trans) }}" data-show-link="{{ $orderlist->order_trans }}" data-show-title="{{ $orderlist->order_trans . ' - ' . $orderlist->order_list }}">
+                                                <i class="fas fa-info"></i>
+                                            </a>
+                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $orderlist->id }}" data-delete-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#deleteModal">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                            @endif
                                         </td>
                                     </tr>
                                     @endforeach
@@ -274,13 +290,19 @@
     $(document).ready(function () {
         $('body').on('click', '#show-detail', function() {
             var json = $(this).data('url');
-            var userIMG = $(this).data('show-image');
             $.get(json, function (data) {
                 $('#detailModal').modal('show');
-                $('#order_list-fabmill_name').val(data[0].fabmill_name);
-                $('#order_list-fabrication').text(data[0].fabrication);
-                $('#order_list-po_fab').val(data[0].po_fab);
-                $('#order_list-etd').val(data[0].etd);
+                if (data.length > 0) {
+                    $('#order_list-fabmill_name').val(data[0].fabmill_name);
+                    $('#order_list-fabrication').text(data[0].fabrication);
+                    $('#order_list-po_fab').val(data[0].po_fab);
+                    $('#order_list-etd').val(data[0].etd);
+                } else {
+                    $('#order_list-fabmill_name').val("");
+                    $('#order_list-fabrication').text("");
+                    $('#order_list-po_fab').val("");
+                    $('#order_list-etd').val("");
+                }
             })
         });
     });

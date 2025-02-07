@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Imports\FabricMillsImport;
 use App\Models\FabricMill;
+use App\Models\LogCiiper;
 use App\Models\SetupIncrement;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class FabricMillController extends Controller
 {
@@ -30,7 +34,8 @@ class FabricMillController extends Controller
         Storage::delete($path);
 
         if($import) {
-            return redirect()->intended('fabricmill/index')->with(['success' => 'Data Berhasil Diimport!']);
+            Alert::success('Create Successfully!', 'Fabric Mill data successfully imported!');
+            return redirect()->intended('fabricmill/index');
         } else {
             return redirect()->intended('fabricmill/index')->with(['error' => 'Data Gagal Diimport!']);
         }
@@ -43,6 +48,17 @@ class FabricMillController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Fabric Mill ' . $request->fabmill_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
+
         SetupIncrement::updateOrCreate([
             'models' => 'FabricMill'
         ],[
@@ -54,15 +70,27 @@ class FabricMillController extends Controller
             'fabmill_name' => $request->fabmill_name,
         ]);
 
+        Alert::success('Create Successfully!', 'Fabric Mill ' . $request->fabmill_no . ' successfully created!');
         return redirect()
-            ->route('fabricmill.create')
-            ->with('success', 'Fabric Mill berhasil ditambahkan!');
+            ->route('fabricmill.create');
     }
 
     public function delete($id) {
         $fabricmills = FabricMill::find($id);    
         $fabricmills->delete();
-        return redirect('fabricmill/index')->with(['error' => 'Record Berhasil Dihapus!']);
+        
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Fabric Mill ' . $fabricmills->fabmill_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+        Alert::success('Delete Successfully!', 'Fabric Mill ' . $fabricmills->fabmill_no . ' successfully deleted!');
+        return redirect('fabricmill/index');
     }
 
     public function find($id) {
@@ -72,6 +100,17 @@ class FabricMillController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Fabric Mill ' . $request->fabmill_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
         $fabricmills = FabricMill::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -92,6 +131,7 @@ class FabricMillController extends Controller
 
         $fabricmills->save();
 
-        return redirect('fabricmill/index')->with(['success' => 'Fabric Mill berhasil diupdate!']);
+        Alert::success('Update Successfully!', 'Fabric Mill ' . $request->fabmill_no . ' successfully updated!');
+        return redirect('fabricmill/index');
     }
 }

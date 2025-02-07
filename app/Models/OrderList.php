@@ -23,6 +23,7 @@ class OrderList extends Model
         'line',
         'target_qty',
         'production_day',
+        'smv',
         'status',
     ];
 }

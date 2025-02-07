@@ -124,6 +124,26 @@
                                 </select>
                             </div>
                             <br>
+                            <div>
+                                <label>Line :</label>
+                                <input class="date form-control" type="number" id="line" name="line" value="{{ $orderlists->line }}" required>
+                            </div>
+                            <br>
+                            <div>
+                                <label>SMV :</label>
+                                <input class="date form-control" type="number" step="any" id="smv" name="smv" value="{{ $orderlists->smv }}" required>
+                            </div>
+                            <br>
+                            <div>
+                                <label>Target Qty :</label>
+                                <input class="date form-control" type="number" id="target_qty" name="target_qty" value="{{ $orderlists->target_qty }}" required>
+                            </div>
+                            <br>
+                            <div>
+                                <label>Production Day :</label>
+                                <input class="date form-control" type="number" id="production_day" name="production_day" value="{{ $orderlists->production_day }}" required>
+                            </div>
+                            <br>
                             <div class="row">
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary btn-block">Update</button>

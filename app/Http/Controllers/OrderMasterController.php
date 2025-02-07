@@ -9,6 +9,7 @@ use App\Models\Brand;
 use App\Models\Buyer;
 use App\Models\Fabrication;
 use App\Models\FollowUp;
+use App\Models\LogCiiper;
 use App\Models\OrderList;
 use App\Models\OrderMaster;
 use App\Models\ProductionPlanning;
@@ -19,11 +20,14 @@ use App\Models\SetupIncrement;
 use App\Models\Shipment;
 use App\Models\Style;
 use App\Models\WashType;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class OrderMasterController extends Controller
@@ -56,15 +60,27 @@ class OrderMasterController extends Controller
     }
 
     public function showlist($order_trans) {
-        $orderlists = OrderList::select('factory.factory_name','order_list.factory_no', 'order_list.lot_no','order_list.pobuyer_no','order_list.ex_factory_date','order_list.vsl_date','order_list.dcpo_qty', DB::raw('round(order_list.dcpo_qty/12,2) as dcpo_dzn'), DB::raw('(sum(coalesce(if(raf_production.raf_dept = "DEP000000004", raf_production.raf_qty, 0),0))-order_list.dcpo_qty) as balance'), DB::raw('round(sum(if(raf_production.raf_dept = "DEP000000004", raf_production.raf_qty, 0)),2) as sum_raf_qty'))
+        $orderlists = OrderList::select('factory.factory_name','order_list.status','order_list.factory_no', 'order_list.lot_no','order_list.pobuyer_no','order_list.ex_factory_date','order_list.vsl_date','order_list.dcpo_qty', DB::raw('round(order_list.dcpo_qty/12,2) as dcpo_dzn'), DB::raw('(sum(coalesce(if(raf_production.raf_dept = "DEP000000004", raf_production.raf_qty, 0),0))-order_list.dcpo_qty) as balance'), DB::raw('round(sum(if(raf_production.raf_dept = "DEP000000004", raf_production.raf_qty, 0)),2) as sum_raf_qty'))
         ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
         ->leftJoin('raf_production','order_list.order_list', '=', 'raf_production.order_list')
         ->leftJoin('factory','factory.factory_no', '=', 'order_list.factory_no')
         ->where('order_list.order_trans', '=', $order_trans)
-        ->groupBy('order_list.order_trans', 'order_list.factory_no', 'order_list.lot_no','order_list.pobuyer_no', 'order_list.ex_factory_date', 'order_list.vsl_date','order_list.dcpo_qty','factory.factory_name')
+        ->groupBy('order_list.order_trans', 'order_list.factory_no', 'order_list.lot_no','order_list.pobuyer_no', 'order_list.ex_factory_date', 'order_list.vsl_date','order_list.dcpo_qty','factory.factory_name','order_list.status')
         ->get();
         // return response()->json($orderlists);
-        return DataTables::of($orderlists)->addIndexColumn()->make(true);
+        return DataTables::of($orderlists)
+        ->addIndexColumn()
+        ->addColumn('statusbadge',function ($row){
+            $statusBadge = '';
+            if ($row->status == 'Finish') {
+                $statusBadge = '<center><a class="btn btn-success btn-circle btn-sm"><i class="fas fa-check"></i></a></center>';
+            } else {
+                $statusBadge = '<center><a class="btn btn-danger btn-circle btn-sm"><i class="fas fa-times"></i></a></center>' ;
+            }
+            return $statusBadge;
+        })
+        ->rawColumns(['statusbadge'])
+        ->make(true);
     }
 
     public function showrafproduction($order_trans) {
@@ -230,7 +246,37 @@ class OrderMasterController extends Controller
         ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
         ->where('order_master.order_trans', '=', $order_trans)
         ->get();
-        return DataTables::of($productionplannings)->addIndexColumn()->make(true);
+        return DataTables::of($productionplannings)
+        ->addIndexColumn()
+        ->addColumn('samplebadge',function ($row){
+            $sampleBadge = '';
+            if ($row->has_sample == 'Yes') {
+                $sampleBadge = '<center><a class="btn btn-success btn-circle btn-sm"><i class="fas fa-check"></i></a></center>';
+            } else {
+                $sampleBadge = '<center><a class="btn btn-danger btn-circle btn-sm"><i class="fas fa-times"></i></a></center>' ;
+            }
+            return $sampleBadge;
+        })
+        ->addColumn('mibadge',function ($row){
+            $miBadge = '';
+            if ($row->has_mi == 'Yes') {
+                $miBadge = '<center><a class="btn btn-success btn-circle btn-sm"><i class="fas fa-check"></i></a></center>';
+            } else {
+                $miBadge = '<center><a class="btn btn-danger btn-circle btn-sm"><i class="fas fa-times"></i></a></center>' ;
+            }
+            return $miBadge;
+        })
+        ->addColumn('cartbadge',function ($row){
+            $cartBadge = '';
+            if ($row->has_cart == 'Yes') {
+                $cartBadge = '<center><a class="btn btn-success btn-circle btn-sm"><i class="fas fa-check"></i></a></center>';
+            } else {
+                $cartBadge = '<center><a class="btn btn-danger btn-circle btn-sm"><i class="fas fa-times"></i></a></center>' ;
+            }
+            return $cartBadge;
+        })
+        ->rawColumns(['samplebadge','mibadge','cartbadge'])
+        ->make(true);
     }
 
     public function import(Request $request)
@@ -246,7 +292,8 @@ class OrderMasterController extends Controller
         Storage::delete($path);
 
         if($import) {
-            return redirect()->intended('ordermaster/index')->with(['success' => 'Data Berhasil Diimport!']);
+            Alert::success('Import Successfully!', 'Order Master data successfully imported!');
+            return redirect()->intended('ordermaster/index');
         } else {
             return redirect()->intended('ordermaster/index')->with(['error' => 'Data Gagal Diimport!']);
         }
@@ -254,6 +301,17 @@ class OrderMasterController extends Controller
 
     public function store(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Created Order Master ' . $request->order_trans;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
+
         $request->validate([
             'sketch_file' => 'required|mimes:jpg,png|max:10240'
         ]);
@@ -282,16 +340,29 @@ class OrderMasterController extends Controller
             'sketch_file' => $fileName,
         ]);
 
+        Alert::success('Create Successfully!', 'Order Master ' . $request->order_trans . ' successfully created!');
         return redirect()
-            ->route('ordermaster.create')
-            ->with('success', 'Order Master berhasil ditambahkan!');
+            ->route('ordermaster.create');
     }
     
     public function delete($id) {
         $ordermasters = OrderMaster::find($id);    
         $ordermasters->delete();
+        
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Deleted Order Master ' . $ordermasters->order_trans;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'trash',
+            'color' => 'bg-danger',
+        ]);
+
         Storage::disk('sketch_uploads')->delete($ordermasters->id);
-        return redirect('ordermaster/index')->with(['error' => 'Record Berhasil Dihapus!']);
+        Alert::success('Delete Successfully!', 'Order Master ' . $ordermasters->order_trans . ' successfully deleted!');
+        return redirect('ordermaster/index');
     }
 
     public function find($id) {
@@ -307,6 +378,17 @@ class OrderMasterController extends Controller
 
     public function update(Request $request)
     {
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Updated Order Master ' . $request->order_trans;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
         $ordermasters = OrderMaster::findOrFail($request->id);
 
         if($request->hasFile('sketch_file')){
@@ -388,6 +470,7 @@ class OrderMasterController extends Controller
 
         $ordermasters->save();
 
+        Alert::success('Update Successfully!', 'Order Master ' . $request->order_trans . ' successfully updated!');
         return redirect('ordermaster/index')->with(['success' => 'Order Master berhasil diupdate!']);
     }
 

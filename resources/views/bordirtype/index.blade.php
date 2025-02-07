@@ -3,6 +3,7 @@
 @include('layout.header')
 <body id="page-top">
 <!-- Page Wrapper -->
+@include('sweetalert::alert')
 <div id="wrapper">
 @include('layout.sidebar')
     <!-- Content Wrapper -->
@@ -59,7 +60,7 @@
                         </div>
                         @endif
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -74,7 +75,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $bordirtype->bordir_no }}</td>
                                         <td>{{ $bordirtype->bordir_type }}</td>
-                                        <td align="center">
+                                        <td class="text-center">
                                             <a href="/bordirtype/find/{{ $bordirtype->id }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>

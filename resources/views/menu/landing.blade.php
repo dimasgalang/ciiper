@@ -10,10 +10,7 @@
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,300,400,500,700,900" rel="stylesheet">
 
     <title>Chutex International Indonesia</title>
-<!--
-Elegance Template
-https://templatemo.com/tm-528-elegance
--->
+    <link rel="icon" type="image/x-icon" href="{{asset('img/icon.ico')}}">
     <!-- Additional CSS Files -->
     <link href="{{asset('homepage/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('homepage/css/font-awesome.css')}}" rel="stylesheet">

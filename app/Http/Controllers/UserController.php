@@ -40,8 +40,6 @@ class UserController extends Controller
         $modelhasroles = ModelHasRoles::where('model_id', '=', $request->id)
         ->where('model_type', '=', 'App\Models\User')
         ->delete();
-        // dd($modelhasroles);
-        // $modelhasroles->delete();
         ModelHasRoles::updateOrCreate(
         [
             'role_id' => $request->role_id,

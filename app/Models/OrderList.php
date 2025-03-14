@@ -16,6 +16,7 @@ class OrderList extends Model
         'lot_no',
         'pobuyer_no',
         'dcpo_qty',
+        'carton_qty',
         'ex_factory_date',
         'vsl_date',
         'wash_no',
@@ -25,5 +26,6 @@ class OrderList extends Model
         'production_day',
         'smv',
         'status',
+        'void',
     ];
 }

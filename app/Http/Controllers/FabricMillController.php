@@ -16,8 +16,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class FabricMillController extends Controller
 {
-    public function index() {
-        $fabricmills   = FabricMill::all();
+    public function index(Request $request) {
+        $fabricmills   = FabricMill::select('*')
+        ->where('void','=',$request->void)
+        ->get();
         return view('fabricmill.index', compact('fabricmills'));
     }
 
@@ -68,6 +70,7 @@ class FabricMillController extends Controller
         FabricMill::create([
             'fabmill_no' => $request->fabmill_no,
             'fabmill_name' => $request->fabmill_name,
+            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Fabric Mill ' . $request->fabmill_no . ' successfully created!');
@@ -132,6 +135,55 @@ class FabricMillController extends Controller
         $fabricmills->save();
 
         Alert::success('Update Successfully!', 'Fabric Mill ' . $request->fabmill_no . ' successfully updated!');
+        return redirect('fabricmill/index');
+    }
+
+    
+    public function void(Request $request)
+    {
+        $fabricmills = FabricMill::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Void Fabric Mill ' . $fabricmills->fabmill_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $fabricmills->fill([
+            'void' => 'true',
+        ]);
+
+        $fabricmills->save();
+
+        Alert::success('Void Successfully!', 'Fabric Mill ' . $fabricmills->fabmill_no . ' successfully voided!');
+        return redirect('fabricmill/index');
+    }
+
+    public function restore(Request $request)
+    {
+        $fabricmills = FabricMill::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Restore Fabric Mill ' . $fabricmills->fabmill_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $fabricmills->fill([
+            'void' => 'false',
+        ]);
+
+        $fabricmills->save();
+
+        Alert::success('Restore Successfully!', 'Fabric Mill ' . $fabricmills->fabmill_no . ' successfully restored!');
         return redirect('fabricmill/index');
     }
 }

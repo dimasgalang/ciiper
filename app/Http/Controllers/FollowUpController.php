@@ -16,8 +16,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class FollowUpController extends Controller
 {
-    public function index() {
-        $followups   = FollowUp::all();
+    public function index(Request $request) {
+        $followups   = FollowUp::select('*')
+        ->where('void','=',$request->void)
+        ->get();
         return view('followup.index', compact('followups'));
     }
 
@@ -68,6 +70,7 @@ class FollowUpController extends Controller
         FollowUp::create([
             'fu_no' => $request->fu_no,
             'fu_name' => $request->fu_name,
+            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Follow Up ' . $request->fu_no . ' successfully created!');
@@ -132,6 +135,55 @@ class FollowUpController extends Controller
         $followups->save();
 
         Alert::success('Update Successfully!', 'Follow Up ' . $request->fu_no . ' successfully updated!');
+        return redirect('followup/index');
+    }
+
+    
+    public function void(Request $request)
+    {
+        $followups = FollowUp::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Void Follow Up ' . $followups->fu_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $followups->fill([
+            'void' => 'true',
+        ]);
+
+        $followups->save();
+
+        Alert::success('Void Successfully!', 'Follow Up ' . $followups->fu_no . ' successfully voided!');
+        return redirect('followup/index');
+    }
+
+    public function restore(Request $request)
+    {
+        $followups = FollowUp::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Restore Follow Up ' . $followups->fu_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $followups->fill([
+            'void' => 'false',
+        ]);
+
+        $followups->save();
+
+        Alert::success('Restore Successfully!', 'Follow Up ' . $followups->fu_no . ' successfully restored!');
         return redirect('followup/index');
     }
 }

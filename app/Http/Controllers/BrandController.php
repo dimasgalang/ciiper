@@ -17,9 +17,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class BrandController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
         $brands   = Brand::select('brand.*', 'buyer.buyer_name')
         ->leftJoin('buyer', 'brand.buyer_no', '=', 'buyer.buyer_no')
+        ->where('void','=',$request->void)
         ->get();
         return view('brand.index', compact('brands'));
     }
@@ -74,6 +75,7 @@ class BrandController extends Controller
             'brand_no' => $request->brand_no,
             'brand_name' => $request->brand_name,
             'brand_gender' => $request->brand_gender,
+            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Brand ' . $request->brand_no . ' successfully created!');
@@ -144,5 +146,53 @@ class BrandController extends Controller
 
         Alert::success('Update Successfully!', 'Brand ' . $request->brand_no . ' successfully updated!');
         return redirect()->intended('brand/index');
+    }
+
+    public function void(Request $request)
+    {
+        $brands = Brand::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Void Brand ' . $brands->brand_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $brands->fill([
+            'void' => 'true',
+        ]);
+
+        $brands->save();
+
+        Alert::success('Void Successfully!', 'Brand ' . $brands->brand_no . ' successfully voided!');
+        return redirect('brand/index');
+    }
+
+    public function restore(Request $request)
+    {
+        $brands = Brand::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Restore Brand ' . $brands->brand_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $brands->fill([
+            'void' => 'false',
+        ]);
+
+        $brands->save();
+
+        Alert::success('Restore Successfully!', 'Brand ' . $brands->brand_no . ' successfully restored!');
+        return redirect('brand/index');
     }
 }

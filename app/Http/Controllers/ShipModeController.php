@@ -16,8 +16,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class ShipModeController extends Controller
 {
-    public function index() {
-        $shipmodes   = ShipMode::all();
+    public function index(Request $request) {
+        $shipmodes   = ShipMode::select('*')
+        ->where('void','=',$request->void)
+        ->get();
         return view('shipmode.index', compact('shipmodes'));
     }
 
@@ -68,6 +70,7 @@ class ShipModeController extends Controller
         ShipMode::create([
             'shipmode_no' => $request->shipmode_no,
             'shipmode_name' => $request->shipmode_name,
+            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Ship Mode ' . $request->shipmode_no . ' successfully created!');
@@ -133,6 +136,55 @@ class ShipModeController extends Controller
         $shipmodes->save();
 
         Alert::success('Update Successfully!', 'Ship Mode ' . $request->shipmode_no . ' successfully updated!');
+        return redirect('shipmode/index');
+    }
+
+    
+    public function void(Request $request)
+    {
+        $shipmodes = ShipMode::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Void Ship Mode ' . $shipmodes->shipmode_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $shipmodes->fill([
+            'void' => 'true',
+        ]);
+
+        $shipmodes->save();
+
+        Alert::success('Void Successfully!', 'Ship Mode ' . $shipmodes->shipmode_no . ' successfully voided!');
+        return redirect('shipmode/index');
+    }
+
+    public function restore(Request $request)
+    {
+        $shipmodes = ShipMode::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Restore Ship Mode ' . $shipmodes->shipmode_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $shipmodes->fill([
+            'void' => 'false',
+        ]);
+
+        $shipmodes->save();
+
+        Alert::success('Restore Successfully!', 'Ship Mode ' . $shipmodes->shipmode_no . ' successfully restored!');
         return redirect('shipmode/index');
     }
 }

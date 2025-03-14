@@ -19,8 +19,8 @@
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">Buyer List</h1>
                     <div>
-                    <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Import Buyer</a>
+                    <!-- <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
+                        class="fas fa-plus fa-sm text-white-50"></i> Import Buyer</a> -->
                     <a href="{{ route('buyer.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                             class="fas fa-plus fa-sm text-white-50"></i> Create Buyer</a>
                     </div>
@@ -28,8 +28,15 @@
                 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
-                    <div class="card-header py-3">
+                    <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
                         <h6 class="m-0 font-weight-bold text-primary">Buyer Data</h6>
+                        <form method="GET" id="form-void">
+                                <select name="void" id="void" class="form-control" onchange="document.getElementById('form-void').submit()" style="width: 300px;">
+                                    <option disabled selected hidden>Select Status</option>
+                                    <option value="false">Active</option>
+                                    <option value="true">Void</option>
+                                </select>
+                        </form>
                     </div>
                     <div class="card-body">
                         @if ($message = Session::get('success'))
@@ -80,12 +87,21 @@
                                         <td>{{ $buyer->buyer_address }}</td>
                                         <td>{{ $buyer->buyer_contact }}</td>
                                         <td class="text-center">
+                                            @if (request()->get('void') == 'false')
                                             <a href="/buyer/find/{{ $buyer->id }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $buyer->id }}" data-delete-name="{{ $buyer->buyer_name }}" data-toggle="modal" data-target="#deleteModal">
+                                            <!-- <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $buyer->id }}" data-delete-name="{{ $buyer->buyer_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
+                                            </a> -->
+                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="void/{{ $buyer->id }}" data-void-name="{{ $buyer->buyer_name }}" data-toggle="modal" data-target="#voidModal">
+                                                <i class="fas fa-ban"></i>
                                             </a>
+                                            @elseif (request()->get('void') == 'true')
+                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="restore/{{ $buyer->id }}" data-restore-name="{{ $buyer->buyer_name }}" data-toggle="modal" data-target="#restoreModal">
+                                                <i class="fas fa-history"></i>
+                                            </a>
+                                            @endif
                                         </td>
                                     </tr>
                                     @endforeach
@@ -116,6 +132,42 @@
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
                         <a id="btn-confirm" href=""><button class="btn btn-primary" type="button">Confirm</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="voidModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="void-title" class="modal-title" id="exampleModalLabel">Void Record</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"><p id="modal-text-record-void"></p></div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
+                        <a id="btn-confirm-void" href=""><button class="btn btn-danger" type="button">Confirm</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="restoreModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="restore-title" class="modal-title" id="exampleModalLabel">Restore Record</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"><p id="modal-text-record-restore"></p></div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
+                        <a id="btn-confirm-restore" href=""><button class="btn btn-success" type="button">Confirm</button></a>
                     </div>
                 </div>
             </div>
@@ -159,7 +211,15 @@
 <script>
     $('.btn-delete-record').on('click', function () {
             $('#btn-confirm').attr('href', $(this).data('delete-link'));
-            $("#modal-text-record").text('Apakah anda yakin ingin menghapus buyer ' + $(this).data('delete-name') + '?');
+            $("#modal-text-record").text('Apakah anda yakin ingin menghapus Buyer ' + $(this).data('delete-name') + '?');
+    });
+    $('.btn-void-record').on('click', function () {
+            $('#btn-confirm-void').attr('href', $(this).data('void-link'));
+            $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus Buyer ' + $(this).data('void-name') + '?');
+    });
+    $('.btn-restore-record').on('click', function () {
+            $('#btn-confirm-restore').attr('href', $(this).data('restore-link'));
+            $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan Buyer ' + $(this).data('restore-name') + '?');
     });
 </script>
 </html>

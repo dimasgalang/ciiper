@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('fu_no')->unique();
             $table->string('fu_name');
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

@@ -16,8 +16,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class SeasonController extends Controller
 {
-    public function index() {
-        $seasons   = Season::all();
+    public function index(Request $request) {
+        $seasons   = Season::select('*')
+        ->where('void','=',$request->void)
+        ->get();
         return view('season.index', compact('seasons'));
     }
 
@@ -70,6 +72,7 @@ class SeasonController extends Controller
             'season_no' => $request->season_no,
             'season_cat' => $request->season_cat,
             'season_year' => $request->season_year,
+            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Season ' . $request->season_no . ' successfully created!');
@@ -138,6 +141,55 @@ class SeasonController extends Controller
         $seasons->save();
 
         Alert::success('Update Successfully!', 'Season ' . $request->season_no . ' successfully updated!');
+        return redirect('season/index');
+    }
+
+    
+    public function void(Request $request)
+    {
+        $seasons = Season::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Void Season ' . $seasons->season_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $seasons->fill([
+            'void' => 'true',
+        ]);
+
+        $seasons->save();
+
+        Alert::success('Void Successfully!', 'Season ' . $seasons->season_no . ' successfully voided!');
+        return redirect('season/index');
+    }
+
+    public function restore(Request $request)
+    {
+        $seasons = Season::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Restore Season ' . $seasons->season_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $seasons->fill([
+            'void' => 'false',
+        ]);
+
+        $seasons->save();
+
+        Alert::success('Restore Successfully!', 'Season ' . $seasons->season_no . ' successfully restored!');
         return redirect('season/index');
     }
 }

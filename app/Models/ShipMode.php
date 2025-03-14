@@ -12,5 +12,6 @@ class ShipMode extends Model
     protected $fillable = [
         'shipmode_no',
         'shipmode_name',
+        'void',
     ];
 }

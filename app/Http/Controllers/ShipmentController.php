@@ -6,6 +6,7 @@ use App\Models\LogCiiper;
 use App\Models\Market;
 use App\Models\OrderList;
 use App\Models\OrderMaster;
+use App\Models\OrderSize;
 use App\Models\RafProduction;
 use App\Models\SetupIncrement;
 use App\Models\Shipment;
@@ -19,11 +20,12 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class ShipmentController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
         $shipments = Shipment::select('shipment.*','market.market_name','ship_mode.shipmode_name','order_list.pobuyer_no')
         ->leftJoin('market', 'shipment.market_no', '=', 'market.market_no')
         ->leftJoin('ship_mode', 'shipment.shipmode_no', '=', 'ship_mode.shipmode_no')
         ->leftJoin('order_list', 'shipment.order_list', '=', 'order_list.order_list')
+        ->where('shipment.void','=',$request->void)
         ->get();
         return view('shipment.index', compact('shipments'));
     }
@@ -36,7 +38,8 @@ class ShipmentController extends Controller
         $orderlists = OrderList::all();
         $shipmodes = ShipMode::all();
         $markets = Market::all();
-        return view('shipment.create', compact('shipmodes','markets','orderlists','ordermasters','setupincements'));
+        $ordersizes = OrderSize::select('order_size.*','size.size')->leftJoin('size','order_size.size_no','=','size.size_no')->get();
+        return view('shipment.create', compact('shipmodes','markets','orderlists','ordermasters','setupincements','ordersizes'));
     }
 
     public function find($id) {
@@ -68,12 +71,14 @@ class ShipmentController extends Controller
         $shipments = RafProduction::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
-            'ship_no' => 'required|max:225|',
+            'ship_no' => 'required|max:255|',
             'order_list' => 'required|max:255',
-            'market_no' => 'required|max:225|',
-            'shipmode_no' => 'required|max:225|',
-            'ship_qty' => 'required|max:225|',
-            'ship_date' => 'required|max:225|',
+            'market_no' => 'required|max:255|',
+            'shipmode_no' => 'required|max:255|',
+            'size_no' => 'required|max:255|',
+            'ship_qty' => 'required',
+            'ship_date' => 'required|max:255|',
+            'carton_qty' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -87,7 +92,9 @@ class ShipmentController extends Controller
             'order_list' => $request->order_list,
             'market_no' => $request->market_no,
             'shipmode_no' => $request->shipmode_no,
+            'size_no' => $request->size_no,
             'ship_qty' => $request->ship_qty,
+            'carton_qty' => $request->carton_qty,
             'ship_date' => $request->ship_date,
             'remark' => $request->remark,
         ]);
@@ -102,17 +109,22 @@ class ShipmentController extends Controller
         $orderlists   = OrderList::select('*', 'order_master.*')
         ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
         ->where('order_list.order_trans', '=', $order_trans)
+        ->where('order_list.void','=','false')
         ->get();
         return response()->json($orderlists);
     }
 
-    public function fetchreadyship($order_list) {
-        $raf_productions = RafProduction::select('raf_production.order_list','order_list.dcpo_qty', DB::raw('ifnull((select sum(raf_production.raf_qty) from raf_production where order_list = "' . $order_list . '" and raf_dept = "DEP000000004"),0) as raf_packing'), DB::raw('ifnull((select sum(shipment.ship_qty) from shipment where order_list = "' . $order_list . '"),0) as sum_ship_qty'), DB::raw('ifnull(((select sum(raf_production.raf_qty) from raf_production where order_list = "' . $order_list . '" and raf_dept = "DEP000000004") - ifnull((select sum(shipment.ship_qty) from shipment where order_list = "' . $order_list . '"),0)),0) as ship_left'))
-            ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
-            ->where('raf_production.order_list', '=', $order_list)
-            ->groupBy('raf_production.order_list','order_list.dcpo_qty')
-            ->get();
+    public function fetchreadyship($order_list, $size_no) {
+        $deptPicking = "DEP000000004";
+        $raf_productions = DB::select('select distinct(order_size.order_list),size.size,order_list.dcpo_qty,ifnull((select sum(order_size.qty) from order_size where order_size.size_no = size.size_no and order_list.order_list = order_size.order_list),0) as size_qty,ifnull((select sum(raf_qty) from raf_production where raf_production.size_no = order_size.size_no and raf_production.order_list = order_list.order_list and raf_production.raf_dept = "' . $deptPicking . '" and void = "false"),0) as total_raf,ifnull((select sum(shipment.ship_qty) from shipment where size_no = order_size.size_no and order_list = order_list.order_list),0) as sum_ship,ifnull((select sum(raf_qty) from raf_production where raf_production.size_no = order_size.size_no and raf_production.order_list = order_list.order_list and raf_production.raf_dept = "' . $deptPicking . '"),0)-ifnull((select sum(shipment.ship_qty) from shipment where size_no = order_size.size_no and order_list = order_list.order_list),0) as ready_ship from order_size left join order_list on order_size.order_list = order_list.order_list left join size on size.size_no = order_size.size_no where order_list.order_list = "' . $order_list . '" and size.size_no = "' . $size_no . '"');
         return response()->json($raf_productions);
+    }
+
+    public function fetchcartonleft($order_list) {
+        $orderlists = OrderList::select('order_list.carton_qty', DB::raw('ifnull((select sum(shipment.carton_qty) from shipment where order_list = "' . $order_list . '" and shipment.void = "false"),0) as sum_carton'),DB::raw('ifnull(((order_list.carton_qty) - ifnull((select sum(shipment.carton_qty) from shipment where order_list = "' . $order_list . '" and shipment.void = "false"),0)),0) as carton_balance'))
+            ->where('order_list.order_list', '=', $order_list)
+            ->get();
+        return response()->json($orderlists);
     }
 
     public function store(Request $request)
@@ -139,14 +151,28 @@ class ShipmentController extends Controller
             'order_list' => $request->order_list,
             'market_no' => $request->market_no,
             'shipmode_no' => $request->shipmode_no,
+            'size_no' => $request->size_no,
             'ship_qty' => $request->ship_qty,
+            'carton_qty' => $request->carton_qty,
             'ship_date' => $request->ship_date,
             'remark' => $request->remark,
+            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Shipment ' . $request->ship_no . ' successfully created!');
         return redirect()
             ->route('shipment.create');
+    }
+    
+
+    public function fetchordersize($order_list) {
+        $ordersizes = OrderSize::select(DB::raw('sum(order_size.qty) as qty_total'),'size.size','size.size_no')
+        ->leftJoin('size', 'order_size.size_no', '=', 'size.size_no')
+        ->where('order_size.order_list', '=', $order_list)
+        ->where('order_size.void','=','false')
+        ->groupBy('order_size.order_list','size.size','size.size_no')
+        ->get();
+        return response()->json($ordersizes);
     }
 
     public function delete($id) {
@@ -164,6 +190,55 @@ class ShipmentController extends Controller
             'color' => 'bg-danger',
         ]);
         Alert::success('Delete Successfully!', 'Shipment ' . $shipments->ship_no . ' successfully deleted!');
+        return redirect('shipment/index');
+    }
+
+    
+    public function void(Request $request)
+    {
+        $shipments = Shipment::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Void Shipment ' . $shipments->ship_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $shipments->fill([
+            'void' => 'true',
+        ]);
+
+        $shipments->save();
+
+        Alert::success('Void Successfully!', 'Shipment ' . $shipments->ship_no . ' successfully voided!');
+        return redirect('shipment/index');
+    }
+
+    public function restore(Request $request)
+    {
+        $shipments = Shipment::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Restore Shipment ' . $shipments->ship_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $shipments->fill([
+            'void' => 'false',
+        ]);
+
+        $shipments->save();
+
+        Alert::success('Restore Successfully!', 'Shipment ' . $shipments->ship_no . ' successfully restored!');
         return redirect('shipment/index');
     }
 }

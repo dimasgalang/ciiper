@@ -19,8 +19,9 @@
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">Order Master List</h1>
                     <div>
-                    <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Import Order Master</a>
+                    <!-- <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
+                        class="fas fa-plus fa-sm text-white-50"></i> Import Order Master</a> -->
+                    <a href="{{ route('ordermaster.export') }}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Export Excel</a>
                     <a href="{{ route('ordermaster.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                             class="fas fa-plus fa-sm text-white-50"></i> Create Order Master</a>
                     </div>
@@ -28,12 +29,15 @@
                 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <div class="row justify-content-between align-items-center" style="margin-left: 5px; margin-right: 5px;">
+                    <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
                             <h6 class="m-0 font-weight-bold text-primary">Order Master Data</h6>
-                            <a href="{{ route('ordermaster.export') }}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i
-                                    class="fas fa-plus fa-sm text-white-50"></i> Export Excel</a>
-                        </div>
+                            <form method="GET" id="form-void">
+                                    <select name="void" id="void" class="form-control" onchange="document.getElementById('form-void').submit()" style="width: 300px;">
+                                        <option disabled selected hidden>Select Status</option>
+                                        <option value="false">Active</option>
+                                        <option value="true">Void</option>
+                                    </select>
+                            </form>
                     </div>
                     <div class="card-body">
                         @if ($message = Session::get('success'))
@@ -75,7 +79,6 @@
                                         <th>Style</th>
                                         <th>Master PO</th>
                                         <th>Qty</th>
-                                        <th>OCF</th>
                                         <th>GMT</th>
                                         <th>MR</th>
                                         <th>Sketch</th>
@@ -94,21 +97,29 @@
                                         <td>{{ $ordermaster->style_name }}</td>
                                         <td>{{ $ordermaster->po_master }}</td>
                                         <td>{{ $ordermaster->qty_order }}</td>
-                                        <td>{{ $ordermaster->qty_ocf }}</td>
                                         <td>{{ $ordermaster->sum_raf_qty }}</td>
                                         <td>{{ $ordermaster->fu_name }}</td>
                                         <td class="text-center"><img id="sketch" src="{{ asset('/sketch/' . $ordermaster->sketch_file) }}" style="width: 200px;"></td>
                                         <td>{{ $ordermaster->remark }}</td>
                                         <td class="text-center">
+                                            @if (request()->get('void') == 'false')
                                             <a href="/ordermaster/find/{{ $ordermaster->id }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a id="show-orderlist" class="btn btn-primary btn-circle btn-sm btn-show-orderlist" data-orderlist-url="{{ route('ordermaster.orderlist', $ordermaster->order_trans) }}" data-rafproduction-url="{{ route('ordermaster.rafproduction', $ordermaster->order_trans) }}" data-rafcutting-url="{{ route('ordermaster.rafcutting', $ordermaster->order_trans) }}" data-rafsewing-url="{{ route('ordermaster.rafsewing', $ordermaster->order_trans) }}" data-rafiron-url="{{ route('ordermaster.rafiron', $ordermaster->order_trans) }}" data-rafpacking-url="{{ route('ordermaster.rafpacking', $ordermaster->order_trans) }}" data-fab-url="{{ route('ordermaster.fab', $ordermaster->order_trans) }}" data-shipment-url="{{ route('ordermaster.shipment', $ordermaster->order_trans) }}" data-style-url="{{ route('ordermaster.style', $ordermaster->order_trans) }}" data-productionplanning-url="{{ route('ordermaster.productionplanning', $ordermaster->order_trans) }}"  data-show-orderlist-link="{{ $ordermaster->order_trans }}" data-show-orderlist-title="{{ $ordermaster->order_trans }} - {{ $ordermaster->po_master }}" data-show-image="{{ asset('/sketch/' . $ordermaster->sketch_file) }}">
+                                            <a id="show-orderlist" class="btn btn-primary btn-circle btn-sm btn-show-orderlist" data-orderlist-url="{{ route('ordermaster.orderlist', $ordermaster->order_trans) }}" data-ordersize-url="{{ route('ordermaster.ordersize', $ordermaster->order_trans) }}" data-rafproduction-url="{{ route('ordermaster.rafproduction', $ordermaster->order_trans) }}" data-rafcutting-url="{{ route('ordermaster.rafcutting', $ordermaster->order_trans) }}" data-rafsewing-url="{{ route('ordermaster.rafsewing', $ordermaster->order_trans) }}" data-rafiron-url="{{ route('ordermaster.rafiron', $ordermaster->order_trans) }}" data-rafpacking-url="{{ route('ordermaster.rafpacking', $ordermaster->order_trans) }}" data-fab-url="{{ route('ordermaster.fab', $ordermaster->order_trans) }}" data-shipment-url="{{ route('ordermaster.shipment', $ordermaster->order_trans) }}" data-style-url="{{ route('ordermaster.style', $ordermaster->order_trans) }}" data-productionplanning-url="{{ route('ordermaster.productionplanning', $ordermaster->order_trans) }}"  data-show-orderlist-link="{{ $ordermaster->order_trans }}" data-show-orderlist-title="{{ $ordermaster->order_trans }} - {{ $ordermaster->po_master }}" data-show-image="{{ asset('/sketch/' . $ordermaster->sketch_file) }}">
                                                 <i class="fas fa-info"></i>
                                             </a>
-                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $ordermaster->id }}" data-delete-name="{{ $ordermaster->order_trans }}" data-toggle="modal" data-target="#deleteModal">
+                                            <!-- <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $ordermaster->id }}" data-delete-name="{{ $ordermaster->order_trans }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
+                                            </a> -->
+                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="void/{{ $ordermaster->id }}" data-void-name="{{ $ordermaster->order_trans }}" data-toggle="modal" data-target="#voidModal">
+                                                <i class="fas fa-ban"></i>
                                             </a>
+                                            @elseif (request()->get('void') == 'true')
+                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="restore/{{ $ordermaster->id }}" data-restore-name="{{ $ordermaster->order_trans }}" data-toggle="modal" data-target="#restoreModal">
+                                                <i class="fas fa-history"></i>
+                                            </a>
+                                            @endif
                                         </td>
                                     </tr>
                                     @endforeach
@@ -183,6 +194,7 @@
                         <div class="tab">
                             <button class="tablinks" onclick="openModal(event, 'Sketch')">Sketch</button>
                             <button class="tablinks" onclick="openModal(event, 'Order List')">Order List</button>
+                            <button class="tablinks" onclick="openModal(event, 'Order Size')">Order Size</button>
                             <button class="tablinks" onclick="openModal(event, 'Production Planning')">Production Planning</button>
                             <button class="tablinks" onclick="openModal(event, 'Cutting')">Cutting</button>
                             <button class="tablinks" onclick="openModal(event, 'Sewing')">Sewing</button>
@@ -262,11 +274,59 @@
                                                     <th>PO Buyer</th>
                                                     <th>DC PO Qty (Dzn)</th>
                                                     <th>DC PO Qty (Pcs)</th>
+                                                    <th>Carton Qty (Pcs)</th>
                                                     <th>RAF Qty (Pcs)</th>
                                                     <th>Balance</th>
                                                     <th>Ex Factory</th>
                                                     <th>Vsl Date</th>
                                                     <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="Order Size" class="tabcontent">
+                            <div class="d-flex flex-row align-items-center justify-content-between" style="margin-top: 10px;">
+                                <h6 class="m-0 font-weight-bold text-primary"></h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-blue-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                        <!-- <div class="dropdown-header">Action:</div> -->
+                                        <a class="dropdown-item" href="{{ route('ordersize.create') }}" target="_blank">Create Order Size</a>
+                                        <!-- <a class="dropdown-item" href="#">Export Excel</a> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <!-- <div class="col-xl-3 col-md-6 mb-4">
+                                    <center><img id="sketch-PIC" src="" style="width: 200px;"></center>
+                                </div> -->
+                                <div class="col-xl-12 col-md-6 mb-4">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-modal table-sm" id="table-ordersize" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Lot</th>
+                                                    <th>PO Buyer</th>
+                                                    <th>DC PO Qty</th>
+                                                    <th>XS</th>
+                                                    <th>S</th>
+                                                    <th>M</th>
+                                                    <th>L</th>
+                                                    <th>XL</th>
+                                                    <th>XXL</th>
+                                                    <th>Total</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -288,6 +348,7 @@
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenuLink">
                                         <!-- <div class="dropdown-header">Action:</div> -->
+                                        <a class="dropdown-item" href="{{ route('productionplanning.index') }}" target="_blank">Open Production Planning</a>
                                         <a class="dropdown-item" href="{{ route('productionplanning.create') }}" target="_blank">Create Production Planning</a>
                                         <!-- <a class="dropdown-item" href="#">Export Excel</a> -->
                                     </div>
@@ -296,16 +357,17 @@
                             <br>
                             <div class="row">
                                 <div class="col-xl-12 col-md-6 mb-4">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-modal table-sm" id="table-production-planning" width="100%" cellspacing="0">
+                                    <div>
+                                        <table class="table-responsive table table-bordered table-modal table-sm" id="table-production-planning" width="100%" cellspacing="0">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
                                                     <th>PO Buyer</th>
-                                                    <th>Sample</th>
-                                                    <th>MI</th>
-                                                    <th>Acc Fab Cart</th>
+                                                    <th>Sample Cart</th>
+                                                    <th>MI Cart</th>
+                                                    <th>Fab Cart</th>
                                                     <th>Fab</th>
+                                                    <th>Acc Cart</th>
                                                     <th>Acc</th>
                                                     <th>Bordir Approve</th>
                                                     <th>Pattern</th>
@@ -318,6 +380,14 @@
                                                     <th>Start Sew.</th>
                                                     <th>Finish Sew.</th>
                                                     <th>Finish Pack.</th>
+                                                    <th>RAF Cut.</th>
+                                                    <th>Balance Cut.</th>
+                                                    <th>RAF Sew.</th>
+                                                    <th>Balance Sew.</th>
+                                                    <th>RAF Iron</th>
+                                                    <th>Balance Iron</th>
+                                                    <th>RAF Pack.</th>
+                                                    <th>Balance Pack.</th>
                                                     <th>Remark</th>
                                                 </tr>
                                             </thead>
@@ -380,17 +450,16 @@
                                                     <th>Lot</th>
                                                     <th>PO Buyer</th>
                                                     <th>DC PO Qty</th>
+                                                    <th>Size</th>
+                                                    <th>Size Qty</th>
                                                     <th>RAF Date</th>
                                                     <th>RAF Qty</th>
-                                                    <th>Total Raf</th>
+                                                    <th>Total RAF</th>
                                                     <th>Balance</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                             </tbody>
-                                            <tfoot align="right">
-                                                <tr><th colspan="5"></th><th></th><th></th></tr>
-                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -448,9 +517,11 @@
                                                     <th>Lot</th>
                                                     <th>PO Buyer</th>
                                                     <th>DC PO Qty</th>
+                                                    <th>Size</th>
+                                                    <th>Size Qty</th>
                                                     <th>RAF Date</th>
                                                     <th>RAF Qty</th>
-                                                    <th>Total Raf</th>
+                                                    <th>Total RAF</th>
                                                     <th>Balance</th>
                                                 </tr>
                                             </thead>
@@ -513,9 +584,11 @@
                                                     <th>Lot</th>
                                                     <th>PO Buyer</th>
                                                     <th>DC PO Qty</th>
+                                                    <th>Size</th>
+                                                    <th>Size Qty</th>
                                                     <th>RAF Date</th>
                                                     <th>RAF Qty</th>
-                                                    <th>Total Raf</th>
+                                                    <th>Total RAF</th>
                                                     <th>Balance</th>
                                                 </tr>
                                             </thead>
@@ -578,9 +651,11 @@
                                                     <th>Lot</th>
                                                     <th>PO Buyer</th>
                                                     <th>DC PO Qty</th>
+                                                    <th>Size</th>
+                                                    <th>Size Qty</th>
                                                     <th>RAF Date</th>
                                                     <th>RAF Qty</th>
-                                                    <th>Total Raf</th>
+                                                    <th>Total RAF</th>
                                                     <th>Balance</th>
                                                 </tr>
                                             </thead>
@@ -664,8 +739,13 @@
                                                     <th>PO Buyer</th>
                                                     <th>Market</th>
                                                     <th>Ship Mode</th>
-                                                    <th>Ship Qty</th>
+                                                    <th>Size</th>
+                                                    <th>Size Qty</th>
                                                     <th>Ship Date</th>
+                                                    <th>Ship Qty</th>
+                                                    <th>Balance</th>
+                                                    <th>Carton Qty</th>
+                                                    <th>Carton Balance</th>
                                                     <th>Remark</th>
                                                 </tr>
                                             </thead>
@@ -724,6 +804,43 @@
                 </div>
             </div>
         </div>
+        
+
+        <div class="modal fade" id="voidModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="void-title" class="modal-title" id="exampleModalLabel">Void Record</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"><p id="modal-text-record-void"></p></div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
+                        <a id="btn-confirm-void" href=""><button class="btn btn-danger" type="button">Confirm</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="restoreModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="restore-title" class="modal-title" id="exampleModalLabel">Restore Record</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"><p id="modal-text-record-restore"></p></div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
+                        <a id="btn-confirm-restore" href=""><button class="btn btn-success" type="button">Confirm</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 @include('layout.footer')
@@ -758,7 +875,15 @@
     });
     $('.btn-delete-record').on('click', function () {
             $('#btn-confirm').attr('href', $(this).data('delete-link'));
-            $("#modal-text-record").text('Apakah anda yakin ingin menghapus order master ' + $(this).data('delete-name') + '?');
+            $("#modal-text-record").text('Apakah anda yakin ingin menghapus Order Master ' + $(this).data('delete-name') + '?');
+    });
+    $('.btn-void-record').on('click', function () {
+            $('#btn-confirm-void').attr('href', $(this).data('void-link'));
+            $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus Order Master ' + $(this).data('void-name') + '?');
+    });
+    $('.btn-restore-record').on('click', function () {
+            $('#btn-confirm-restore').attr('href', $(this).data('restore-link'));
+            $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan Order Master ' + $(this).data('restore-name') + '?');
     });
 </script>
 <script type="text/javascript">
@@ -767,6 +892,7 @@
             // $("#dataSketch").css("display", "none");
             // document.getElementById("dataSketch").style.display = 'none';
             var jsonOrderList = $(this).data('orderlist-url');
+            var jsonOrderSize = $(this).data('ordersize-url');
             // var jsonRafProduction = $(this).data('rafproduction-url'); 
             var jsonRafCutting = $(this).data('rafcutting-url'); 
             var jsonRafSewing = $(this).data('rafsewing-url'); 
@@ -790,10 +916,11 @@
                         { data: 'pobuyer_no', name: 'pobuyer_no' },
                         { data: 'dcpo_dzn', name: 'dcpo_dzn' },
                         { data: 'dcpo_qty', name: 'dcpo_qty' },
+                        { data: 'carton_qty', name: 'carton_qty' },
                         { data: 'sum_raf_qty', name: 'sum_raf_qty' },
                         { data: 'balance', name: 'balance' },
-                        { data: 'ex_factory_date', name: 'ex_factory_date' },
-                        { data: 'vsl_date', name: 'vsl_date' },
+                        { data: 'ex_factory_date_formated', name: 'ex_factory_date_formated' },
+                        { data: 'vsl_date_formated', name: 'vsl_date_formated' },
                         { data: 'statusbadge', name: 'statusbadge', orderable: false, searchable: false},
             
                     ]
@@ -809,20 +936,29 @@
                             { data: 'pobuyer_no', name: 'pobuyer_no' },
                             { data: 'samplebadge', name: 'samplebadge', orderable: false, searchable: false},
                             { data: 'mibadge', name: 'mibadge', orderable: false, searchable: false},
-                            { data: 'cartbadge', name: 'cartbadge', orderable: false, searchable: false},
-                            { data: 'fab_date', name: 'fab_date' },
-                            { data: 'acc_date', name: 'acc_date' },
-                            { data: 'bordir_approve', name: 'bordir_approve' },
-                            { data: 'pattern_date', name: 'pattern_date' },
-                            { data: 'sampletest_date', name: 'sampletest_date' },
-                            { data: 'marker_date', name: 'marker_date' },
-                            { data: 'pilotrun_date', name: 'pilotrun_date' },
-                            { data: 'ppm_date', name: 'ppm_date' },
-                            { data: 'startcut_date', name: 'startcut_date' },
-                            { data: 'finishcut_date', name: 'finishcut_date' },
-                            { data: 'startsew_date', name: 'startsew_date' },
-                            { data: 'finishsew_date', name: 'finishsew_date' },
-                            { data: 'finishpack_date', name: 'finishpack_date' },
+                            { data: 'fabbadge', name: 'fabbadge', orderable: false, searchable: false},
+                            { data: 'fab_date_formated', name: 'fab_date_formated' },
+                            { data: 'accbadge', name: 'accbadge', orderable: false, searchable: false},
+                            { data: 'acc_date_formated', name: 'acc_date_formated' },
+                            { data: 'bordir_approve_formated', name: 'bordir_approve_formated' },
+                            { data: 'pattern_date_formated', name: 'pattern_date_formated' },
+                            { data: 'sampletest_date_formated', name: 'sampletest_date_formated' },
+                            { data: 'marker_date_formated', name: 'marker_date_formated' },
+                            { data: 'pilotrun_date_formated', name: 'pilotrun_date_formated' },
+                            { data: 'ppm_date_formated', name: 'ppm_date_formated' },
+                            { data: 'startcut_date_formated', name: 'startcut_date_formated' },
+                            { data: 'finishcut_date_formated', name: 'finishcut_date_formated' },
+                            { data: 'startsew_date_formated', name: 'startsew_date_formated' },
+                            { data: 'finishsew_date_formated', name: 'finishsew_date_formated' },
+                            { data: 'finishpack_date_formated', name: 'finishpack_date_formated' },
+                            { data: 'sum_raf_cut', name: 'sum_raf_cut' },
+                            { data: 'balance_cut_colored', name: 'balance_cut_colored' },
+                            { data: 'sum_raf_sew', name: 'sum_raf_sew' },
+                            { data: 'balance_sew_colored', name: 'balance_sew_colored' },
+                            { data: 'sum_raf_iron', name: 'sum_raf_iron' },
+                            { data: 'balance_iron_colored', name: 'balance_iron_colored' },
+                            { data: 'sum_raf_pack', name: 'sum_raf_pack' },
+                            { data: 'balance_pack_colored', name: 'balance_pack_colored' },
                             { data: 'remark', name: 'remark' },
                 
                         ]
@@ -843,14 +979,16 @@
                                 }
                             },
                             columns: [
-                                {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                                 { data: 'lot_no', name: 'lot_no', orderable: false },
                                 { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
                                 { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
-                                { data: 'raf_date', name: 'raf_date', orderable: false },
+                                { data: 'size', name: 'size', orderable: false },
+                                { data: 'size_qty', name: 'size_qty', orderable: false },
+                                { data: 'raf_date_formated', name: 'raf_date_formated', orderable: false },
                                 { data: 'raf_qty', name: 'raf_qty', orderable: false },
                                 { data: 'totalraf', name: 'totalraf', orderable: false },
-                                { data: 'balance', name: 'balance', orderable: false },
+                                { data: 'balance_color', name: 'balance_color', orderable: false },
                             ],
                         });
                         $('#filter-data-cutting').click(function(){
@@ -872,14 +1010,16 @@
                                     }
                                 },
                                 columns: [
-                                    {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                                     { data: 'lot_no', name: 'lot_no', orderable: false },
                                     { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
                                     { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
-                                    { data: 'raf_date', name: 'raf_date', orderable: false },
+                                    { data: 'size', name: 'size', orderable: false },
+                                    { data: 'size_qty', name: 'size_qty', orderable: false },
+                                    { data: 'raf_date_formated', name: 'raf_date_formated', orderable: false },
                                     { data: 'raf_qty', name: 'raf_qty', orderable: false },
                                     { data: 'totalraf', name: 'totalraf', orderable: false },
-                                    { data: 'balance', name: 'balance', orderable: false },
+                                    { data: 'balance_color', name: 'balance_color', orderable: false },
                                 ],
                             });
                             $('#filter-data-sewing').click(function(){
@@ -901,14 +1041,16 @@
                                         }
                                     },
                                     columns: [
-                                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                                        { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                                         { data: 'lot_no', name: 'lot_no', orderable: false },
                                         { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
                                         { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
-                                        { data: 'raf_date', name: 'raf_date', orderable: false },
+                                        { data: 'size', name: 'size', orderable: false },
+                                        { data: 'size_qty', name: 'size_qty', orderable: false },
+                                        { data: 'raf_date_formated', name: 'raf_date_formated', orderable: false },
                                         { data: 'raf_qty', name: 'raf_qty', orderable: false },
                                         { data: 'totalraf', name: 'totalraf', orderable: false },
-                                        { data: 'balance', name: 'balance', orderable: false },
+                                        { data: 'balance_color', name: 'balance_color', orderable: false },
                                     ],
                                 });
                                 $('#filter-data-iron').click(function(){
@@ -930,14 +1072,16 @@
                                             }
                                         },
                                         columns: [
-                                            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                                            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                                             { data: 'lot_no', name: 'lot_no', orderable: false },
                                             { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
                                             { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
-                                            { data: 'raf_date', name: 'raf_date', orderable: false },
+                                            { data: 'size', name: 'size', orderable: false },
+                                            { data: 'size_qty', name: 'size_qty', orderable: false },
+                                            { data: 'raf_date_formated', name: 'raf_date_formated', orderable: false },
                                             { data: 'raf_qty', name: 'raf_qty', orderable: false },
                                             { data: 'totalraf', name: 'totalraf', orderable: false },
-                                            { data: 'balance', name: 'balance', orderable: false },
+                                            { data: 'balance_color', name: 'balance_color', orderable: false },
                                         ],
                                     });
                                     $('#filter-data-packing').click(function(){
@@ -953,8 +1097,13 @@
                                                 { data: 'pobuyer_no', name: 'pobuyer_no' },
                                                 { data: 'market_name', name: 'market_name' },
                                                 { data: 'shipmode_name', name: 'shipmode_name' },
+                                                { data: 'size', name: 'size' },
+                                                { data: 'size_qty', name: 'size_qty' },
+                                                { data: 'ship_date_formated', name: 'ship_date_formated' },
                                                 { data: 'ship_qty', name: 'ship_qty' },
-                                                { data: 'ship_date', name: 'ship_date' },
+                                                { data: 'balance_color', name: 'balance_color', orderable: false },
+                                                { data: 'carton_qty', name: 'carton_qty' },
+                                                { data: 'carton_balance_color', name: 'carton_balance_color' },
                                                 { data: 'remark', name: 'remark' },
                                     
                                             ]
@@ -991,7 +1140,31 @@
                                                 } else {
 
                                                 }
-                                                $('#orderlistModal').modal('show');
+                                                $.get(jsonOrderSize, function (data) {
+                                                    var tableOrderSize = $('#table-ordersize').DataTable({
+                                                        destroy: true,
+                                                        processing: true,
+                                                        responsive: true,
+                                                        ajax: jsonOrderSize,
+                                                        columns: [
+                                                            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                                                            { data: 'lot_no', name: 'lot_no', orderable: false },
+                                                            { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
+                                                            { data: 'dcpo_qty', name: 'dcpo_qty', orderable: false },
+                                                            { data: 'XS', name: 'XS', orderable: false },
+                                                            { data: 'S', name: 'S', orderable: false },
+                                                            { data: 'M', name: 'M', orderable: false },
+                                                            { data: 'L', name: 'L', orderable: false },
+                                                            { data: 'XL', name: 'XL', orderable: false },
+                                                            { data: 'XXL', name: 'XXL', orderable: false },
+                                                            { data: 'total', name: 'total', orderable: false },
+                                                        ],
+                                                    });
+                                                    $('#filter-data-ordersize').click(function(){
+                                                        tableOrderSize.draw();
+                                                    });
+                                                    $('#orderlistModal').modal('show');
+                                                });
                                             });
                                         });
                                     });

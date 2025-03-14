@@ -12,5 +12,6 @@ class FabricMill extends Model
     protected $fillable = [
         'fabmill_no',
         'fabmill_name',
+        'void'
     ];
 }

@@ -16,5 +16,6 @@ class Fabrication extends Model
         'fabrication',
         'po_fab',
         'etd',
+        'void',
     ];
 }

@@ -23,5 +23,6 @@ class OrderMaster extends Model
         'fu_no',
         'remark',
         'sketch_file',
+        'void'
     ];
 }

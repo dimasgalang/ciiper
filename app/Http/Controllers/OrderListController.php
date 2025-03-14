@@ -12,6 +12,7 @@ use App\Models\FollowUp;
 use App\Models\LogCiiper;
 use App\Models\OrderList;
 use App\Models\OrderMaster;
+use App\Models\OrderSize;
 use App\Models\RafProduction;
 use App\Models\Season;
 use App\Models\SetupIncrement;
@@ -25,10 +26,11 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
+use Yajra\DataTables\Facades\DataTables;
 
 class OrderListController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
         // $orderlists = OrderList::all();
         $orderlists = OrderList::select('order_list.*','purchase_order.po_master','season.season_cat','buyer.buyer_name', 'brand.brand_name', 'style.style_name', 'fabrication.fabrication', 'fabrication.po_fab', 'fabrication.etd', 'fabric_mill.fabmill_name', 'factory.factory_name','wash_type','bordir_type')
         ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
@@ -42,6 +44,7 @@ class OrderListController extends Controller
         ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
         ->leftJoin('wash_type', 'order_list.wash_no', '=', 'wash_type.wash_no')
         ->leftJoin('bordir_type', 'order_list.bordir_no', '=', 'bordir_type.bordir_no')
+        ->where('order_list.void','=',$request->void)
         ->get();
         // dd($orderlists);
         return view('orderlist.index', compact('orderlists'));
@@ -52,6 +55,7 @@ class OrderListController extends Controller
         $fabrication = Fabrication::select('*', 'fabric_mill.*')
         ->leftJoin('fabric_mill', 'fabric_mill.fabmill_no', '=', 'fabrication.fabmill_no')
         ->where('fabrication.order_trans', '=', $order_trans)
+        ->where('fabrication.void','=','false')
         ->get();
         return response()->json($fabrication);
     }
@@ -117,6 +121,7 @@ class OrderListController extends Controller
             'lot_no' => $request->lot_no,
             'pobuyer_no' => $request->pobuyer_no,
             'dcpo_qty' => $request->dcpo_qty,
+            'carton_qty' => $request->carton_qty,
             'ex_factory_date' => $request->ex_factory_date,
             'vsl_date' => $request->vsl_date,
             'wash_no' => $request->wash_no,
@@ -125,6 +130,7 @@ class OrderListController extends Controller
             'target_qty' => $request->target_qty,
             'production_day' => $request->production_day,
             'smv' => $request->smv,
+            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Order List ' . $request->order_list . ' successfully created!');
@@ -197,15 +203,16 @@ class OrderListController extends Controller
 
         $validator = Validator::make($request->all(), [
             'order_trans' => 'required|max:255',
-            'order_list' => 'required|max:225|',
-            'factory_no' => 'required|max:225|',
-            'lot_no' => 'required|max:225|',
-            'pobuyer_no' => 'required|max:225|',
-            'dcpo_qty' => 'required|max:225|',
-            'ex_factory_date' => 'required|max:225|',
-            'vsl_date' => 'required|max:225|',
-            'wash_no' => 'required|max:225|',
-            'bordir_no' => 'required|max:225|',
+            'order_list' => 'required|max:255|',
+            'factory_no' => 'required|max:255|',
+            'lot_no' => 'required|max:255|',
+            'pobuyer_no' => 'required|max:255|',
+            'dcpo_qty' => 'required',
+            'carton_qty' => 'required',
+            'ex_factory_date' => 'required|max:255|',
+            'vsl_date' => 'required|max:255|',
+            'wash_no' => 'required|max:255|',
+            'bordir_no' => 'required|max:255|',
             'line' => 'required',
             'target_qty' => 'required',
             'production_day' => 'required',
@@ -225,6 +232,7 @@ class OrderListController extends Controller
             'lot_no' => $request->lot_no,
             'pobuyer_no' => $request->pobuyer_no,
             'dcpo_qty' => $request->dcpo_qty,
+            'carton_qty' => $request->carton_qty,
             'ex_factory_date' => $request->ex_factory_date,
             'vsl_date' => $request->vsl_date,
             'wash_no' => $request->wash_no,
@@ -243,11 +251,81 @@ class OrderListController extends Controller
     
 
     public function fetchorderleft($order_trans) {
-        $order_lists = OrderMaster::select('order_master.order_trans','order_master.qty_order', DB::raw('ifnull(sum(order_list.dcpo_qty),0) as sum_dcpo_qty'), DB::raw('ifnull((order_master.qty_order - ifnull(sum(order_list.dcpo_qty),0)),0) as qty_left'))
+        $order_lists = OrderMaster::select('order_master.order_trans','order_master.qty_order', DB::raw('ifnull((select sum(dcpo_qty) from order_list where order_trans = order_master.order_trans and order_list.void = "false"),0) as sum_dcpo_qty'), DB::raw('order_master.qty_order-ifnull((select sum(dcpo_qty) from order_list where order_trans = order_master.order_trans and order_list.void = "false"),0) as qty_left'))
         ->leftJoin('order_list', 'order_list.order_trans', '=', 'order_master.order_trans')
         ->where('order_master.order_trans', '=', $order_trans)
-        ->groupBy('order_master.order_trans','order_master.qty_order')
         ->get();
         return response()->json($order_lists);
+    }
+
+    // public function showordersize($order_list) {
+    //     $ordersizes = OrderSize::select('size.size','order_list.pobuyer_no','order_list.lot_no','order_list.dcpo_qty','order_size.qty',DB::raw('(select sum(qty) from order_size t2 where t2.order_list = "'. $order_list .'") as sum_qty'))
+    //         ->leftJoin('order_list','order_size.order_list','=','order_list.order_list')
+    //         ->leftJoin('size','order_size.size_no','=','size.size_no')
+    //         ->where('order_size.order_list','=',$order_list)
+    //         ->get();
+    //         return DataTables::of($ordersizes)->addIndexColumn()->make(true);
+    // }
+
+    // Pivot
+    public function showordersize($order_list) {
+        $ordersizes = OrderSize::select('order_list.pobuyer_no','order_list.lot_no','order_list.dcpo_qty',DB::raw('ifnull(sum(case when size.size ="XS" then order_size.qty end),0) as "XS"'),DB::raw('ifnull(sum(case when size.size ="S" then order_size.qty end),0) as "S"'),DB::raw('ifnull(sum(case when size.size ="M" then order_size.qty end),0) as "M"'),DB::raw('ifnull(sum(case when size.size ="L" then order_size.qty end),0) as "L"'),DB::raw('ifnull(sum(case when size.size ="XL" then order_size.qty end),0) as "XL"'),DB::raw('ifnull(sum(case when size.size ="XXL" then order_size.qty end),0) as "XXL"'))
+            ->leftJoin('order_list','order_size.order_list','=','order_list.order_list')
+            ->leftJoin('size','order_size.size_no','=','size.size_no')
+            ->where('order_size.order_list','=',$order_list)
+            ->where('order_size.void','=','false')
+            ->groupBy('order_list.pobuyer_no','order_list.lot_no','order_list.dcpo_qty')
+            ->get();
+            // return response()->json($ordersizes);
+            return DataTables::of($ordersizes)->addIndexColumn()->make(true);
+    }
+
+    
+    public function void(Request $request)
+    {
+        $orderlists = OrderList::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Void Order List ' . $orderlists->order_list;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $orderlists->fill([
+            'void' => 'true',
+        ]);
+
+        $orderlists->save();
+
+        Alert::success('Void Successfully!', 'Order List ' . $orderlists->order_list . ' successfully voided!');
+        return redirect('orderlist/index');
+    }
+
+    public function restore(Request $request)
+    {
+        $orderlists = OrderList::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Restore Order List ' . $orderlists->order_list;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $orderlists->fill([
+            'void' => 'false',
+        ]);
+
+        $orderlists->save();
+
+        Alert::success('Restore Successfully!', 'Order List ' . $orderlists->order_list . ' successfully restored!');
+        return redirect('orderlist/index');
     }
 }

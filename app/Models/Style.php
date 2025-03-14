@@ -14,5 +14,6 @@ class Style extends Model
         'style_no',
         'style_name',
         'style_desc',
+        'void',
     ];
 }

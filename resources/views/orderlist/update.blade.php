@@ -93,7 +93,12 @@
                             <br>
                             <div>
                                 <label>DC PO Qty :</label>
-                                <input class="form-control" type="text" id="dcpo_qty" name="dcpo_qty" value="{{ $orderlists->dcpo_qty }}" required>
+                                <input class="form-control" type="number" id="dcpo_qty" name="dcpo_qty" value="{{ $orderlists->dcpo_qty }}" required>
+                            </div>
+                            <br>
+                            <div>
+                                <label>Carton Qty :</label>
+                                <input class="form-control" type="number" id="carton_qty" name="carton_qty" value="{{ $orderlists->carton_qty }}" required>
                             </div>
                             <br>
                             <div>

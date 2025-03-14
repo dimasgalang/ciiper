@@ -110,12 +110,17 @@
                             <br>
                             <div>
                                 <label>QTY Order :</label>
-                                <input class="form-control" type="text" id="qty_order" name="qty_order" value="{{ $ordermasters->qty_order }}">
+                                <input class="form-control" type="number" id="qty_order" name="qty_order" value="{{ $ordermasters->qty_order }}">
                             </div>
                             <br>
                             <div>
                                 <label>QTY OCF :</label>
-                                <input class="form-control" type="text" id="qty_ocf" name="qty_ocf" value="{{ $ordermasters->qty_ocf }}">
+                                <input class="form-control" type="number" id="qty_ocf" name="qty_ocf" value="{{ $ordermasters->qty_ocf }}">
+                            </div>
+                            <br>
+                            <div>
+                                <label>Carton Qty :</label>
+                                <input class="form-control" type="number" id="carton_qty" name="carton_qty" value="{{ $ordermasters->carton_qty }}">
                             </div>
                             <br>
                             <div>

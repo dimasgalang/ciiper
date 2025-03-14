@@ -19,8 +19,8 @@
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">Shipment List</h1>
                     <div>
-                    <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Import Shipment</a>
+                    <!-- <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
+                        class="fas fa-plus fa-sm text-white-50"></i> Import Shipment</a> -->
                     <a href="{{ route('shipment.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                             class="fas fa-plus fa-sm text-white-50"></i> Create Shipment</a>
                     </div>
@@ -28,8 +28,15 @@
                 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
-                    <div class="card-header py-3">
+                    <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
                         <h6 class="m-0 font-weight-bold text-primary">Shipment Data</h6>
+                        <form method="GET" id="form-void">
+                                <select name="void" id="void" class="form-control" onchange="document.getElementById('form-void').submit()" style="width: 300px;">
+                                    <option disabled selected hidden>Select Status</option>
+                                    <option value="false">Active</option>
+                                    <option value="true">Void</option>
+                                </select>
+                        </form>
                     </div>
                     <div class="card-body">
                         @if ($message = Session::get('success'))
@@ -69,6 +76,7 @@
                                         <th>Market</th>
                                         <th>Ship Mode</th>
                                         <th>Ship Qty</th>
+                                        <th>Carton Qty</th>
                                         <th>Ship Date</th>
                                         <th>Remark</th>
                                         <th>Action</th>
@@ -83,15 +91,25 @@
                                         <td>{{ $shipment->market_name }}</td>
                                         <td>{{ $shipment->shipmode_name }}</td>
                                         <td>{{ $shipment->ship_qty }}</td>
-                                        <td>{{ $shipment->ship_date }}</td>
+                                        <td>{{ $shipment->carton_qty }}</td>
+                                        <td>{{ date('dmy', strtotime($shipment->ship_date)) }}</td>
                                         <td>{{ $shipment->remark }}</td>
                                         <td class="text-center">
+                                            @if (request()->get('void') == 'false')
                                             <a href="/shipment/find/{{ $shipment->id }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $shipment->id }}" data-delete-name="{{ $shipment->shipment_name }}" data-toggle="modal" data-target="#deleteModal">
+                                            <!-- <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $shipment->id }}" data-delete-name="{{ $shipment->shipment_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
+                                            </a> -->
+                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="void/{{ $shipment->id }}" data-void-name="{{ $shipment->shipment_name }}" data-toggle="modal" data-target="#voidModal">
+                                                <i class="fas fa-ban"></i>
                                             </a>
+                                            @elseif (request()->get('void') == 'true')
+                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="restore/{{ $shipment->id }}" data-restore-name="{{ $shipment->shipment_name }}" data-toggle="modal" data-target="#restoreModal">
+                                                <i class="fas fa-history"></i>
+                                            </a>
+                                            @endif
                                         </td>
                                     </tr>
                                     @endforeach
@@ -122,6 +140,42 @@
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
                         <a id="btn-confirm" href=""><button class="btn btn-primary" type="button">Confirm</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="voidModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="void-title" class="modal-title" id="exampleModalLabel">Void Record</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"><p id="modal-text-record-void"></p></div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
+                        <a id="btn-confirm-void" href=""><button class="btn btn-danger" type="button">Confirm</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="restoreModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="restore-title" class="modal-title" id="exampleModalLabel">Restore Record</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"><p id="modal-text-record-restore"></p></div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
+                        <a id="btn-confirm-restore" href=""><button class="btn btn-success" type="button">Confirm</button></a>
                     </div>
                 </div>
             </div>
@@ -165,7 +219,15 @@
 <script>
     $('.btn-delete-record').on('click', function () {
             $('#btn-confirm').attr('href', $(this).data('delete-link'));
-            $("#modal-text-record").text('Apakah anda yakin ingin menghapus shipment ' + $(this).data('delete-name') + '?');
+            $("#modal-text-record").text('Apakah anda yakin ingin menghapus Shipment ' + $(this).data('delete-name') + '?');
+    });
+    $('.btn-void-record').on('click', function () {
+            $('#btn-confirm-void').attr('href', $(this).data('void-link'));
+            $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus Shipment ' + $(this).data('void-name') + '?');
+    });
+    $('.btn-restore-record').on('click', function () {
+            $('#btn-confirm-restore').attr('href', $(this).data('restore-link'));
+            $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan Shipment ' + $(this).data('restore-name') + '?');
     });
 </script>
 </html>

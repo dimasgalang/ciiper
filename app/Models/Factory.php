@@ -12,5 +12,6 @@ class Factory extends Model
     protected $fillable = [
         'factory_no',
         'factory_name',
+        'void'
     ];
 }

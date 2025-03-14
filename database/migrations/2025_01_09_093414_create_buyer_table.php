@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('buyer_name');
             $table->string('buyer_address')->nullable();
             $table->string('buyer_contact')->nullable();
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

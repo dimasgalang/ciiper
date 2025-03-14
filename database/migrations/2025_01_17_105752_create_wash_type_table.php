@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('wash_no')->unique();
             $table->string('wash_type');
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

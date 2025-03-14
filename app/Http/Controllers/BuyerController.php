@@ -16,8 +16,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class BuyerController extends Controller
 {
-    public function index() {
-        $buyers   = Buyer::all();
+    public function index(Request $request) {
+        $buyers   = Buyer::select('*')
+        ->where('void','=',$request->void)
+        ->get();
         return view('buyer.index', compact('buyers'));
     }
 
@@ -70,6 +72,7 @@ class BuyerController extends Controller
             'buyer_name' => $request->buyer_name,
             'buyer_address' => $request->buyer_address,
             'buyer_contact' => $request->buyer_contact,
+            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Buyer ' . $request->buyer_no . ' successfully created!');
@@ -138,5 +141,54 @@ class BuyerController extends Controller
 
         Alert::success('Update Successfully!', 'Buyer ' . $request->buyer_no . ' successfully updated!');
         return redirect()->intended('buyer/index');
+    }
+
+    
+    public function void(Request $request)
+    {
+        $buyers = Buyer::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Void Buyer ' . $buyers->buyer_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $buyers->fill([
+            'void' => 'true',
+        ]);
+
+        $buyers->save();
+
+        Alert::success('Void Successfully!', 'Buyer ' . $buyers->buyer_no . ' successfully voided!');
+        return redirect('buyer/index');
+    }
+
+    public function restore(Request $request)
+    {
+        $buyers = Buyer::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Restore Buyer ' . $buyers->buyer_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $buyers->fill([
+            'void' => 'false',
+        ]);
+
+        $buyers->save();
+
+        Alert::success('Restore Successfully!', 'Buyer ' . $buyers->buyer_no . ' successfully restored!');
+        return redirect('buyer/index');
     }
 }

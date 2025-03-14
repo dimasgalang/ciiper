@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('fabrication');
             $table->text('po_fab');
             $table->text('etd');
+            $table->text('void')->nullable();
             $table->timestamps();
         });
     }

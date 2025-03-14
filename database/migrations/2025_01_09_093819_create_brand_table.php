@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('brand_no')->unique();
             $table->string('brand_name');
             $table->string('brand_gender')->nullable();
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

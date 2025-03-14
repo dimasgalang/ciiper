@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('po_no')->unique();
             $table->string('po_master');
             $table->string('po_desc')->nullable();
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

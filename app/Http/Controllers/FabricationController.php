@@ -18,11 +18,12 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class FabricationController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
         $fabrications = Fabrication::select('fabrication.*', 'purchase_order.po_master','fabric_mill.fabmill_name')
         ->leftJoin('order_master', 'order_master.order_trans', '=', 'fabrication.order_trans')
         ->leftJoin('purchase_order', 'purchase_order.po_no', '=', 'order_master.po_no')
         ->leftJoin('fabric_mill', 'fabrication.fabmill_no', '=', 'fabric_mill.fabmill_no')
+        ->where('fabrication.void','=',$request->void)
         ->get();
         return view('fabrication.index', compact('fabrications'));
     }
@@ -81,6 +82,7 @@ class FabricationController extends Controller
             'fabrication' => $request->fabrication,
             'po_fab' => $request->po_fab,
             'etd' => $request->etd,
+            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Fabrication ' . $request->fab_no . ' successfully created!');
@@ -159,6 +161,55 @@ class FabricationController extends Controller
         $fabrications->save();
 
         Alert::success('Update Successfully!', 'Fabrication ' . $request->fab_no . ' successfully updated!');
+        return redirect('fabrication/index');
+    }
+
+    
+    public function void(Request $request)
+    {
+        $fabrications = Fabrication::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Void Fabrication ' . $fabrications->fab_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $fabrications->fill([
+            'void' => 'true',
+        ]);
+
+        $fabrications->save();
+
+        Alert::success('Void Successfully!', 'Fabrication ' . $fabrications->fab_no . ' successfully voided!');
+        return redirect('fabrication/index');
+    }
+
+    public function restore(Request $request)
+    {
+        $fabrications = Fabrication::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Restore Fabrication ' . $fabrications->fab_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $fabrications->fill([
+            'void' => 'false',
+        ]);
+
+        $fabrications->save();
+
+        Alert::success('Restore Successfully!', 'Fabrication ' . $fabrications->fab_no . ' successfully restored!');
         return redirect('fabrication/index');
     }
 }

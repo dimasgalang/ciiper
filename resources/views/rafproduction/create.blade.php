@@ -84,6 +84,16 @@
                             </div>
                             <br>
                             <div>
+                                <label>Size :</label>
+                                <select class="form-control" id="size_no" name="size_no" disabled>
+                                    <option></option>
+                                    @foreach($ordersizes as $ordersize)
+                                    <option value="{{ $ordersize->size_no }}">{{ $ordersize->size }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <br>
+                            <div>
                                 <label>RAF No :</label>
                                 @if($setupincements->last_number ?? '')
                                 <input class="form-control" type="text" id="raf_no" name="raf_no" value="{{ 'RAF' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
@@ -164,6 +174,19 @@
         var order_list = $(this).val();
         if (order_list) {
             $('#raf_dept').removeAttr('disabled');
+            $.ajax({
+                url: '/rafproduction/fetchordersize/'+order_list,
+                type: "GET",
+                dataType: "json",
+                success:function(data) {
+                    $('#size_no').empty();
+                    $('#size_no').append('<option></option>');
+                    $.each(data, function(key, value) {
+                        $('#size_no').append('<option value="'+ value.size_no +'">'+ value.size +'</option>');
+                    });
+                    $('#size_no').removeAttr('disabled');
+                }
+            });
         } else{
             $('#raf_dept').empty();
             $('#raf_dept').attr('disabled','disabled');
@@ -173,13 +196,18 @@
           allowClear: true,
           placeholder: 'Choose Departement',
     });
-    $(document).on("change", "#raf_dept", function(e){
+    $("#size_no").select2({
+          allowClear: true,
+          placeholder: 'Choose Size',
+    });
+    $(document).on("change", "#size_no", function(e){
         e.preventDefault();
-        var raf_dept = $(this).val();
+        var size_no = $(this).val();
         var order_list = document.getElementById('order_list').value;
+        var raf_dept = document.getElementById('raf_dept').value;
         if (raf_dept) {
             $.ajax({
-                url: '/rafproduction/fetchrafleft/'+order_list+'/'+raf_dept,
+                url: '/rafproduction/fetchrafleft/'+order_list+'/'+raf_dept+'/'+size_no,
                 type: "GET",
                 dataType: "json",
                 success:function(data) {

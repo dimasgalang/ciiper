@@ -12,5 +12,6 @@ class Market extends Model
     protected $fillable = [
         'market_no',
         'market_name',
+        'void',
     ];
 }

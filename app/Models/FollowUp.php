@@ -12,5 +12,6 @@ class FollowUp extends Model
     protected $fillable = [
         'fu_no',
         'fu_name',
+        'void'
     ];
 }

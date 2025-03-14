@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('lot_no');
             $table->string('pobuyer_no');
             $table->integer('dcpo_qty');
+            $table->integer('carton_qty')->nullable();
             $table->date('ex_factory_date');
             $table->date('vsl_date');
             $table->string('wash_no');
@@ -28,6 +29,7 @@ return new class extends Migration
             $table->integer('production_day');
             $table->double('smv');
             $table->string('status')->nullable();
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('order_trans');
             $table->string('order_list');
+            $table->string('order_size_no');
             $table->string('raf_no')->unique();
             $table->date('raf_date');
             $table->integer('raf_qty');
             $table->string('raf_dept');
             $table->string('remark')->nullable();
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

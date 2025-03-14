@@ -60,13 +60,62 @@
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
+                 @if(count($datareminders) > 0)
+                <span class="badge badge-danger badge-counter">{{ count($datareminders[0]) }}</span>
+                @else
                 <span class="badge badge-danger badge-counter"></span>
+                @endif
             </a>
             <!-- Dropdown - Alerts -->
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                 aria-labelledby="alertsDropdown">
                 <h6 class="dropdown-header">
                     Alerts Center
+                </h6>
+                @if (count($datareminders[0]) > 5)
+                    @for ($i = 0; $i < 5; $i++)
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                        <div class="mr-3">
+                            <div class="icon-circle bg-danger">
+                                <i class="fas fa-bell text-white"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="font-weight-bold">{{ $datareminders[0][$i] }}</span>
+                        </div>
+                    </a>
+                    @endfor
+                @elseif (count($datareminders[0]) < 5)
+                    @for ($i = 0; $i < count($datareminders[0]); $i++)
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                        <div class="mr-3">
+                            <div class="icon-circle bg-danger">
+                                <i class="fas fa-bell text-white"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="font-weight-bold">{{ $datareminders[0][$i] }}</span>
+                        </div>
+                    </a>
+                    @endfor
+                @endif
+                <a class="dropdown-item text-center small text-gray-500" href="{{ route('alert.index') }}">Show All Alerts</a>
+            </div>
+        </li>
+
+        <!-- Nav Item - Alerts -->
+        <li class="nav-item dropdown no-arrow mx-1">
+            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-envelope fa-fw"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-danger badge-counter"></span>
+            </a>
+            <!-- Dropdown - Alerts -->
+            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                    Log Center
                 </h6>
                 @foreach($logs as $log)
                 <a class="dropdown-item d-flex align-items-center" href="#">
@@ -81,7 +130,7 @@
                     </div>
                 </a>
                 @endforeach
-                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Logs</a>
             </div>
         </li>
 

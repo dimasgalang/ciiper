@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('season_no')->unique();
             $table->string('season_year');
             $table->string('season_cat');
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

@@ -18,12 +18,14 @@ return new class extends Migration
             $table->string('order_list');
             $table->string('has_sample');
             $table->string('has_mi');
-            $table->string('has_cart');
+            $table->string('has_fab_cart');
+            $table->string('has_acc_cart');
             $table->date('fab_date');
             $table->date('acc_date');
             $table->date('bordir_approve');
             $table->date('pattern_date');
             $table->date('sampletest_date');
+            $table->date('reqmarker_date');
             $table->date('marker_date');
             $table->date('pilotrun_date');
             $table->date('ppm_date');
@@ -33,6 +35,7 @@ return new class extends Migration
             $table->date('finishsew_date');
             $table->date('finishpack_date');
             $table->string('remark')->nullable();
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

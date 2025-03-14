@@ -13,5 +13,6 @@ class Season extends Model
         'season_no',
         'season_cat',
         'season_year',
+        'void',
     ];
 }

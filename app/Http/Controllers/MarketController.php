@@ -16,8 +16,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class MarketController extends Controller
 {
-    public function index() {
-        $markets   = Market::all();
+    public function index(Request $request) {
+        $markets   = Market::select('*')
+        ->where('void','=',$request->void)
+        ->get();
         return view('market.index', compact('markets'));
     }
 
@@ -67,6 +69,7 @@ class MarketController extends Controller
         Market::create([
             'market_no' => $request->market_no,
             'market_name' => $request->market_name,
+            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Market ' . $request->market_no . ' successfully created!');
@@ -131,6 +134,55 @@ class MarketController extends Controller
         $markets->save();
 
         Alert::success('Update Successfully!', 'Market ' . $request->market_no . ' successfully updated!');
+        return redirect('market/index');
+    }
+
+    
+    public function void(Request $request)
+    {
+        $markets = Market::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Void Market ' . $markets->market_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $markets->fill([
+            'void' => 'true',
+        ]);
+
+        $markets->save();
+
+        Alert::success('Void Successfully!', 'Market ' . $markets->market_no . ' successfully voided!');
+        return redirect('market/index');
+    }
+
+    public function restore(Request $request)
+    {
+        $markets = Market::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Restore Market ' . $markets->market_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $markets->fill([
+            'void' => 'false',
+        ]);
+
+        $markets->save();
+
+        Alert::success('Restore Successfully!', 'Market ' . $markets->market_no . ' successfully restored!');
         return redirect('market/index');
     }
 }

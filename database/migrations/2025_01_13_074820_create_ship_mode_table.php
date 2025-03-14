@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('shipmode_no')->unique();
             $table->string('shipmode_name');
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

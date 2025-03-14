@@ -14,12 +14,15 @@ return new class extends Migration
         Schema::create('shipment', function (Blueprint $table) {
             $table->id();
             $table->string('ship_no')->unique();
-            $table->string('order_list')->unique();
+            $table->string('order_list');
             $table->string('market_no');
             $table->string('ship_no');
+            $table->string('size_no');
             $table->integer('ship_qty');
+            $table->integer('carton_qty');
             $table->date('ship_date');
             $table->string('remark')->nullable();
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

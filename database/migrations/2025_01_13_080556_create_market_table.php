@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('market_no')->unique();
             $table->string('market_name');
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

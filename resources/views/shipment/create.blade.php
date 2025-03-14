@@ -103,8 +103,23 @@
                             </div>
                             <br>
                             <div>
+                                <label>Size :</label>
+                                <select class="form-control" id="size_no" name="size_no" disabled>
+                                    <option></option>
+                                    @foreach($ordersizes as $ordersize)
+                                    <option value="{{ $ordersize->size_no }}">{{ $ordersize->size }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <br>
+                            <div>
                                 <label id="ship_ready">Ship Qty :</label>
                                 <input class="form-control" type="number" id="ship_qty" name="ship_qty" min="1" max="1" required>
+                            </div>
+                            <br>
+                            <div>
+                                <label id="carton_ready">Carton Qty :</label>
+                                <input class="form-control" type="number" id="carton_qty" name="carton_qty" min="1" max="1" required>
                             </div>
                             <br>
                             <div>
@@ -173,14 +188,51 @@
         var order_list = document.getElementById('order_list').value;
         if (order_list) {
             $.ajax({
-                url: '/shipment/fetchreadyship/'+order_list,
+                url: '/shipment/fetchcartonleft/'+order_list,
                 type: "GET",
                 dataType: "json",
                 success:function(data) {
                     if (data.length > 0) {
                         $.each(data, function(key, value) {
-                                $('#ship_ready').text('Ship Qty : ' + (value.raf_packing - value.sum_ship_qty));
-                                $('#ship_qty').attr("max", (value.raf_packing - value.sum_ship_qty));
+                                $('#carton_ready').text('Carton Qty : ' + (value.carton_balance));
+                                $('#carton_qty').attr("max", (value.carton_balance));
+                        });
+                    } else {
+                        $('#carton_ready').text('Ship Qty : ' + 0);
+                        $('#carton_qty').attr("max", 0);
+                    }
+                }
+            });
+            $.ajax({
+                url: '/shipment/fetchordersize/'+order_list,
+                type: "GET",
+                dataType: "json",
+                success:function(data) {
+                    $('#size_no').empty();
+                    $('#size_no').append('<option></option>');
+                    $.each(data, function(key, value) {
+                        $('#size_no').append('<option value="'+ value.size_no +'">'+ value.size +'</option>');
+                    });
+                    $('#size_no').removeAttr('disabled');
+                }
+            });
+        } else{
+        }
+    });
+    $(document).on("change", "#size_no", function(e){
+        e.preventDefault();
+        var size_no = $(this).val();
+        var order_list = document.getElementById('order_list').value;
+        if (order_list) {
+            $.ajax({
+                url: '/shipment/fetchreadyship/'+order_list+'/'+size_no,
+                type: "GET",
+                dataType: "json",
+                success:function(data) {
+                    if (data.length > 0) {
+                        $.each(data, function(key, value) {
+                                $('#ship_ready').text('Ship Qty : ' + (value.ready_ship));
+                                $('#ship_qty').attr("max", (value.ready_ship));
                         });
                     } else {
                         $('#ship_ready').text('Ship Qty : ' + 0);
@@ -198,6 +250,10 @@
     $("#shipmode_no").select2({
           allowClear: true,
           placeholder: 'Choose Ship Mode',
+    });
+    $("#size_no").select2({
+          allowClear: true,
+          placeholder: 'Choose Size',
     });
 </script>
 </html>

@@ -16,8 +16,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class PurchaseOrderController extends Controller
 {
-    public function index() {
-        $pos   = PurchaseOrder::all();
+    public function index(Request $request) {
+        $pos   = PurchaseOrder::select('*')
+        ->where('void','=',$request->void)
+        ->get();
         return view('po.index', compact('pos'));
     }
 
@@ -72,6 +74,7 @@ class PurchaseOrderController extends Controller
             'po_no' => $request->po_no,
             'po_master' => $request->po_master,
             'po_desc' => $request->po_desc,
+            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Purchase Order ' . $request->po_no . ' successfully created!');
@@ -139,6 +142,55 @@ class PurchaseOrderController extends Controller
         $pos->save();
 
         Alert::success('Update Successfully!', 'Purchase Order ' . $request->po_no . ' successfully update!');
+        return redirect('po/index');
+    }
+
+    
+    public function void(Request $request)
+    {
+        $pos = PurchaseOrder::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Void Purchase Order ' . $pos->po_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $pos->fill([
+            'void' => 'true',
+        ]);
+
+        $pos->save();
+
+        Alert::success('Void Successfully!', 'Purchase Order ' . $pos->po_no . ' successfully voided!');
+        return redirect('po/index');
+    }
+
+    public function restore(Request $request)
+    {
+        $pos = PurchaseOrder::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Restore Purchase Order ' . $pos->po_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $pos->fill([
+            'void' => 'false',
+        ]);
+
+        $pos->save();
+
+        Alert::success('Restore Successfully!', 'Purchase Order ' . $pos->po_no . ' successfully restored!');
         return redirect('po/index');
     }
 }

@@ -17,6 +17,7 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
+                @include('flash::message')
                 @if ($message = Session::get('success'))
                 <div class="alert alert-success alert-block">
                     <button type="button" class="close" data-dismiss="alert">×</button>	
@@ -87,8 +88,8 @@
                         </div>
                     </div>
                 </div>
-                
-
+                <!-- <input type="text" class="form-control" id="speech">
+                <button id="tombol" class="btn btn-primary">Proses</button> -->
                 <!-- Approach -->
                 <div class="row">
                     <!-- Area Chart -->
@@ -166,4 +167,14 @@
 <script src="{{asset('vendor/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
 <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
+<!-- <script src="https://code.responsivevoice.org/responsivevoice.js?key=0zayRiU4"></script> -->
+<!-- <script>
+    $('document').ready(function () {
+        $('#tombol').click(function() {
+            var teks = $('#speech').val();
+            console.log(teks);
+            responsiveVoice.speak(teks, "Indonesian Female");
+        })
+    });
+</script> -->
 </html>

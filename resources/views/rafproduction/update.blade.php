@@ -106,6 +106,16 @@
                             </div>
                             <br>
                             <div>
+                                <label>Size :</label>
+                                <select class="form-control" id="order_size_no" name="order_size_no">
+                                    <option></option>
+                                    @foreach($ordersizes as $ordersize)
+                                        <option value="{{ $ordersize->size_no }}" {{ $rafproductions->size_no == $ordersize->size_no  ? 'selected' : ''}}>{{ $ordersize->size }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <br>
+                            <div>
                                 <label>Remark :</label>
                                 <input class="form-control" type="text" id="remark" name="remark" value="{{ $rafproductions->remark }}">
                             </div>
@@ -170,6 +180,10 @@
     $("#raf_dept").select2({
           allowClear: true,
           placeholder: 'Choose RAF Dept',
+    });
+    $("#order_size_no").select2({
+          allowClear: true,
+          placeholder: 'Choose Size',
     });
     $(document).on("change", "#raf_dept", function(e){
         e.preventDefault();

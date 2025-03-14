@@ -16,8 +16,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class FactoryController extends Controller
 {
-    public function index() {
-        $factorys   = Factory::all();
+    public function index(Request $request) {
+        $factorys   = Factory::select('*')
+        ->where('void','=',$request->void)
+        ->get();
         return view('factory.index', compact('factorys'));
     }
 
@@ -142,6 +144,55 @@ class FactoryController extends Controller
         $factorys->save();
 
         Alert::success('Update Successfully!', 'Factory ' . $request->factory_no . ' successfully updated!');
+        return redirect('factory/index');
+    }
+
+    
+    public function void(Request $request)
+    {
+        $factorys = Factory::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Void Factory ' . $factorys->factory_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $factorys->fill([
+            'void' => 'true',
+        ]);
+
+        $factorys->save();
+
+        Alert::success('Void Successfully!', 'Factory ' . $factorys->factory_no . ' successfully voided!');
+        return redirect('factory/index');
+    }
+
+    public function restore(Request $request)
+    {
+        $factorys = Factory::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Restore Factory ' . $factorys->factory_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $factorys->fill([
+            'void' => 'false',
+        ]);
+
+        $factorys->save();
+
+        Alert::success('Restore Successfully!', 'Factory ' . $factorys->factory_no . ' successfully restored!');
         return redirect('factory/index');
     }
 }

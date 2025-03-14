@@ -12,5 +12,6 @@ class ProductionDept extends Model
     protected $fillable = [
         'dept_no',
         'dept_name',
+        'void',
     ];
 }

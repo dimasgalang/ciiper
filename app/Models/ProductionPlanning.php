@@ -15,12 +15,14 @@ class ProductionPlanning extends Model
         'order_list',
         'has_sample',
         'has_mi',
-        'has_cart',
+        'has_fab_cart',
+        'has_acc_cart',
         'fab_date',
         'acc_date',
         'bordir_approve',
         'pattern_date',
         'sampletest_date',
+        'reqmarker_date',
         'marker_date',
         'pilotrun_date',
         'ppm_date',
@@ -30,5 +32,6 @@ class ProductionPlanning extends Model
         'finishsew_date',
         'finishpack_date',
         'remark',
+        'void',
     ];
 }

@@ -13,5 +13,6 @@ class PurchaseOrder extends Model
         'po_no',
         'po_master',
         'po_desc',
+        'void',
     ];
 }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('fabmill_no')->unique();
             $table->string('fabmill_name');
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

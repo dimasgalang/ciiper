@@ -13,6 +13,7 @@ class Buyer extends Model
         'buyer_no',
         'buyer_name',
         'buyer_address',
-        'buyer_contact'
+        'buyer_contact',
+        'void'
     ];
 }

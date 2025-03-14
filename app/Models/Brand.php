@@ -14,5 +14,6 @@ class Brand extends Model
         'brand_no',
         'brand_name',
         'brand_gender',
+        'void',
     ];
 }

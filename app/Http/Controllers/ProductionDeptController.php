@@ -15,8 +15,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class ProductionDeptController extends Controller
 {
-    public function index() {
-        $productiondepts   = ProductionDept::all();
+    public function index(Request $request) {
+        $productiondepts   = ProductionDept::select('*')
+        ->where('void','=',$request->void)
+        ->get();
         return view('productiondept.index', compact('productiondepts'));
     }
 
@@ -46,6 +48,7 @@ class ProductionDeptController extends Controller
         ProductionDept::create([
             'dept_no' => $request->dept_no,
             'dept_name' => $request->dept_name,
+            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Production Dept ' . $request->dept_no . ' successfully created!');
@@ -130,6 +133,55 @@ class ProductionDeptController extends Controller
         $productiondepts->save();
 
         Alert::success('Update Successfully!', 'Production Dept ' . $request->dept_no . ' successfully updated!');
+        return redirect('productiondept/index');
+    }
+
+    
+    public function void(Request $request)
+    {
+        $productiondepts = ProductionDept::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Void Production Dept ' . $productiondepts->dept_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $productiondepts->fill([
+            'void' => 'true',
+        ]);
+
+        $productiondepts->save();
+
+        Alert::success('Void Successfully!', 'Production Dept ' . $productiondepts->dept_no . ' successfully voided!');
+        return redirect('productiondept/index');
+    }
+
+    public function restore(Request $request)
+    {
+        $productiondepts = ProductionDept::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Restore Production Dept ' . $productiondepts->dept_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $productiondepts->fill([
+            'void' => 'false',
+        ]);
+
+        $productiondepts->save();
+
+        Alert::success('Restore Successfully!', 'Production Dept ' . $productiondepts->dept_no . ' successfully restored!');
         return redirect('productiondept/index');
     }
 }

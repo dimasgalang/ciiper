@@ -12,5 +12,6 @@ class WashType extends Model
     protected $fillable = [
         'wash_no',
         'wash_type',
+        'void',
     ];
 }

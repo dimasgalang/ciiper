@@ -18,9 +18,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class StyleController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
         $styles   = Style::select('style.*', 'brand.brand_name')
         ->leftJoin('brand', 'style.brand_no', '=', 'brand.brand_no')
+        ->where('style.void','=',$request->void)
         ->get();
         return view('style.index', compact('styles'));
     }
@@ -75,6 +76,7 @@ class StyleController extends Controller
             'style_no' => $request->style_no,
             'style_name' => $request->style_name,
             'style_desc' => $request->style_desc,
+            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Style ' . $request->style_no . ' successfully created!');
@@ -145,6 +147,55 @@ class StyleController extends Controller
         $styles->save();
 
         Alert::success('Update Successfully!', 'Style ' . $request->style_no . ' successfully updated!');
+        return redirect('style/index');
+    }
+
+    
+    public function void(Request $request)
+    {
+        $styles = Style::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Void Style ' . $styles->style_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $styles->fill([
+            'void' => 'true',
+        ]);
+
+        $styles->save();
+
+        Alert::success('Void Successfully!', 'Style ' . $styles->style_no . ' successfully voided!');
+        return redirect('style/index');
+    }
+
+    public function restore(Request $request)
+    {
+        $styles = Style::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Restore Style ' . $styles->style_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $styles->fill([
+            'void' => 'false',
+        ]);
+
+        $styles->save();
+
+        Alert::success('Restore Successfully!', 'Style ' . $styles->style_no . ' successfully restored!');
         return redirect('style/index');
     }
 }

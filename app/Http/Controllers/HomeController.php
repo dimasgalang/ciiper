@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Buyer;
 use App\Models\LogCiiper;
 use App\Models\OrderMaster;
+use App\Models\ProductionPlanning;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -45,6 +46,10 @@ class HomeController extends Controller
 
         $ordermasters = OrderMaster::select(DB::raw('COUNT(*) AS JUMLAH'))->get();
         $buyers = Buyer::select(DB::raw('COUNT(*) AS JUMLAH'))->get();
+
+        $now = Carbon::now();
+        $fabdate = DB::select('select *,DATE_SUB(fab_date, INTERVAL 7 DAY) as tanggal from production_planning where "2025-06-19" >= DATE_SUB(fab_date, INTERVAL 7 DAY) and "2025-06-19" <= fab_date');
+        // dd($fabdate);
 
         // $data = DB::connection('sqlsrv')->table('REKAP')->select('*')
         // ->where('TAHUN', '>=', date('Y')-1)
@@ -116,6 +121,7 @@ class HomeController extends Controller
         // ->where('DEPARTEMENT', 'LIKE', '%MAGANG%')->get();
         
         // return view('menu.home', ['employee' => $employee, 'intern' => $intern, 'users' => $users, 'quotes' => $quote], compact('chart'));
+        // return redirect()->intended('/home')->with(compact('users','latestlogs','ordermasters','buyers'))->with(['error' => 'Data Gagal Diimport!']);
         return view('menu.homeprod', compact('users','latestlogs','ordermasters','buyers'));
     }
 

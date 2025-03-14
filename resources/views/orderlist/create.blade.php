@@ -100,6 +100,11 @@
                             </div>
                             <br>
                             <div>
+                                <label>Carton Qty :</label>
+                                <input class="form-control" type="number" id="carton_qty" name="carton_qty">
+                            </div>
+                            <br>
+                            <div>
                                 <label>Ex Factory Date :</label>
                                 <input class="date form-control" type="date" id="ex_factory_date" name="ex_factory_date" required>
                             </div>

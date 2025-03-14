@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('bordir_no')->unique();
             $table->string('bordir_type');
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

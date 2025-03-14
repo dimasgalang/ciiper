@@ -14,8 +14,11 @@ class Shipment extends Model
         'order_list',
         'market_no',
         'shipmode_no',
+        'size_no',
         'ship_qty',
+        'carton_qty',
         'ship_date',
         'remark',
+        'void'
     ];
 }

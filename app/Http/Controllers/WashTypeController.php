@@ -16,8 +16,10 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class WashTypeController extends Controller
 {
-    public function index() {
-        $washtypes   = WashType::all();
+    public function index(Request $request) {
+        $washtypes   = WashType::select('*')
+        ->where('void','=',$request->void)
+        ->get();
         return view('washtype.index', compact('washtypes'));
     }
 
@@ -67,6 +69,7 @@ class WashTypeController extends Controller
         WashType::create([
             'wash_no' => $request->wash_no,
             'wash_type' => $request->wash_type,
+            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Wash Type ' . $request->wash_no . ' successfully created!');
@@ -130,6 +133,55 @@ class WashTypeController extends Controller
         $washtypes->save();
 
         Alert::success('Update Successfully!', 'Wash Type ' . $request->wash_no . ' successfully updated!');
+        return redirect('washtype/index');
+    }
+
+    
+    public function void(Request $request)
+    {
+        $washtypes = WashType::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Void Wash Type ' . $washtypes->wash_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $washtypes->fill([
+            'void' => 'true',
+        ]);
+
+        $washtypes->save();
+
+        Alert::success('Void Successfully!', 'Wash Type ' . $washtypes->wash_no . ' successfully voided!');
+        return redirect('washtype/index');
+    }
+
+    public function restore(Request $request)
+    {
+        $washtypes = WashType::findOrFail($request->id);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Restore Wash Type ' . $washtypes->wash_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        $washtypes->fill([
+            'void' => 'false',
+        ]);
+
+        $washtypes->save();
+
+        Alert::success('Restore Successfully!', 'Wash Type ' . $washtypes->wash_no . ' successfully restored!');
         return redirect('washtype/index');
     }
 }

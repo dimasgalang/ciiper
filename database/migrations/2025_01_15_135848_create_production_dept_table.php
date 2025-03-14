@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('dept_no')->unique();
             $table->string('dept_name');
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

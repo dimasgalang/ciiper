@@ -11,11 +11,13 @@ class RafProduction extends Model
     public $table = "raf_production";
     protected $fillable = [
         'order_trans',
+        'order_list',
+        'size_no',
         'raf_no',
         'raf_dept',
-        'order_list',
         'raf_date',
         'raf_qty',
         'remark',
+        'void'
     ];
 }

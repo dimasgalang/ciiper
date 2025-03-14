@@ -77,14 +77,102 @@
                             <br>
                             <div>
                                 <label>Order List :</label>
-                                <select class="form-control" id="order_list" name="order_list" disabled>
+                                @if($lastorderlist->last_number ?? '')
+                                <input class="form-control" type="text" id="order_list" name="order_list" value="{{ 'ORL' . str_pad(intval(substr($lastorderlist->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @else
+                                <input class="form-control" type="text" id="order_list" name="order_list" value="{{ 'ORL' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @endif
+                            </div>
+                            <br>
+                            <div>
+                                <label>Factory :</label>
+                                <select class="form-control" id="factory_no" name="factory_no">
                                     <option></option>
+                                    @foreach($factorys as $factory)
+                                    <option value="{{ $factory->factory_no }}">{{ $factory->factory_no }} - {{ $factory->factory_name }}</option>
+                                    @endforeach
                                 </select>
+                            </div>
+                            <br><hr>
+                            <h3>Order</h3>
+                            <div class="row">
+                                <div class="col-xl-3">
+                                    <div>
+                                        <label id="dcpo_left">DC PO Qty :</label>
+                                        <input class="form-control" type="number" id="dcpo_qty" name="dcpo_qty" min="1" max="0" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Wash Type :</label>
+                                        <select class="form-control" id="wash_no" name="wash_no">
+                                            @foreach($washtypes as $washtype)
+                                            <option value="{{ $washtype->wash_no }}">{{ $washtype->wash_type }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Target Qty :</label>
+                                        <input class="date form-control" type="number" id="target_qty" name="target_qty" required>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3">
+                                    <div>
+                                        <label>Carton Qty :</label>
+                                        <input class="form-control" type="number" id="carton_qty" name="carton_qty" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Bordir Type :</label>
+                                        <select class="form-control" id="bordir_no" name="bordir_no">
+                                            @foreach($bordirtypes as $bordirtype)
+                                            <option value="{{ $bordirtype->bordir_no }}">{{ $bordirtype->bordir_type }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Production Day :</label>
+                                        <input class="date form-control" type="number" id="production_day" name="production_day" required>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3">
+                                    <div>
+                                        <label>Lot :</label>
+                                        <input class="form-control" type="text" id="lot_no" name="lot_no" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Ex Factory Date :</label>
+                                        <input class="date form-control" type="date" id="ex_factory_date" name="ex_factory_date" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Line :</label>
+                                        <input class="date form-control" type="number" id="line" name="line" required>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3">
+                                    <div>
+                                        <label>PO Buyer :</label>
+                                        <input class="form-control" type="text" id="pobuyer_no" name="pobuyer_no" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>Ship Date :</label>
+                                        <input class="date form-control" type="date" id="vsl_date" name="vsl_date" required>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <label>SMV :</label>
+                                        <input class="date form-control" type="decimal" id="smv" name="smv" required>
+                                    </div>
+                                </div>
                             </div>
                             <br><hr>
                             <h3>Cart</h3>
                             <div class="row">
-                                <div class="col-xl-4">
+                                <div class="col-xl-3">
                                     <div>
                                         <label>Sample :</label>
                                         <select class="form-control" id="has_sample" name="has_sample">
@@ -94,7 +182,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-xl-4">
+                                <div class="col-xl-3">
                                     <div>
                                         <label>MI :</label>
                                         <select class="form-control" id="has_mi" name="has_mi">
@@ -104,10 +192,20 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-xl-4">
+                                <div class="col-xl-3">
                                     <div>
-                                        <label>Cart :</label>
-                                        <select class="form-control" id="has_cart" name="has_cart">
+                                        <label>Fab Cart :</label>
+                                        <select class="form-control" id="has_fab_cart" name="has_fab_cart">
+                                            <option></option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3">
+                                    <div>
+                                        <label>Acc Cart :</label>
+                                        <select class="form-control" id="has_acc_cart" name="has_acc_cart">
                                             <option></option>
                                             <option value="Yes">Yes</option>
                                             <option value="No">No</option>
@@ -115,6 +213,51 @@
                                     </div>
                                 </div>
                             </div>
+                            <br><hr>
+                            <h3>Planning Accesories</h3>
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <div id="accesoriesSew">
+                                        <label>Accesories Sewing :</label>
+                                        <div class="row">
+                                            <div class="col-xl-5">
+                                                <select class="form-control accesories_sew" id="accesories_sew" name="accesories_sew[]" >
+                                                    @foreach($accesoriessewings as $accesoriessewing)
+                                                    <option value="{{ $accesoriessewing->accesories_no }}">{{ $accesoriessewing->accesories_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-xl-4">
+                                                <input class="form-control item_date_sew" type="date" id="item_date_sew" name="item_date_sew[]" required>
+                                            </div>
+                                            <div class="col-xl-3">
+                                                <button type="button" class="btn btn-primary btn-block" onclick="addRecordsAccSewing()">Add</button>
+                                            </div>
+                                        </div><br>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div id="accesoriesPack">
+                                        <label>Accesories Sewing :</label>
+                                        <div class="row">
+                                            <div class="col-xl-5">
+                                                <select class="form-control accesories_pack" id="accesories_pack" name="accesories_pack[]" >
+                                                    @foreach($accesoriespackings as $accesoriespacking)
+                                                    <option value="{{ $accesoriespacking->accesories_no }}">{{ $accesoriespacking->accesories_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-xl-4">
+                                                <input class="form-control item_date_pack" type="date" id="item_date_pack" name="item_date_pack[]" required>
+                                            </div>
+                                            <div class="col-xl-3">
+                                                <button type="button" class="btn btn-primary btn-block" onclick="addRecordsAccPacking()">Add</button>
+                                            </div>
+                                        </div><br>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
                             <br><hr>
                             <h3>Planning Date</h3>
                             <div class="row">
@@ -145,6 +288,11 @@
                                     </div>
                                 </div>
                                 <div class="col-xl-4">
+                                    <div>
+                                        <label>Req Marker :</label>
+                                        <input class="form-control" type="date" id="reqmarker_date" name="reqmarker_date" required>
+                                    </div>
+                                    <br>
                                     <div>
                                         <label>Marker :</label>
                                         <input class="form-control" type="date" id="marker_date" name="marker_date" required>
@@ -217,32 +365,6 @@
           allowClear: true,
           placeholder: 'Choose Master PO',
     });
-    $(document).on("change", "#order_trans", function(e){
-        e.preventDefault();
-        var order_trans = $(this).val();
-        if (order_trans) {
-            $.ajax({
-                url: '/productionplanning/fetchorderlist/'+order_trans,
-                type: "GET",
-                dataType: "json",
-                success:function(data) {
-                    $('#order_list').empty();
-                    $('#order_list').append('<option></option>');
-                    $.each(data, function(key, value) {
-                        $('#order_list').append('<option value="'+ value.order_list +'">'+ value.lot_no + ' - ' + value.pobuyer_no +'</option>');
-                    });
-                    $('#order_list').removeAttr('disabled');
-                }
-            });
-        } else{
-            $('#order_list').empty();
-            $('#order_list').attr('disabled','disabled');
-        }
-    });
-    $("#order_list").select2({
-          allowClear: true,
-          placeholder: 'Choose Order List',
-    });
     $("#has_sample").select2({
           allowClear: true,
           placeholder: 'Choose Is Has Sample?',
@@ -251,9 +373,72 @@
           allowClear: true,
           placeholder: 'Choose Is Has MI?',
     });
-    $("#has_cart").select2({
+    $("#has_fab_cart").select2({
           allowClear: true,
-          placeholder: 'Choose Is Has Cart?',
+          placeholder: 'Choose Is Has Fab Cart?',
+    });
+    $("#has_acc_cart").select2({
+          allowClear: true,
+          placeholder: 'Choose Is Has Acc Cart?',
+    });
+    $("#factory_no").select2({
+          allowClear: true,
+          placeholder: 'Choose Factory',
+    });
+    $(document).on("change", "#order_trans", function(e){
+        e.preventDefault();
+        var order_trans = $(this).val();
+        if (order_trans) {
+            $.ajax({
+                url: '/orderlist/fetchorderleft/'+order_trans,
+                type: "GET",
+                dataType: "json",
+                success:function(data) {
+                    $.each(data, function(key, value) {
+                        $('#dcpo_left').text('DC PO Qty : ' + value.qty_left);
+                        $('#dcpo_qty').attr("max",value.qty_left);
+                    });
+                }
+            });
+        } else{
+            $('#dcpo_left').text('DC PO Qty : ' + value.qty_left);
+            $('#dcpo_qty').attr("max",value.qty_left);
+        }
+    });
+</script>
+<script type="text/javascript">
+    function addRecordsAccSewing() {
+        $("#accesoriesSew").append('<div class="row"><br><br><div class="col-xl-5"><select class="form-control accesories_sew" id="accesories_sew" name="accesories_sew[]">@foreach($accesoriessewings as $accesoriessewing)<option value="{{ $accesoriessewing->accesories_no }}">{{ $accesoriessewing->accesories_name }}</option>@endforeach</select></div><div class="col-xl-4"><input class="form-control item_date_sew" type="date" id="item_date_sew" name="item_date_sew[]" required></div><div class="col-xl-3"><button type="button" class="btn btn-danger btn-block removeThisSewing">Remove</button></div></div>');
+        $('.accesories_sew').select2({
+            allowClear: true,
+            placeholder: 'Choose Accesories',
+        });
+    }
+
+    $(document).on('click', '.removeThisSewing', function() {
+        $(this).parent().parent().remove();
+    })
+    $('.accesories_sew').select2({
+        allowClear: true,
+        placeholder: 'Choose Accesories',
+    });
+
+
+    
+    function addRecordsAccPacking() {
+        $("#accesoriesPack").append('<div class="row"><br><br><div class="col-xl-5"><select class="form-control accesories_pack" id="accesories_pack" name="accesories_pack[]">@foreach($accesoriespackings as $accesoriespacking)<option value="{{ $accesoriespacking->accesories_no }}">{{ $accesoriespacking->accesories_name }}</option>@endforeach</select></div><div class="col-xl-4"><input class="form-control item_date_pack" type="date" id="item_date_pack" name="item_date_pack[]" required></div><div class="col-xl-3"><button type="button" class="btn btn-danger btn-block removeThisPacking">Remove</button></div></div>');
+        $('.accesories_pack').select2({
+            allowClear: true,
+            placeholder: 'Choose Accesories',
+        });
+    }
+
+    $(document).on('click', '.removeThisPacking', function() {
+        $(this).parent().parent().remove();
+    })
+    $('.accesories_pack').select2({
+        allowClear: true,
+        placeholder: 'Choose Accesories',
     });
 </script>
 </html>

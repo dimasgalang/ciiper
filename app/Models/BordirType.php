@@ -12,5 +12,6 @@ class BordirType extends Model
     protected $fillable = [
         'bordir_no',
         'bordir_type',
+        'void',
     ];
 }

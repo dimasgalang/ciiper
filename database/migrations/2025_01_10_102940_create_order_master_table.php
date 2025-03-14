@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('fu_no');
             $table->string('sketch_file');
             $table->string('remark')->nullable();
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

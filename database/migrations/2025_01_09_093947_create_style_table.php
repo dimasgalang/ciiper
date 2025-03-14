@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('style_no')->unique();
             $table->string('style_name');
             $table->string('style_desc')->nullable();
+            $table->string('void')->nullable();
             $table->timestamps();
         });
     }

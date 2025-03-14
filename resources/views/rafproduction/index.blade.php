@@ -33,8 +33,8 @@
                         <form method="GET" id="form-void">
                                 <select name="void" id="void" class="form-control" onchange="document.getElementById('form-void').submit()" style="width: 300px;">
                                     <option disabled selected hidden>Select Status</option>
-                                    <option value="false">Active</option>
-                                    <option value="true">Void</option>
+                                    <option value="false" {{ app('request')->input('void') == 'false'  ? 'selected' : ''}}>Active</option>
+                                    <option value="true" {{ app('request')->input('void') == 'true'  ? 'selected' : ''}}>Void</option>
                                 </select>
                         </form>
                     </div>
@@ -94,17 +94,17 @@
                                         <td>{{ $rafproduction->remark }}</td>
                                         <td class="text-center">
                                             @if (request()->get('void') == 'false')
-                                            <a href="/rafproduction/find/{{ $rafproduction->id }}" class="btn btn-primary btn-circle btn-sm">
+                                            <a href="{{ route('rafproduction.find', ['id' => $rafproduction->id]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <!-- <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $rafproduction->id }}" data-delete-name="{{ $rafproduction->raf_no }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a> -->
-                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="void/{{ $rafproduction->id }}" data-void-name="{{ $rafproduction->raf_no }}" data-toggle="modal" data-target="#voidModal">
+                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="{{ route('rafproduction.void', ['id' => $rafproduction->id]) }}" data-void-name="{{ $rafproduction->raf_no }}" data-toggle="modal" data-target="#voidModal">
                                                 <i class="fas fa-ban"></i>
                                             </a>
                                             @elseif (request()->get('void') == 'true')
-                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="restore/{{ $rafproduction->id }}" data-restore-name="{{ $rafproduction->raf_no }}" data-toggle="modal" data-target="#restoreModal">
+                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="{{ route('rafproduction.restore', ['id' => $rafproduction->id]) }}" data-restore-name="{{ $rafproduction->raf_no }}" data-toggle="modal" data-target="#restoreModal">
                                                 <i class="fas fa-history"></i>
                                             </a>
                                             @endif

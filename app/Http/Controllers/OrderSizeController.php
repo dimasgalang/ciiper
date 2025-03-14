@@ -89,6 +89,7 @@ class OrderSizeController extends Controller
 
     public function find($id) {
         $ordersizes = OrderSize::find($id);
+        $sizes = Size::all();
         return view('ordersize.update', compact('ordersizes'));
     }
 
@@ -108,9 +109,9 @@ class OrderSizeController extends Controller
 
         $validator = Validator::make($request->all(), [
             'order_size_no' => 'required|max:255|',
-            'order_list' => 'required|max:255',
-            'order_trans' => 'required|max:255',
-            'size_no' => 'required|max:255',
+            // 'order_list' => 'required|max:255',
+            // 'order_trans' => 'required|max:255',
+            // 'size_no' => 'required|max:255',
             'qty' => 'required',
         ]);
 
@@ -122,9 +123,9 @@ class OrderSizeController extends Controller
 
         $ordersizes->fill([
             'order_size_no' => $request->order_size_no,
-            'order_list' => $request->order_list,
-            'order_trans' => $request->order_trans,
-            'size_no' => $request->size_no,
+            // 'order_list' => $request->order_list,
+            // 'order_trans' => $request->order_trans,
+            // 'size_no' => $request->size_no,
             'qty' => $request->qty,
         ]);
 

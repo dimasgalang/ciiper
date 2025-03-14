@@ -20,7 +20,7 @@ class BrandController extends Controller
     public function index(Request $request) {
         $brands   = Brand::select('brand.*', 'buyer.buyer_name')
         ->leftJoin('buyer', 'brand.buyer_no', '=', 'buyer.buyer_no')
-        ->where('void','=',$request->void)
+        ->where('brand.void','=',$request->void)
         ->get();
         return view('brand.index', compact('brands'));
     }

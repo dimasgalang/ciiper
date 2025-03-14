@@ -72,6 +72,7 @@
                 <h6 class="dropdown-header">
                     Alerts Center
                 </h6>
+                @if ($datareminders)
                 @if (count($datareminders[0]) > 5)
                     @for ($i = 0; $i < 5; $i++)
                     <a class="dropdown-item d-flex align-items-center" href="#">
@@ -98,6 +99,7 @@
                         </div>
                     </a>
                     @endfor
+                @endif
                 @endif
                 <a class="dropdown-item text-center small text-gray-500" href="{{ route('alert.index') }}">Show All Alerts</a>
             </div>

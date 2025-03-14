@@ -33,8 +33,8 @@
                         <form method="GET" id="form-void">
                                 <select name="void" id="void" class="form-control" onchange="document.getElementById('form-void').submit()" style="width: 300px;">
                                     <option disabled selected hidden>Select Status</option>
-                                    <option value="false">Active</option>
-                                    <option value="true">Void</option>
+                                    <option value="false" {{ app('request')->input('void') == 'false'  ? 'selected' : ''}}>Active</option>
+                                    <option value="true" {{ app('request')->input('void') == 'true'  ? 'selected' : ''}}>Void</option>
                                 </select>
                         </form>
                     </div>
@@ -84,17 +84,17 @@
                                         <td>{{ $fabricmill->fabmill_name }}</td>
                                         <td class="text-center">
                                             @if (request()->get('void') == 'false')
-                                            <a href="/fabricmill/find/{{ $fabricmill->id }}" class="btn btn-primary btn-circle btn-sm">
+                                            <a href="{{ route('fabricmill.find', ['id' => $fabricmill->id]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <!-- <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $fabricmill->id }}" data-delete-name="{{ $fabricmill->fabmill_name }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a> -->
-                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="void/{{ $fabricmill->id }}" data-void-name="{{ $fabricmill->fabmill_name }}" data-toggle="modal" data-target="#voidModal">
+                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="{{ route('fabricmill.void', ['id' => $fabricmill->id]) }}" data-void-name="{{ $fabricmill->fabmill_name }}" data-toggle="modal" data-target="#voidModal">
                                                 <i class="fas fa-ban"></i>
                                             </a>
                                             @elseif (request()->get('void') == 'true')
-                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="restore/{{ $fabricmill->id }}" data-restore-name="{{ $fabricmill->fabmill_name }}" data-toggle="modal" data-target="#restoreModal">
+                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="{{ route('fabricmill.restore', ['id' => $fabricmill->id]) }}" data-restore-name="{{ $fabricmill->fabmill_name }}" data-toggle="modal" data-target="#restoreModal">
                                                 <i class="fas fa-history"></i>
                                             </a>
                                             @endif

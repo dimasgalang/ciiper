@@ -15,23 +15,19 @@ class SetupIncrementSeeder extends Seeder
     {
         DB::table('setup_increment')->insert([
             'models' => 'Accesories',
-            'last_number' => 'ACC000000025',
-            'void' => 'false'
+            'last_number' => 'ACC000000025'
         ]);
         DB::table('setup_increment')->insert([
             'models' => 'Category',
-            'last_number' => 'CAT000000006',
-            'void' => 'false'
+            'last_number' => 'CAT000000006'
         ]);
         DB::table('setup_increment')->insert([
             'models' => 'ProductionDept',
-            'last_number' => 'DEP000000004',
-            'void' => 'false'
+            'last_number' => 'DEP000000004'
         ]);
         DB::table('setup_increment')->insert([
             'models' => 'Size',
-            'last_number' => 'SIZ000000006',
-            'void' => 'false'
+            'last_number' => 'SIZ000000006'
         ]);
     }
 }

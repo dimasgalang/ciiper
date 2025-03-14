@@ -34,8 +34,8 @@
                             <form method="GET" id="form-void">
                                     <select name="void" id="void" class="form-control" onchange="document.getElementById('form-void').submit()" style="width: 300px;">
                                         <option disabled selected hidden>Select Status</option>
-                                        <option value="false">Active</option>
-                                        <option value="true">Void</option>
+                                        <option value="false" {{ app('request')->input('void') == 'false'  ? 'selected' : ''}}>Active</option>
+                                        <option value="true" {{ app('request')->input('void') == 'true'  ? 'selected' : ''}}>Void</option>
                                     </select>
                             </form>
                     </div>
@@ -103,7 +103,7 @@
                                         <td>{{ $ordermaster->remark }}</td>
                                         <td class="text-center">
                                             @if (request()->get('void') == 'false')
-                                            <a href="/ordermaster/find/{{ $ordermaster->id }}" class="btn btn-primary btn-circle btn-sm">
+                                            <a href="{{ route('ordermaster.find', ['id' => $ordermaster->id]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <a id="show-orderlist" class="btn btn-primary btn-circle btn-sm btn-show-orderlist" data-orderlist-url="{{ route('ordermaster.orderlist', $ordermaster->order_trans) }}" data-ordersize-url="{{ route('ordermaster.ordersize', $ordermaster->order_trans) }}" data-rafproduction-url="{{ route('ordermaster.rafproduction', $ordermaster->order_trans) }}" data-rafcutting-url="{{ route('ordermaster.rafcutting', $ordermaster->order_trans) }}" data-rafsewing-url="{{ route('ordermaster.rafsewing', $ordermaster->order_trans) }}" data-rafiron-url="{{ route('ordermaster.rafiron', $ordermaster->order_trans) }}" data-rafpacking-url="{{ route('ordermaster.rafpacking', $ordermaster->order_trans) }}" data-fab-url="{{ route('ordermaster.fab', $ordermaster->order_trans) }}" data-shipment-url="{{ route('ordermaster.shipment', $ordermaster->order_trans) }}" data-style-url="{{ route('ordermaster.style', $ordermaster->order_trans) }}" data-productionplanning-url="{{ route('ordermaster.productionplanning', $ordermaster->order_trans) }}"  data-show-orderlist-link="{{ $ordermaster->order_trans }}" data-show-orderlist-title="{{ $ordermaster->order_trans }} - {{ $ordermaster->po_master }}" data-show-image="{{ asset('/sketch/' . $ordermaster->sketch_file) }}">
@@ -112,11 +112,11 @@
                                             <!-- <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $ordermaster->id }}" data-delete-name="{{ $ordermaster->order_trans }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a> -->
-                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="void/{{ $ordermaster->id }}" data-void-name="{{ $ordermaster->order_trans }}" data-toggle="modal" data-target="#voidModal">
+                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="{{ route('ordermaster.void', ['id' => $ordermaster->id]) }}" data-void-name="{{ $ordermaster->order_trans }}" data-toggle="modal" data-target="#voidModal">
                                                 <i class="fas fa-ban"></i>
                                             </a>
                                             @elseif (request()->get('void') == 'true')
-                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="restore/{{ $ordermaster->id }}" data-restore-name="{{ $ordermaster->order_trans }}" data-toggle="modal" data-target="#restoreModal">
+                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="{{ route('ordermaster.restore', ['id' => $ordermaster->id]) }}" data-restore-name="{{ $ordermaster->order_trans }}" data-toggle="modal" data-target="#restoreModal">
                                                 <i class="fas fa-history"></i>
                                             </a>
                                             @endif

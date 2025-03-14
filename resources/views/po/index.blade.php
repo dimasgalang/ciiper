@@ -86,17 +86,17 @@
                                         <td>{{ $po->po_desc }}</td>
                                         <td class="text-center">
                                             @if (request()->get('void') == 'false')
-                                            <a href="/po/find/{{ $po->id }}" class="btn btn-primary btn-circle btn-sm">
+                                            <a href="{{ route('po.find', ['id' => $po->id]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <!-- <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $po->id }}" data-delete-name="{{ $po->po_master }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a> -->
-                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="void/{{ $po->id }}" data-void-name="{{ $po->po_master }}" data-toggle="modal" data-target="#voidModal">
+                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="{{ route('po.void', ['id' => $po->id]) }}" data-void-name="{{ $po->po_master }}" data-toggle="modal" data-target="#voidModal">
                                                 <i class="fas fa-ban"></i>
                                             </a>
                                             @elseif (request()->get('void') == 'true')
-                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="restore/{{ $po->id }}" data-restore-name="{{ $po->po_master }}" data-toggle="modal" data-target="#restoreModal">
+                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="{{ route('po.restore', ['id' => $po->id]) }}" data-restore-name="{{ $po->po_master }}" data-toggle="modal" data-target="#restoreModal">
                                                 <i class="fas fa-history"></i>
                                             </a>
                                             @endif

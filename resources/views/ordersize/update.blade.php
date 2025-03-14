@@ -16,17 +16,17 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Update Size</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Update Ordersize</h1>
                 </div>
                 
 
                 <!-- Approach -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Form Update Size</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Update Ordersize</h6>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="{{ route('size.update') }}" enctype="multipart/form-data">
+                        <form method="post" action="{{ route('ordersize.update') }}" enctype="multipart/form-data">
                             @csrf
                             @if ($message = Session::get('success'))
                             <div class="alert alert-success alert-block">
@@ -56,16 +56,16 @@
                             </div>
                             @endif
                             <div>
-                                <input class="form-control" type="hidden" id="id" name="id" value="{{ $sizes->id }}" readonly>
+                                <input class="form-control" type="hidden" id="id" name="id" value="{{ $ordersizes->id }}" readonly>
                             </div>
                             <div>
-                                <label>Size No :</label>
-                                <input class="form-control" type="text" id="size_no" name="size_no" value="{{ $sizes->size_no }}" required readonly>
+                                <label>Order Size No :</label>
+                                <input class="form-control" type="text" id="order_size_no" name="order_size_no" value="{{ $ordersizes->order_size_no }}" required readonly>
                             </div>
                             <br>
                             <div>
-                                <label>Size Name :</label>
-                                <input class="form-control" type="text" id="size" name="size" value="{{ $sizes->size }}">
+                                <label>Qty :</label>
+                                <input class="form-control" type="text" id="qty" name="qty" value="{{ $ordersizes->qty }}">
                             </div>
                             <br>
                             <div class="row">

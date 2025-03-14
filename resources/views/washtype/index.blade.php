@@ -33,8 +33,8 @@
                         <form method="GET" id="form-void">
                                 <select name="void" id="void" class="form-control" onchange="document.getElementById('form-void').submit()" style="width: 300px;">
                                     <option disabled selected hidden>Select Status</option>
-                                    <option value="false">Active</option>
-                                    <option value="true">Void</option>
+                                    <option value="false" {{ app('request')->input('void') == 'false'  ? 'selected' : ''}}>Active</option>
+                                    <option value="true" {{ app('request')->input('void') == 'true'  ? 'selected' : ''}}>Void</option>
                                 </select>
                         </form>
                     </div>
@@ -84,17 +84,17 @@
                                         <td>{{ $washtype->wash_type }}</td>
                                         <td class="text-center">
                                             @if (request()->get('void') == 'false')
-                                            <a href="/washtype/find/{{ $washtype->id }}" class="btn btn-primary btn-circle btn-sm">
+                                            <a href="{{ route('washtype.find', ['id' => $washtype->id]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <!-- <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $washtype->id }}" data-delete-name="{{ $washtype->wash_type }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i>
                                             </a> -->
-                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="void/{{ $washtype->id }}" data-void-name="{{ $washtype->wash_type }}" data-toggle="modal" data-target="#voidModal">
+                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="{{ route('washtype.void', ['id' => $washtype->id]) }}" data-void-name="{{ $washtype->wash_type }}" data-toggle="modal" data-target="#voidModal">
                                                 <i class="fas fa-ban"></i>
                                             </a>
                                             @elseif (request()->get('void') == 'true')
-                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="restore/{{ $washtype->id }}" data-restore-name="{{ $washtype->wash_type }}" data-toggle="modal" data-target="#restoreModal">
+                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="{{ route('washtype.restore', ['id' => $washtype->id]) }}" data-restore-name="{{ $washtype->wash_type }}" data-toggle="modal" data-target="#restoreModal">
                                                 <i class="fas fa-history"></i>
                                             </a>
                                             @endif

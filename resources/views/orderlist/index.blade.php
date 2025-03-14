@@ -33,8 +33,8 @@
                         <form method="GET" id="form-void">
                                 <select name="void" id="void" class="form-control" onchange="document.getElementById('form-void').submit()" style="width: 300px;">
                                     <option disabled selected hidden>Select Status</option>
-                                    <option value="false">Active</option>
-                                    <option value="true">Void</option>
+                                    <option value="false" {{ app('request')->input('void') == 'false'  ? 'selected' : ''}}>Active</option>
+                                    <option value="true" {{ app('request')->input('void') == 'true'  ? 'selected' : ''}}>Void</option>
                                 </select>
                         </form>
                     </div>
@@ -131,10 +131,10 @@
                                         <td class="text-center">
                                             @if($orderlist->status !== 'Finish')
                                             @if (request()->get('void') == 'false')
-                                            <a class="btn btn-success btn-circle btn-sm btn-change-record" data-change-link="change/{{ $orderlist->id }}" data-change-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#changeModal">
+                                            <a class="btn btn-success btn-circle btn-sm btn-change-record" data-change-link="{{ route('orderlist.change', ['id' => $orderlist->id]) }}" data-change-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#changeModal">
                                                 <i class="fas fa-check-square"></i>
                                             </a>
-                                            <a href="/orderlist/find/{{ $orderlist->id }}" class="btn btn-primary btn-circle btn-sm">
+                                            <a href="{{ route('orderlist.find', ['id' => $orderlist->id]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <a id="show-detail" class="btn btn-primary btn-circle btn-sm btn-show-detail" data-url="{{ route('orderlist.showordersize', $orderlist->order_list) }}" data-show-link="{{ $orderlist->order_list }}" data-show-title="{{ $orderlist->order_list }} - {{ $orderlist->pobuyer_no }}">
@@ -142,11 +142,11 @@
                                             </a>
                                             <!-- <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $orderlist->id }}" data-delete-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i> -->
-                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="void/{{ $orderlist->id }}" data-void-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#voidModal">
+                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="{{ route('orderlist.void', ['id' => $orderlist->id]) }}" data-void-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#voidModal">
                                                 <i class="fas fa-ban"></i>
                                             </a>
                                             @elseif (request()->get('void') == 'true')
-                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="restore/{{ $orderlist->id }}" data-restore-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#restoreModal">
+                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="{{ route('orderlist.restore', ['id' => $orderlist->id]) }}" data-restore-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#restoreModal">
                                                 <i class="fas fa-history"></i>
                                             </a>
                                             @endif
@@ -158,11 +158,11 @@
                                             </a>
                                             <!-- <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $orderlist->id }}" data-delete-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#deleteModal">
                                                 <i class="fas fa-trash"></i> -->
-                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="void/{{ $orderlist->id }}" data-void-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#voidModal">
+                                            <a class="btn btn-danger btn-circle btn-sm btn-void-record" data-void-link="{{ route('orderlist.void', ['id' => $orderlist->id]) }}" data-void-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#voidModal">
                                                 <i class="fas fa-ban"></i>
                                             </a>
                                             @elseif (request()->get('void') == 'true')
-                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="restore/{{ $orderlist->id }}" data-restore-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#restoreModal">
+                                            <a class="btn btn-success btn-circle btn-sm btn-restore-record" data-restore-link="{{ route('orderlist.restore', ['id' => $orderlist->id]) }}" data-restore-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#restoreModal">
                                                 <i class="fas fa-history"></i>
                                             </a>
                                             @endif

@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
 
         view()->composer('*', function ($view) {
             if (Auth::check()) {
-                $roles = User::select('users.name', 'users.email', 'users.id', 'model_has_roles.*', 'roles.name as rolename')
+                $roleusers = User::select('users.name', 'users.email', 'users.id', 'model_has_roles.*', 'roles.name as rolename')
                     ->leftJoin('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
                     ->leftJoin('roles', 'roles.id', '=', 'model_has_roles.role_id')
                     ->where('users.id', '=', Auth::user()->id)
@@ -189,7 +189,7 @@ class AppServiceProvider extends ServiceProvider
                     }
                 }
 
-                View::share(['roles' => $roles, 'logs' => $logs, 'datareminders' => $dataReminder]);
+                View::share(['roleusers' => $roleusers, 'logs' => $logs, 'datareminders' => $dataReminder]);
             }
         });
 

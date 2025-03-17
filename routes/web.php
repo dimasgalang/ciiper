@@ -161,13 +161,13 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Order Master
     Route::get('/ordermaster/index', [OrderMasterController::class, 'index'])->name('ordermaster.index');
-    Route::get('/ordermaster/create', [OrderMasterController::class, 'create'])->name('ordermaster.create')->middleware(['auth', 'role:Admin']);
-    Route::get('/ordermaster/delete/{id}', [OrderMasterController::class, 'delete'])->name('ordermaster.delete')->middleware(['auth', 'role:Admin']);
-    Route::get('/ordermaster/void/{id}', [OrderMasterController::class, 'void'])->name('ordermaster.void')->middleware(['auth', 'role:Admin']);
-    Route::get('/ordermaster/restore/{id}', [OrderMasterController::class, 'restore'])->name('ordermaster.restore')->middleware(['auth', 'role:Admin']);
-    Route::get('/ordermaster/find/{id}', [OrderMasterController::class, 'find'])->name('ordermaster.find')->middleware(['auth', 'role:Admin']);
-    Route::post('/ordermaster/update', [OrderMasterController::class, 'update'])->name('ordermaster.update')->middleware(['auth', 'role:Admin']);
-    Route::post('/ordermaster/store', [OrderMasterController::class, 'store'])->name('ordermaster.store')->middleware(['auth', 'role:Admin']);
+    Route::get('/ordermaster/create', [OrderMasterController::class, 'create'])->name('ordermaster.create');
+    Route::get('/ordermaster/delete/{id}', [OrderMasterController::class, 'delete'])->name('ordermaster.delete');
+    Route::get('/ordermaster/void/{id}', [OrderMasterController::class, 'void'])->name('ordermaster.void');
+    Route::get('/ordermaster/restore/{id}', [OrderMasterController::class, 'restore'])->name('ordermaster.restore');
+    Route::get('/ordermaster/find/{id}', [OrderMasterController::class, 'find'])->name('ordermaster.find');
+    Route::post('/ordermaster/update', [OrderMasterController::class, 'update'])->name('ordermaster.update');
+    Route::post('/ordermaster/store', [OrderMasterController::class, 'store'])->name('ordermaster.store');
     Route::get('/ordermaster/orderlist/{order_trans}', [OrderMasterController::class, 'showlist'])->name('ordermaster.orderlist');
     Route::get('/ordermaster/ordersize/{order_trans}', [OrderMasterController::class, 'showordersize'])->name('ordermaster.ordersize');
     Route::get('/ordermaster/shipment/{order_trans}', [OrderMasterController::class, 'showshipment'])->name('ordermaster.shipment');

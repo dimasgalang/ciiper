@@ -49,7 +49,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeController::class, 'landing'])->name('/');
+Route::get('/', [LoginController::class, 'login'])->name('/');
 
 //Auth
 Route::group(['middleware' => 'guest'], function () {

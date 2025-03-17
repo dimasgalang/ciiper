@@ -20,6 +20,7 @@
     </li>
 
     <!-- Nav Item - Pages Collapse Menu -->
+    @if($roles[0]->rolename == 'Admin')
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdmin"
             aria-expanded="true" aria-controls="collapseAdmin">
@@ -33,6 +34,7 @@
             </div>
         </div>
     </li>
+    @endif
     <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseKaryawan"
             aria-expanded="true" aria-controls="collapseKaryawan">

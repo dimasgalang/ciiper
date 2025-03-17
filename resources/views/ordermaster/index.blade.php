@@ -21,7 +21,7 @@
                     <div>
                     <!-- <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
                         class="fas fa-plus fa-sm text-white-50"></i> Import Order Master</a> -->
-                    <a href="{{ route('ordermaster.export') }}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Export Excel</a>
+                    <!-- <a href="{{ route('ordermaster.export') }}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Export Excel</a> -->
                     <a href="{{ route('ordermaster.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                             class="fas fa-plus fa-sm text-white-50"></i> Create Order Master</a>
                     </div>

@@ -153,7 +153,7 @@ class ProductionPlanningController extends Controller
             'line' => $request->line,
             'target_qty' => $request->target_qty,
             'production_day' => $request->production_day,
-            'smv' => $request->smv,
+            'smv' => str_replace(",", ".", $request->smv),
             'void' => 'false'
         ]);
 
@@ -225,7 +225,10 @@ class ProductionPlanningController extends Controller
 
     public function find($id)
     {
-        $productionplannings = ProductionPlanning::find($id);
+        $productionplannings = ProductionPlanning::select('production_planning.*', 'order_list.id as idorder', 'order_list.order_list', 'order_list.pobuyer_no', 'order_list.dcpo_qty', 'order_list.target_qty', 'order_list.carton_qty', 'order_list.lot_no', 'order_list.production_day', 'order_list.line', 'order_list.smv', 'order_list.ex_factory_date', 'order_list.vsl_date', 'order_list.factory_no')
+            ->leftJoin('order_list', 'order_list.order_list', '=', 'production_planning.order_list')
+            ->where('production_planning.id', '=', $id)->get();
+        // dd($productionplannings);
         $orderlists = OrderList::select('order_list.order_list', 'order_list.pobuyer_no', 'production_planning.*')
             ->leftJoin('production_planning', 'production_planning.order_list', '=', 'order_list.order_list')
             ->where('production_planning.id', '=', $id)
@@ -235,7 +238,10 @@ class ProductionPlanningController extends Controller
             ->leftJoin('production_planning', 'order_master.order_trans', '=', 'production_planning.order_trans')
             ->where('production_planning.id', '=', $id)
             ->get();
-        return view('productionplanning.update', compact('productionplannings', 'orderlists', 'ordermasters'));
+        $washtypes = WashType::all();
+        $bordirtypes = BordirType::all();
+        $factorys = Factory::all();
+        return view('productionplanning.update', compact('productionplannings', 'orderlists', 'ordermasters', 'washtypes', 'bordirtypes', 'factorys'));
     }
 
     public function update(Request $request)
@@ -252,10 +258,12 @@ class ProductionPlanningController extends Controller
         ]);
 
         $productionplannings = ProductionPlanning::findOrFail($request->id);
+        $orderlists = OrderList::findOrFail($request->idorder);
+        // dd($request->idorder);
 
         $validator = Validator::make($request->all(), [
-            'plan_no' => 'required|max:225|',
-            'order_trans' => 'required|max:225|',
+            'plan_no' => 'required|max:255|',
+            'order_trans' => 'required|max:255|',
             'order_list' => 'required|max:255',
             'has_sample' => 'required|max:255',
             'has_mi' => 'required|max:255',
@@ -308,7 +316,26 @@ class ProductionPlanningController extends Controller
             'remark' => $request->remark,
         ]);
 
+        $orderlists->fill([
+            'order_trans' => $request->order_trans,
+            'order_list' => $request->order_list,
+            'factory_no' => $request->factory_no,
+            'lot_no' => $request->lot_no,
+            'pobuyer_no' => $request->pobuyer_no,
+            'dcpo_qty' => $request->dcpo_qty,
+            'carton_qty' => $request->carton_qty,
+            'ex_factory_date' => $request->ex_factory_date,
+            'vsl_date' => $request->vsl_date,
+            'wash_no' => $request->wash_no,
+            'bordir_no' => $request->bordir_no,
+            'line' => $request->line,
+            'target_qty' => $request->target_qty,
+            'production_day' => $request->production_day,
+            'smv' => str_replace(",", ".", $request->smv),
+        ]);
+
         $productionplannings->save();
+        $orderlists->save();
 
         Alert::success('Update Successfully!', 'Production Planning ' . $request->plan_no . ' successfully updated!');
         return redirect('productionplanning/index');

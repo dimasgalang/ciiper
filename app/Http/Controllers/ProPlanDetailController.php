@@ -21,10 +21,17 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ProPlanDetailController extends Controller
 {
-    public function index(Request $request) {
-        $proplandetails   = ProPlanDetail::select('proplan_detail.*','order_list.pobuyer_no')->leftJoin('order_list','proplan_detail.order_list','=','order_list.order_list')
-        ->where('proplan_detail.void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $proplandetails   = ProPlanDetail::select('proplan_detail.*', 'order_list.pobuyer_no')->leftJoin('order_list', 'proplan_detail.order_list', '=', 'order_list.order_list')
+                ->where('proplan_detail.void', '=', $request->void)
+                ->get();
+        } else {
+            $proplandetails   = ProPlanDetail::select('proplan_detail.*', 'order_list.pobuyer_no')->leftJoin('order_list', 'proplan_detail.order_list', '=', 'order_list.order_list')
+                ->where('proplan_detail.void', '=', 'false')
+                ->get();
+        }
         return view('proplandetail.index', compact('proplandetails'));
     }
 
@@ -36,11 +43,11 @@ class ProPlanDetailController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new ProPlanDetailsImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new ProPlanDetailsImport(), storage_path('app/public/excel/' . $nama_file));
         Storage::delete($path);
 
-        if($import) {
+        if ($import) {
             Alert::success('Import Successfully!', 'Production Planning Detail data successfully imported!');
             return redirect()->intended('proplandetail/index');
         } else {
@@ -48,14 +55,15 @@ class ProPlanDetailController extends Controller
         }
     }
 
-    public function create() {
-        $setupincements = SetupIncrement::all()->where('models','=','ProPlanDetail')->last();
-        $ordermasters = OrderMaster::select('order_master.*','purchase_order.po_master')
-        ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
-        ->get();
+    public function create()
+    {
+        $setupincements = SetupIncrement::all()->where('models', '=', 'ProPlanDetail')->last();
+        $ordermasters = OrderMaster::select('order_master.*', 'purchase_order.po_master')
+            ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
+            ->get();
         $orderlists = OrderList::all();
         $categories = Category::all();
-        return view('proplandetail.create', compact('ordermasters', 'orderlists','setupincements','categories'));
+        return view('proplandetail.create', compact('ordermasters', 'orderlists', 'setupincements', 'categories'));
     }
 
     public function store(Request $request)
@@ -72,7 +80,7 @@ class ProPlanDetailController extends Controller
         ]);
         SetupIncrement::updateOrCreate([
             'models' => 'ProPlanDetail'
-        ],[
+        ], [
             'models' => 'ProPlanDetail',
             'last_number' => $request->proplan_no,
         ]);
@@ -93,10 +101,11 @@ class ProPlanDetailController extends Controller
             ->route('proplandetail.create');
     }
 
-    public function delete($id) {
-        $proplandetails = ProPlanDetail::find($id);    
+    public function delete($id)
+    {
+        $proplandetails = ProPlanDetail::find($id);
         $proplandetails->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Production Planning Detail ' . $proplandetails->proplan_no;
@@ -111,12 +120,13 @@ class ProPlanDetailController extends Controller
         return redirect('proplandetail/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $proplandetails = ProPlanDetail::find($id);
-        $ordermasters = Ordermaster::select('*')->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')->get();
+        $ordermasters = Ordermaster::select('*')->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')->get();
         $orderlists = OrderList::all();
         $categories = Category::all();
-        return view('proplandetail.update', compact('proplandetails','ordermasters','orderlists','categories'));
+        return view('proplandetail.update', compact('proplandetails', 'ordermasters', 'orderlists', 'categories'));
     }
 
     public function update(Request $request)
@@ -164,48 +174,52 @@ class ProPlanDetailController extends Controller
         return redirect('proplandetail/index');
     }
 
-    public function showdetailsample($order_list) {
-        $proplandetails = ProPlanDetail::select('proplan_detail.item','proplan_detail.remark','proplan_detail.status','category.category_name',DB::raw('concat(proplan_detail.percentage,"%") as percentage'))
-        ->leftJoin('category','proplan_detail.category_no','=','category.category_no')
-        ->where('proplan_detail.order_list', '=', $order_list)
-        ->where('proplan_detail.category_no', '=', 'CAT000000002')
-        ->get();
+    public function showdetailsample($order_list)
+    {
+        $proplandetails = ProPlanDetail::select('proplan_detail.item', 'proplan_detail.remark', 'proplan_detail.status', 'category.category_name', DB::raw('concat(proplan_detail.percentage,"%") as percentage'))
+            ->leftJoin('category', 'proplan_detail.category_no', '=', 'category.category_no')
+            ->where('proplan_detail.order_list', '=', $order_list)
+            ->where('proplan_detail.category_no', '=', 'CAT000000002')
+            ->get();
         return DataTables::of($proplandetails)
-        ->addIndexColumn()
-        ->make(true);
+            ->addIndexColumn()
+            ->make(true);
     }
-    public function showdetailfabric($order_list) {
-        $proplandetails = ProPlanDetail::select('proplan_detail.item','proplan_detail.remark','proplan_detail.status','category.category_name',DB::raw('concat(proplan_detail.percentage,"%") as percentage'))
-        ->leftJoin('category','proplan_detail.category_no','=','category.category_no')
-        ->where('proplan_detail.order_list', '=', $order_list)
-        ->where('proplan_detail.category_no', '=', 'CAT000000003')
-        ->get();
+    public function showdetailfabric($order_list)
+    {
+        $proplandetails = ProPlanDetail::select('proplan_detail.item', 'proplan_detail.remark', 'proplan_detail.status', 'category.category_name', DB::raw('concat(proplan_detail.percentage,"%") as percentage'))
+            ->leftJoin('category', 'proplan_detail.category_no', '=', 'category.category_no')
+            ->where('proplan_detail.order_list', '=', $order_list)
+            ->where('proplan_detail.category_no', '=', 'CAT000000003')
+            ->get();
         return DataTables::of($proplandetails)
-        ->addIndexColumn()
-        ->make(true);
+            ->addIndexColumn()
+            ->make(true);
     }
-    public function showdetailmi($order_list) {
-        $proplandetails = ProPlanDetail::select('proplan_detail.item','proplan_detail.remark','proplan_detail.status','category.category_name',DB::raw('concat(proplan_detail.percentage,"%") as percentage'))
-        ->leftJoin('category','proplan_detail.category_no','=','category.category_no')
-        ->where('proplan_detail.order_list', '=', $order_list)
-        ->where('proplan_detail.category_no', '=', 'CAT000000004')
-        ->get();
+    public function showdetailmi($order_list)
+    {
+        $proplandetails = ProPlanDetail::select('proplan_detail.item', 'proplan_detail.remark', 'proplan_detail.status', 'category.category_name', DB::raw('concat(proplan_detail.percentage,"%") as percentage'))
+            ->leftJoin('category', 'proplan_detail.category_no', '=', 'category.category_no')
+            ->where('proplan_detail.order_list', '=', $order_list)
+            ->where('proplan_detail.category_no', '=', 'CAT000000004')
+            ->get();
         return DataTables::of($proplandetails)
-        ->addIndexColumn()
-        ->make(true);
+            ->addIndexColumn()
+            ->make(true);
     }
-    public function showdetailacc($order_list) {
-        $proplandetails = ProPlanDetail::select('proplan_detail.item','proplan_detail.remark','proplan_detail.status','category.category_name',DB::raw('concat(proplan_detail.percentage,"%") as percentage'))
-        ->leftJoin('category','proplan_detail.category_no','=','category.category_no')
-        ->where('proplan_detail.order_list', '=', $order_list)
-        ->where('proplan_detail.category_no', '=', 'CAT000000001')
-        ->get();
+    public function showdetailacc($order_list)
+    {
+        $proplandetails = ProPlanDetail::select('proplan_detail.item', 'proplan_detail.remark', 'proplan_detail.status', 'category.category_name', DB::raw('concat(proplan_detail.percentage,"%") as percentage'))
+            ->leftJoin('category', 'proplan_detail.category_no', '=', 'category.category_no')
+            ->where('proplan_detail.order_list', '=', $order_list)
+            ->where('proplan_detail.category_no', '=', 'CAT000000001')
+            ->get();
         return DataTables::of($proplandetails)
-        ->addIndexColumn()
-        ->make(true);
+            ->addIndexColumn()
+            ->make(true);
     }
 
-    
+
     public function void(Request $request)
     {
         $proplandetails = ProPlanDetail::findOrFail($request->id);

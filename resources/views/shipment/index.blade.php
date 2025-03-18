@@ -95,7 +95,7 @@
                                         <td>{{ date('dmy', strtotime($shipment->ship_date)) }}</td>
                                         <td>{{ $shipment->remark }}</td>
                                         <td class="text-center">
-                                            @if (request()->get('void') == 'false')
+                                            @if (request()->get('void') == 'false' || request()->get('void') == '')
                                             <a href="{{ route('shipment.find', ['id' => $shipment->id]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>

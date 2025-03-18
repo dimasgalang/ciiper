@@ -30,33 +30,51 @@ use Yajra\DataTables\Facades\DataTables;
 
 class OrderListController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         // $orderlists = OrderList::all();
-        $orderlists = OrderList::select('order_list.*','purchase_order.po_master','season.season_cat','buyer.buyer_name', 'brand.brand_name', 'style.style_name', 'fabrication.fabrication', 'fabrication.po_fab', 'fabrication.etd', 'fabric_mill.fabmill_name', 'factory.factory_name','wash_type','bordir_type')
-        ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
-        ->leftJoin('season', 'order_master.season_no', '=', 'season.season_no')
-        ->leftJoin('buyer', 'order_master.buyer_no', '=', 'buyer.buyer_no')
-        ->leftJoin('brand', 'order_master.brand_no', '=', 'brand.brand_no')
-        ->leftJoin('style', 'order_master.style_no', '=', 'style.style_no')
-        ->leftJoin('fabrication', 'order_master.order_trans', '=', 'fabrication.order_trans')
-        ->leftJoin('fabric_mill', 'fabric_mill.fabmill_no', '=', 'fabrication.fabmill_no')
-        ->leftJoin('factory', 'factory.factory_no', '=', 'order_list.factory_no')
-        ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
-        ->leftJoin('wash_type', 'order_list.wash_no', '=', 'wash_type.wash_no')
-        ->leftJoin('bordir_type', 'order_list.bordir_no', '=', 'bordir_type.bordir_no')
-        ->where('order_list.void','=',$request->void)
-        ->get();
-        // dd($orderlists);
+        if ($request->void) {
+            $orderlists = OrderList::select('order_list.*', 'purchase_order.po_master', 'season.season_cat', 'buyer.buyer_name', 'brand.brand_name', 'style.style_name', 'fabrication.fabrication', 'fabrication.po_fab', 'fabrication.etd', 'fabric_mill.fabmill_name', 'factory.factory_name', 'wash_type', 'bordir_type')
+                ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
+                ->leftJoin('season', 'order_master.season_no', '=', 'season.season_no')
+                ->leftJoin('buyer', 'order_master.buyer_no', '=', 'buyer.buyer_no')
+                ->leftJoin('brand', 'order_master.brand_no', '=', 'brand.brand_no')
+                ->leftJoin('style', 'order_master.style_no', '=', 'style.style_no')
+                ->leftJoin('fabrication', 'order_master.order_trans', '=', 'fabrication.order_trans')
+                ->leftJoin('fabric_mill', 'fabric_mill.fabmill_no', '=', 'fabrication.fabmill_no')
+                ->leftJoin('factory', 'factory.factory_no', '=', 'order_list.factory_no')
+                ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
+                ->leftJoin('wash_type', 'order_list.wash_no', '=', 'wash_type.wash_no')
+                ->leftJoin('bordir_type', 'order_list.bordir_no', '=', 'bordir_type.bordir_no')
+                ->where('order_list.void', '=', $request->void)
+                ->get();
+        } else {
+            $orderlists = OrderList::select('order_list.*', 'purchase_order.po_master', 'season.season_cat', 'buyer.buyer_name', 'brand.brand_name', 'style.style_name', 'fabrication.fabrication', 'fabrication.po_fab', 'fabrication.etd', 'fabric_mill.fabmill_name', 'factory.factory_name', 'wash_type', 'bordir_type')
+                ->leftJoin('order_master', 'order_master.order_trans', '=', 'order_list.order_trans')
+                ->leftJoin('season', 'order_master.season_no', '=', 'season.season_no')
+                ->leftJoin('buyer', 'order_master.buyer_no', '=', 'buyer.buyer_no')
+                ->leftJoin('brand', 'order_master.brand_no', '=', 'brand.brand_no')
+                ->leftJoin('style', 'order_master.style_no', '=', 'style.style_no')
+                ->leftJoin('fabrication', 'order_master.order_trans', '=', 'fabrication.order_trans')
+                ->leftJoin('fabric_mill', 'fabric_mill.fabmill_no', '=', 'fabrication.fabmill_no')
+                ->leftJoin('factory', 'factory.factory_no', '=', 'order_list.factory_no')
+                ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
+                ->leftJoin('wash_type', 'order_list.wash_no', '=', 'wash_type.wash_no')
+                ->leftJoin('bordir_type', 'order_list.bordir_no', '=', 'bordir_type.bordir_no')
+                ->where('order_list.void', '=', 'false')
+                ->get();
+        }
         return view('orderlist.index', compact('orderlists'));
     }
-    
-    public function showfab($order_trans) {
-        
+
+    public function showfab($order_trans)
+    {
+
         $fabrication = Fabrication::select('*', 'fabric_mill.*')
-        ->leftJoin('fabric_mill', 'fabric_mill.fabmill_no', '=', 'fabrication.fabmill_no')
-        ->where('fabrication.order_trans', '=', $order_trans)
-        ->where('fabrication.void','=','false')
-        ->get();
+            ->leftJoin('fabric_mill', 'fabric_mill.fabmill_no', '=', 'fabrication.fabmill_no')
+            ->where('fabrication.order_trans', '=', $order_trans)
+            ->where('fabrication.void', '=', 'false')
+            ->get();
         return response()->json($fabrication);
     }
 
@@ -68,11 +86,11 @@ class OrderListController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new OrderListsImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new OrderListsImport(), storage_path('app/public/excel/' . $nama_file));
         Storage::delete($path);
 
-        if($import) {
+        if ($import) {
             Alert::success('Import Successfully!', 'Order List data successfully imported!');
             return redirect()->intended('orderlist/index');
         } else {
@@ -80,11 +98,12 @@ class OrderListController extends Controller
         }
     }
 
-    public function create() {
-        $setupincements = SetupIncrement::all()->where('models','=','OrderList')->last();
-        $ordermasters = OrderMaster::select('order_master.*','purchase_order.po_master')
-        ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
-        ->get();
+    public function create()
+    {
+        $setupincements = SetupIncrement::all()->where('models', '=', 'OrderList')->last();
+        $ordermasters = OrderMaster::select('order_master.*', 'purchase_order.po_master')
+            ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
+            ->get();
         $seasons = Season::all();
         $buyers = Buyer::all();
         $brands = Brand::all();
@@ -93,7 +112,7 @@ class OrderListController extends Controller
         $factorys = Factory::all();
         $washtypes = WashType::all();
         $bordirtypes = BordirType::all();
-        return view('orderlist.create', compact('setupincements','ordermasters','seasons','buyers','brands','styles','followups','factorys','washtypes','bordirtypes'));
+        return view('orderlist.create', compact('setupincements', 'ordermasters', 'seasons', 'buyers', 'brands', 'styles', 'followups', 'factorys', 'washtypes', 'bordirtypes'));
     }
 
     public function store(Request $request)
@@ -110,7 +129,7 @@ class OrderListController extends Controller
         ]);
         SetupIncrement::updateOrCreate([
             'models' => 'OrderList'
-        ],[
+        ], [
             'models' => 'OrderList',
             'last_number' => $request->order_list,
         ]);
@@ -138,10 +157,11 @@ class OrderListController extends Controller
             ->route('orderlist.create');
     }
 
-    public function delete($id) {
-        $orderlists = OrderList::find($id);    
+    public function delete($id)
+    {
+        $orderlists = OrderList::find($id);
         $orderlists->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Order List ' . $orderlists->order_list;
@@ -155,8 +175,9 @@ class OrderListController extends Controller
         Alert::success('Delete Successfully!', 'Order List ' . $orderlists->order_list . ' successfully deleted!');
         return redirect('orderlist/index');
     }
-    
-    public function finish(Request $request) {
+
+    public function finish(Request $request)
+    {
         $orderlists = OrderList::findOrFail($request->id);
         $orderlists->fill([
             'status' => 'Finish',
@@ -168,13 +189,14 @@ class OrderListController extends Controller
         return redirect('orderlist/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $orderlists = OrderList::find($id);
-        $ordermasters = OrderMaster::select('order_master.po_no','purchase_order.po_master','order_list.*')
-        ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
-        ->leftJoin('order_list','order_master.order_trans','=','order_list.order_trans')
-        ->where('order_list.id','=',$id)
-        ->get();
+        $ordermasters = OrderMaster::select('order_master.po_no', 'purchase_order.po_master', 'order_list.*')
+            ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
+            ->leftJoin('order_list', 'order_master.order_trans', '=', 'order_list.order_trans')
+            ->where('order_list.id', '=', $id)
+            ->get();
         $seasons = Season::all();
         $buyers = Buyer::all();
         $brands = Brand::all();
@@ -183,7 +205,7 @@ class OrderListController extends Controller
         $factorys = Factory::all();
         $washtypes = WashType::all();
         $bordirtypes = BordirType::all();
-        return view('orderlist.update', compact('orderlists','ordermasters','seasons','buyers','brands','styles','followups','factorys','washtypes','bordirtypes'));
+        return view('orderlist.update', compact('orderlists', 'ordermasters', 'seasons', 'buyers', 'brands', 'styles', 'followups', 'factorys', 'washtypes', 'bordirtypes'));
     }
 
     public function update(Request $request)
@@ -248,13 +270,14 @@ class OrderListController extends Controller
         Alert::success('Update Successfully!', 'Order List ' . $request->order_list . ' successfully updated!');
         return redirect('orderlist/index');
     }
-    
 
-    public function fetchorderleft($order_trans) {
-        $order_lists = OrderMaster::select('order_master.order_trans','order_master.qty_order', DB::raw('ifnull((select sum(dcpo_qty) from order_list where order_trans = order_master.order_trans and order_list.void = "false"),0) as sum_dcpo_qty'), DB::raw('order_master.qty_order-ifnull((select sum(dcpo_qty) from order_list where order_trans = order_master.order_trans and order_list.void = "false"),0) as qty_left'))
-        ->leftJoin('order_list', 'order_list.order_trans', '=', 'order_master.order_trans')
-        ->where('order_master.order_trans', '=', $order_trans)
-        ->get();
+
+    public function fetchorderleft($order_trans)
+    {
+        $order_lists = OrderMaster::select('order_master.order_trans', 'order_master.qty_order', DB::raw('ifnull((select sum(dcpo_qty) from order_list where order_trans = order_master.order_trans and order_list.void = "false"),0) as sum_dcpo_qty'), DB::raw('order_master.qty_order-ifnull((select sum(dcpo_qty) from order_list where order_trans = order_master.order_trans and order_list.void = "false"),0) as qty_left'))
+            ->leftJoin('order_list', 'order_list.order_trans', '=', 'order_master.order_trans')
+            ->where('order_master.order_trans', '=', $order_trans)
+            ->get();
         return response()->json($order_lists);
     }
 
@@ -268,19 +291,20 @@ class OrderListController extends Controller
     // }
 
     // Pivot
-    public function showordersize($order_list) {
-        $ordersizes = OrderSize::select('order_list.pobuyer_no','order_list.lot_no','order_list.dcpo_qty',DB::raw('ifnull(sum(case when size.size ="XS" then order_size.qty end),0) as "XS"'),DB::raw('ifnull(sum(case when size.size ="S" then order_size.qty end),0) as "S"'),DB::raw('ifnull(sum(case when size.size ="M" then order_size.qty end),0) as "M"'),DB::raw('ifnull(sum(case when size.size ="L" then order_size.qty end),0) as "L"'),DB::raw('ifnull(sum(case when size.size ="XL" then order_size.qty end),0) as "XL"'),DB::raw('ifnull(sum(case when size.size ="XXL" then order_size.qty end),0) as "XXL"'))
-            ->leftJoin('order_list','order_size.order_list','=','order_list.order_list')
-            ->leftJoin('size','order_size.size_no','=','size.size_no')
-            ->where('order_size.order_list','=',$order_list)
-            ->where('order_size.void','=','false')
-            ->groupBy('order_list.pobuyer_no','order_list.lot_no','order_list.dcpo_qty')
+    public function showordersize($order_list)
+    {
+        $ordersizes = OrderSize::select('order_list.pobuyer_no', 'order_list.lot_no', 'order_list.dcpo_qty', DB::raw('ifnull(sum(case when size.size ="XS" then order_size.qty end),0) as "XS"'), DB::raw('ifnull(sum(case when size.size ="S" then order_size.qty end),0) as "S"'), DB::raw('ifnull(sum(case when size.size ="M" then order_size.qty end),0) as "M"'), DB::raw('ifnull(sum(case when size.size ="L" then order_size.qty end),0) as "L"'), DB::raw('ifnull(sum(case when size.size ="XL" then order_size.qty end),0) as "XL"'), DB::raw('ifnull(sum(case when size.size ="XXL" then order_size.qty end),0) as "XXL"'))
+            ->leftJoin('order_list', 'order_size.order_list', '=', 'order_list.order_list')
+            ->leftJoin('size', 'order_size.size_no', '=', 'size.size_no')
+            ->where('order_size.order_list', '=', $order_list)
+            ->where('order_size.void', '=', 'false')
+            ->groupBy('order_list.pobuyer_no', 'order_list.lot_no', 'order_list.dcpo_qty')
             ->get();
-            // return response()->json($ordersizes);
-            return DataTables::of($ordersizes)->addIndexColumn()->make(true);
+        // return response()->json($ordersizes);
+        return DataTables::of($ordersizes)->addIndexColumn()->make(true);
     }
 
-    
+
     public function void(Request $request)
     {
         $orderlists = OrderList::findOrFail($request->id);

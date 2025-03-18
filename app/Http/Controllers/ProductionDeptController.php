@@ -15,15 +15,23 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class ProductionDeptController extends Controller
 {
-    public function index(Request $request) {
-        $productiondepts   = ProductionDept::select('*')
-        ->where('void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $productiondepts   = ProductionDept::select('*')
+                ->where('void', '=', $request->void)
+                ->get();
+        } else {
+            $productiondepts   = ProductionDept::select('*')
+                ->where('void', '=', 'false')
+                ->get();
+        }
         return view('productiondept.index', compact('productiondepts'));
     }
 
-    public function create() {
-        $setupincements = SetupIncrement::all()->where('models','=','ProductionDept')->last();
+    public function create()
+    {
+        $setupincements = SetupIncrement::all()->where('models', '=', 'ProductionDept')->last();
         return view('productiondept.create', compact('setupincements'));
     }
 
@@ -41,7 +49,7 @@ class ProductionDeptController extends Controller
         ]);
         SetupIncrement::updateOrCreate([
             'models' => 'ProductionDept'
-        ],[
+        ], [
             'models' => 'ProductionDept',
             'last_number' => $request->dept_no,
         ]);
@@ -56,10 +64,11 @@ class ProductionDeptController extends Controller
             ->route('productiondept.create');
     }
 
-    public function delete($id) {
-        $productiondepts = ProductionDept::find($id);    
+    public function delete($id)
+    {
+        $productiondepts = ProductionDept::find($id);
         $productiondepts->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Production Dept ' . $productiondepts->dept_no;
@@ -83,10 +92,10 @@ class ProductionDeptController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new ProductionDeptsImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new ProductionDeptsImport(), storage_path('app/public/excel/' . $nama_file));
 
-        if($import) {
+        if ($import) {
             Alert::success('Import Successfully!', 'Production Dept data successfully imported!');
             return redirect()->intended('productiondept/index');
         } else {
@@ -94,7 +103,8 @@ class ProductionDeptController extends Controller
         }
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $productiondepts = ProductionDept::find($id);
         return view('productiondept.update', compact('productiondepts'));
     }
@@ -136,7 +146,7 @@ class ProductionDeptController extends Controller
         return redirect('productiondept/index');
     }
 
-    
+
     public function void(Request $request)
     {
         $productiondepts = ProductionDept::findOrFail($request->id);

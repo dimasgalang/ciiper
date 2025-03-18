@@ -83,7 +83,7 @@
                                         <td>{{ $size->size_no }}</td>
                                         <td>{{ $size->size }}</td>
                                         <td class="text-center">
-                                            @if (request()->get('void') == 'false')
+                                            @if (request()->get('void') == 'false' || request()->get('void') == '')
                                             <a href="{{ route('size.find', ['id' => $size->id]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>

@@ -18,11 +18,19 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class StyleController extends Controller
 {
-    public function index(Request $request) {
-        $styles   = Style::select('style.*', 'brand.brand_name')
-        ->leftJoin('brand', 'style.brand_no', '=', 'brand.brand_no')
-        ->where('style.void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $styles   = Style::select('style.*', 'brand.brand_name')
+                ->leftJoin('brand', 'style.brand_no', '=', 'brand.brand_no')
+                ->where('style.void', '=', $request->void)
+                ->get();
+        } else {
+            $styles   = Style::select('style.*', 'brand.brand_name')
+                ->leftJoin('brand', 'style.brand_no', '=', 'brand.brand_no')
+                ->where('style.void', '=', 'false')
+                ->get();
+        }
         return view('style.index', compact('styles'));
     }
 
@@ -34,11 +42,11 @@ class StyleController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new StylesImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new StylesImport(), storage_path('app/public/excel/' . $nama_file));
         Storage::delete($path);
 
-        if($import) {
+        if ($import) {
             Alert::success('Import Successfully!', 'Style data successfully imported!');
             return redirect()->intended('style/index');
         } else {
@@ -46,9 +54,10 @@ class StyleController extends Controller
         }
     }
 
-    public function create() {
+    public function create()
+    {
         $brands   = Brand::all();
-        $setupincements = SetupIncrement::all()->where('models','=','Style')->last();
+        $setupincements = SetupIncrement::all()->where('models', '=', 'Style')->last();
         return view('style.create', compact('brands', 'setupincements'));
     }
 
@@ -67,7 +76,7 @@ class StyleController extends Controller
 
         SetupIncrement::updateOrCreate([
             'models' => 'Style'
-        ],[
+        ], [
             'models' => 'Style',
             'last_number' => $request->style_no,
         ]);
@@ -84,10 +93,11 @@ class StyleController extends Controller
             ->route('style.create');
     }
 
-    public function delete($id) {
-        $styles = Style::find($id);    
+    public function delete($id)
+    {
+        $styles = Style::find($id);
         $styles->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Style ' . $styles->style_no;
@@ -103,7 +113,8 @@ class StyleController extends Controller
         return redirect('style/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $styles = Style::find($id);
         return view('style.update', compact('styles'));
     }
@@ -150,7 +161,7 @@ class StyleController extends Controller
         return redirect('style/index');
     }
 
-    
+
     public function void(Request $request)
     {
         $styles = Style::findOrFail($request->id);

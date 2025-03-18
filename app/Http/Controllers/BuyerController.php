@@ -16,10 +16,17 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class BuyerController extends Controller
 {
-    public function index(Request $request) {
-        $buyers   = Buyer::select('*')
-        ->where('void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $buyers   = Buyer::select('*')
+                ->where('void', '=', $request->void)
+                ->get();
+        } else {
+            $buyers   = Buyer::select('*')
+                ->where('void', '=', 'false')
+                ->get();
+        }
         return view('buyer.index', compact('buyers'));
     }
 
@@ -31,11 +38,11 @@ class BuyerController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new BuyersImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new BuyersImport(), storage_path('app/public/excel/' . $nama_file));
         Storage::delete($path);
 
-        if($import) {
+        if ($import) {
             Alert::success('Import Successfully!', 'Buyer data successfully imported!');
             return redirect()->intended('buyer/index');
         } else {
@@ -43,8 +50,9 @@ class BuyerController extends Controller
         }
     }
 
-    public function create() {
-        $setupincements = SetupIncrement::all()->where('models','=','Buyer')->last();
+    public function create()
+    {
+        $setupincements = SetupIncrement::all()->where('models', '=', 'Buyer')->last();
         return view('buyer.create', compact('setupincements'));
     }
 
@@ -63,7 +71,7 @@ class BuyerController extends Controller
 
         SetupIncrement::updateOrCreate([
             'models' => 'Buyer'
-        ],[
+        ], [
             'models' => 'Buyer',
             'last_number' => $request->buyer_no,
         ]);
@@ -80,10 +88,11 @@ class BuyerController extends Controller
             ->route('buyer.create');
     }
 
-    public function delete($id) {
-        $buyers = Buyer::find($id);    
+    public function delete($id)
+    {
+        $buyers = Buyer::find($id);
         $buyers->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Buyer ' . $buyers->buyer_no;
@@ -94,12 +103,13 @@ class BuyerController extends Controller
             'icon' => 'trash',
             'color' => 'bg-danger',
         ]);
-        
+
         Alert::success('Delete Successfully!', 'Buyer ' . $buyers->buyer_no . ' successfully deleted!');
         return redirect('buyer/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $buyers = Buyer::find($id);
         return view('buyer.update', compact('buyers'));
     }
@@ -116,7 +126,7 @@ class BuyerController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-        
+
         $buyers = Buyer::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -143,7 +153,7 @@ class BuyerController extends Controller
         return redirect()->intended('buyer/index');
     }
 
-    
+
     public function void(Request $request)
     {
         $buyers = Buyer::findOrFail($request->id);

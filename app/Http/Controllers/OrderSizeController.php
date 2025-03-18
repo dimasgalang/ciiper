@@ -19,20 +19,29 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class OrderSizeController extends Controller
 {
-    public function index(Request $request) {
-        $ordersizes = OrderSize::select('order_size.*','size.size_no','size.size')
-        ->leftJoin('size','order_size.size_no','=','size.size_no')
-        ->where('order_size.void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $ordersizes = OrderSize::select('order_size.*', 'size.size_no', 'size.size')
+                ->leftJoin('size', 'order_size.size_no', '=', 'size.size_no')
+                ->where('order_size.void', '=', $request->void)
+                ->get();
+        } else {
+            $ordersizes = OrderSize::select('order_size.*', 'size.size_no', 'size.size')
+                ->leftJoin('size', 'order_size.size_no', '=', 'size.size_no')
+                ->where('order_size.void', '=', 'false')
+                ->get();
+        }
         return view('ordersize.index', compact('ordersizes'));
     }
 
-    public function create() {
-        $setupincements = SetupIncrement::all()->where('models','=','OrderSize')->last();
+    public function create()
+    {
+        $setupincements = SetupIncrement::all()->where('models', '=', 'OrderSize')->last();
         $orderlists = OrderList::all();
         $ordermasters = OrderMaster::select('order_master.*', 'purchase_order.po_master')
-        ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
-        ->get();
+            ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
+            ->get();
         $sizes = Size::all();
         return view('ordersize.create', compact('setupincements', 'orderlists', 'sizes', 'ordermasters'));
     }
@@ -51,7 +60,7 @@ class OrderSizeController extends Controller
         ]);
         SetupIncrement::updateOrCreate([
             'models' => 'OrderSize'
-        ],[
+        ], [
             'models' => 'OrderSize',
             'last_number' => $request->order_size_no,
         ]);
@@ -69,10 +78,11 @@ class OrderSizeController extends Controller
             ->route('ordersize.create');
     }
 
-    public function delete($id) {
-        $ordersizes = OrderSize::find($id);    
+    public function delete($id)
+    {
+        $ordersizes = OrderSize::find($id);
         $ordersizes->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Order Size ' . $ordersizes->order_size_no;
@@ -87,7 +97,8 @@ class OrderSizeController extends Controller
         return redirect('ordersize/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $ordersizes = OrderSize::find($id);
         $sizes = Size::all();
         return view('ordersize.update', compact('ordersizes'));
@@ -135,24 +146,26 @@ class OrderSizeController extends Controller
         return redirect('ordersize/index');
     }
 
-    public function fetchdcpoleft($order_list) {
-        $ordersizes = OrderList::select('order_list.dcpo_qty',DB::raw('ifnull(sum(order_size.qty),0) as sum_qty'), DB::raw('ifnull((order_list.dcpo_qty-ifnull(sum(order_size.qty),0)),0) as dcpo_left'))
-        ->leftJoin('order_size', 'order_size.order_list', '=', 'order_list.order_list')
-        ->where('order_list.order_list', '=', $order_list)
-        ->groupBy('order_list.dcpo_qty')
-        ->get();
+    public function fetchdcpoleft($order_list)
+    {
+        $ordersizes = OrderList::select('order_list.dcpo_qty', DB::raw('ifnull(sum(order_size.qty),0) as sum_qty'), DB::raw('ifnull((order_list.dcpo_qty-ifnull(sum(order_size.qty),0)),0) as dcpo_left'))
+            ->leftJoin('order_size', 'order_size.order_list', '=', 'order_list.order_list')
+            ->where('order_list.order_list', '=', $order_list)
+            ->groupBy('order_list.dcpo_qty')
+            ->get();
         return response()->json($ordersizes);
     }
-    
-    public function fetchorderlist($order_trans) {
-        $orderlists   = OrderList::select('order_list.*','production_planning.*')
-        ->join('production_planning', 'order_list.order_list', '=', 'production_planning.order_list')
-        ->where('order_list.order_trans', '=', $order_trans)
-        ->get();
+
+    public function fetchorderlist($order_trans)
+    {
+        $orderlists   = OrderList::select('order_list.*', 'production_planning.*')
+            ->join('production_planning', 'order_list.order_list', '=', 'production_planning.order_list')
+            ->where('order_list.order_trans', '=', $order_trans)
+            ->get();
         return response()->json($orderlists);
     }
 
-    
+
     public function void(Request $request)
     {
         $ordersizes = OrderSize::findOrFail($request->id);

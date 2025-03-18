@@ -16,10 +16,17 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class ShipModeController extends Controller
 {
-    public function index(Request $request) {
-        $shipmodes   = ShipMode::select('*')
-        ->where('void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $shipmodes   = ShipMode::select('*')
+                ->where('void', '=', $request->void)
+                ->get();
+        } else {
+            $shipmodes   = ShipMode::select('*')
+                ->where('void', '=', 'false')
+                ->get();
+        }
         return view('shipmode.index', compact('shipmodes'));
     }
 
@@ -31,11 +38,11 @@ class ShipModeController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new ShipModesImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new ShipModesImport(), storage_path('app/public/excel/' . $nama_file));
         Storage::delete($path);
 
-        if($import) {
+        if ($import) {
             Alert::success('Import Successfully!', 'Ship Mode data successfully imported!');
             return redirect()->intended('shipmode/index');
         } else {
@@ -43,8 +50,9 @@ class ShipModeController extends Controller
         }
     }
 
-    public function create() {
-        $setupincements = SetupIncrement::all()->where('models','=','ShipMode')->last();
+    public function create()
+    {
+        $setupincements = SetupIncrement::all()->where('models', '=', 'ShipMode')->last();
         return view('shipmode.create', compact('setupincements'));
     }
 
@@ -63,7 +71,7 @@ class ShipModeController extends Controller
 
         SetupIncrement::updateOrCreate([
             'models' => 'ShipMode'
-        ],[
+        ], [
             'models' => 'ShipMode',
             'last_number' => $request->shipmode_no,
         ]);
@@ -78,10 +86,11 @@ class ShipModeController extends Controller
             ->route('shipmode.create');
     }
 
-    public function delete($id) {
-        $shipmodes = ShipMode::find($id);    
+    public function delete($id)
+    {
+        $shipmodes = ShipMode::find($id);
         $shipmodes->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Ship Mode ' . $shipmodes->shipmode_no;
@@ -97,7 +106,8 @@ class ShipModeController extends Controller
         return redirect('shipmode/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $shipmodes = ShipMode::find($id);
         return view('shipmode.update', compact('shipmodes'));
     }
@@ -139,7 +149,7 @@ class ShipModeController extends Controller
         return redirect('shipmode/index');
     }
 
-    
+
     public function void(Request $request)
     {
         $shipmodes = ShipMode::findOrFail($request->id);

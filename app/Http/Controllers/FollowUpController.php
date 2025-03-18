@@ -16,10 +16,17 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class FollowUpController extends Controller
 {
-    public function index(Request $request) {
-        $followups   = FollowUp::select('*')
-        ->where('void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $followups   = FollowUp::select('*')
+                ->where('void', '=', $request->void)
+                ->get();
+        } else {
+            $followups   = FollowUp::select('*')
+                ->where('void', '=', 'false')
+                ->get();
+        }
         return view('followup.index', compact('followups'));
     }
 
@@ -31,11 +38,11 @@ class FollowUpController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new FollowUpsImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new FollowUpsImport(), storage_path('app/public/excel/' . $nama_file));
         Storage::delete($path);
 
-        if($import) {
+        if ($import) {
             Alert::success('Import Successfully!', 'Follow Up data successfully imported!');
             return redirect()->intended('followup/index');
         } else {
@@ -43,8 +50,9 @@ class FollowUpController extends Controller
         }
     }
 
-    public function create() {
-        $setupincements = SetupIncrement::all()->where('models','=','FollowUp')->last();
+    public function create()
+    {
+        $setupincements = SetupIncrement::all()->where('models', '=', 'FollowUp')->last();
         return view('followup.create', compact('setupincements'));
     }
 
@@ -62,7 +70,7 @@ class FollowUpController extends Controller
         ]);
         SetupIncrement::updateOrCreate([
             'models' => 'FollowUp'
-        ],[
+        ], [
             'models' => 'FollowUp',
             'last_number' => $request->fu_no,
         ]);
@@ -78,10 +86,11 @@ class FollowUpController extends Controller
             ->route('followup.create');
     }
 
-    public function delete($id) {
-        $followups = FollowUp::find($id);    
+    public function delete($id)
+    {
+        $followups = FollowUp::find($id);
         $followups->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Follow Up ' . $followups->fu_no;
@@ -96,7 +105,8 @@ class FollowUpController extends Controller
         return redirect('followup/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $followups = FollowUp::find($id);
         return view('followup.update', compact('followups'));
     }
@@ -138,7 +148,7 @@ class FollowUpController extends Controller
         return redirect('followup/index');
     }
 
-    
+
     public function void(Request $request)
     {
         $followups = FollowUp::findOrFail($request->id);

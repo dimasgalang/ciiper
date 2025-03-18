@@ -21,37 +21,49 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class RafProductionController extends Controller
 {
-    public function index(Request $request) {
-        $rafproductions = RafProduction::select('raf_production.*','production_dept.dept_name','order_list.pobuyer_no','size.size')
-        ->leftJoin('production_dept', 'raf_production.raf_dept', '=', 'production_dept.dept_no')
-        ->leftJoin('order_list', 'raf_production.order_list', '=', 'order_list.order_list')
-        ->leftJoin('size','raf_production.size_no','=','size.size_no')
-        ->where('raf_production.void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $rafproductions = RafProduction::select('raf_production.*', 'production_dept.dept_name', 'order_list.pobuyer_no', 'size.size')
+                ->leftJoin('production_dept', 'raf_production.raf_dept', '=', 'production_dept.dept_no')
+                ->leftJoin('order_list', 'raf_production.order_list', '=', 'order_list.order_list')
+                ->leftJoin('size', 'raf_production.size_no', '=', 'size.size_no')
+                ->where('raf_production.void', '=', $request->void)
+                ->get();
+        } else {
+            $rafproductions = RafProduction::select('raf_production.*', 'production_dept.dept_name', 'order_list.pobuyer_no', 'size.size')
+                ->leftJoin('production_dept', 'raf_production.raf_dept', '=', 'production_dept.dept_no')
+                ->leftJoin('order_list', 'raf_production.order_list', '=', 'order_list.order_list')
+                ->leftJoin('size', 'raf_production.size_no', '=', 'size.size_no')
+                ->where('raf_production.void', '=', 'false')
+                ->get();
+        }
         return view('rafproduction.index', compact('rafproductions'));
     }
 
-    public function create() {
+    public function create()
+    {
         $ordermasters = OrderMaster::select('order_master.*', 'purchase_order.po_master')
-        ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
-        ->get();
-        $ordersizes = OrderSize::select('order_size.*','size.size')->leftJoin('size','order_size.size_no','=','size.size_no')->get();
+            ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
+            ->get();
+        $ordersizes = OrderSize::select('order_size.*', 'size.size')->leftJoin('size', 'order_size.size_no', '=', 'size.size_no')->get();
         $productiondepts = ProductionDept::all();
-        $setupincements = SetupIncrement::all()->where('models','=','RafProduction')->last();
-        return view('rafproduction.create', compact('setupincements','ordermasters','productiondepts','ordersizes'));
+        $setupincements = SetupIncrement::all()->where('models', '=', 'RafProduction')->last();
+        return view('rafproduction.create', compact('setupincements', 'ordermasters', 'productiondepts', 'ordersizes'));
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $rafproductions = RafProduction::find($id);
-        $orderlists = OrderMaster::select('order_master.po_no','purchase_order.po_master','raf_production.*','order_list.pobuyer_no')
-        ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
-        ->leftJoin('raf_production','order_master.order_trans','=','raf_production.order_trans')
-        ->leftJoin('order_list','order_list.order_list','=','raf_production.order_list')
-        ->where('raf_production.id','=',$id)
-        ->get();
+        $orderlists = OrderMaster::select('order_master.po_no', 'purchase_order.po_master', 'raf_production.*', 'order_list.pobuyer_no')
+            ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
+            ->leftJoin('raf_production', 'order_master.order_trans', '=', 'raf_production.order_trans')
+            ->leftJoin('order_list', 'order_list.order_list', '=', 'raf_production.order_list')
+            ->where('raf_production.id', '=', $id)
+            ->get();
         $productiondepts = ProductionDept::all();
         $ordersizes = DB::select('select distinct order_size.size_no,size.size from order_size left join size on order_size.size_no = size.size_no');
-        return view('rafproduction.update', compact('rafproductions', 'orderlists','productiondepts','ordersizes'));
+        return view('rafproduction.update', compact('rafproductions', 'orderlists', 'productiondepts', 'ordersizes'));
     }
 
     public function update(Request $request)
@@ -103,26 +115,29 @@ class RafProductionController extends Controller
         return redirect('rafproduction/index');
     }
 
-    public function fetchorderlist($order_trans) {
-        $orderlists   = OrderList::select('order_list.*','production_planning.*')
-        ->join('production_planning', 'order_list.order_list', '=', 'production_planning.order_list')
-        ->where('order_list.order_trans', '=', $order_trans)
-        ->where('order_list.void','=','false')
-        ->get();
+    public function fetchorderlist($order_trans)
+    {
+        $orderlists   = OrderList::select('order_list.*', 'production_planning.*')
+            ->join('production_planning', 'order_list.order_list', '=', 'production_planning.order_list')
+            ->where('order_list.order_trans', '=', $order_trans)
+            ->where('order_list.void', '=', 'false')
+            ->get();
         return response()->json($orderlists);
     }
 
-    public function fetchordersize($order_list) {
-        $ordersizes = OrderSize::select(DB::raw('sum(order_size.qty) as qty_total'),'size.size','size.size_no')
-        ->leftJoin('size', 'order_size.size_no', '=', 'size.size_no')
-        ->where('order_size.order_list', '=', $order_list)
-        ->where('order_size.void','=','false')
-        ->groupBy('order_size.order_list','size.size','size.size_no')
-        ->get();
+    public function fetchordersize($order_list)
+    {
+        $ordersizes = OrderSize::select(DB::raw('sum(order_size.qty) as qty_total'), 'size.size', 'size.size_no')
+            ->leftJoin('size', 'order_size.size_no', '=', 'size.size_no')
+            ->where('order_size.order_list', '=', $order_list)
+            ->where('order_size.void', '=', 'false')
+            ->groupBy('order_size.order_list', 'size.size', 'size.size_no')
+            ->get();
         return response()->json($ordersizes);
     }
 
-    public function fetchrafleft($order_list, $raf_dept, $size_no) {
+    public function fetchrafleft($order_list, $raf_dept, $size_no)
+    {
         $deptPicking = "";
         $deptFrom =  "";
         if ($raf_dept == 'DEP000000001') {
@@ -134,12 +149,12 @@ class RafProductionController extends Controller
             $deptFrom = 'DEP000000001';
             $raf_productions = DB::select('select distinct order_size.order_list,size.size,order_list.dcpo_qty,ifnull((select sum(order_size.qty) from order_size where order_size.size_no = size.size_no and order_list.order_list = order_size.order_list),0) as size_qty,ifnull((select sum(raf_qty) from raf_production where raf_production.size_no = order_size.size_no and raf_production.order_list = order_list.order_list and raf_production.raf_dept = "' . $deptPicking . '"),0) as total_raf,ifnull((select sum(raf_qty) from raf_production t2 where t2.size_no = order_size.size_no and t2.order_list = order_list.order_list and t2.raf_dept = "' . $deptFrom . '"),0) as dept_from,ifnull((select sum(raf_qty) from raf_production t2 where t2.size_no = order_size.size_no and t2.order_list = order_list.order_list and t2.raf_dept = "' . $deptFrom . '"),0)-ifnull((select sum(raf_qty) from raf_production where raf_production.size_no = order_size.size_no and raf_production.order_list = order_list.order_list and raf_production.raf_dept = "' . $deptPicking . '"),0) as raf_left from order_size left join order_list on order_size.order_list = order_list.order_list left join size on size.size_no = order_size.size_no where order_list.order_list = "' . $order_list . '" and size.size_no = "' . $size_no . '"');
             return response()->json($raf_productions);
-        }else if ($raf_dept == 'DEP000000003') {
+        } else if ($raf_dept == 'DEP000000003') {
             $deptPicking = 'DEP000000003';
             $deptFrom = 'DEP000000002';
             $raf_productions = DB::select('select distinct order_size.order_list,size.size,order_list.dcpo_qty,ifnull((select sum(order_size.qty) from order_size where order_size.size_no = size.size_no and order_list.order_list = order_size.order_list),0) as size_qty,ifnull((select sum(raf_qty) from raf_production where raf_production.size_no = order_size.size_no and raf_production.order_list = order_list.order_list and raf_production.raf_dept = "' . $deptPicking . '"),0) as total_raf,ifnull((select sum(raf_qty) from raf_production t2 where t2.size_no = order_size.size_no and t2.order_list = order_list.order_list and t2.raf_dept = "' . $deptFrom . '"),0) as dept_from,ifnull((select sum(raf_qty) from raf_production t2 where t2.size_no = order_size.size_no and t2.order_list = order_list.order_list and t2.raf_dept = "' . $deptFrom . '"),0)-ifnull((select sum(raf_qty) from raf_production where raf_production.size_no = order_size.size_no and raf_production.order_list = order_list.order_list and raf_production.raf_dept = "' . $deptPicking . '"),0) as raf_left from order_size left join order_list on order_size.order_list = order_list.order_list left join size on size.size_no = order_size.size_no where order_list.order_list = "' . $order_list . '" and size.size_no = "' . $size_no . '"');
             return response()->json($raf_productions);
-        }else if ($raf_dept == 'DEP000000004') {
+        } else if ($raf_dept == 'DEP000000004') {
             $deptPicking = 'DEP000000004';
             $deptFrom = 'DEP000000003';
             $raf_productions = DB::select('select distinct order_size.order_list,size.size,order_list.dcpo_qty,ifnull((select sum(order_size.qty) from order_size where order_size.size_no = size.size_no and order_list.order_list = order_size.order_list),0) as size_qty,ifnull((select sum(raf_qty) from raf_production where raf_production.size_no = order_size.size_no and raf_production.order_list = order_list.order_list and raf_production.raf_dept = "' . $deptPicking . '"),0) as total_raf,ifnull((select sum(raf_qty) from raf_production t2 where t2.size_no = order_size.size_no and t2.order_list = order_list.order_list and t2.raf_dept = "' . $deptFrom . '"),0) as dept_from,ifnull((select sum(raf_qty) from raf_production t2 where t2.size_no = order_size.size_no and t2.order_list = order_list.order_list and t2.raf_dept = "' . $deptFrom . '"),0)-ifnull((select sum(raf_qty) from raf_production where raf_production.size_no = order_size.size_no and raf_production.order_list = order_list.order_list and raf_production.raf_dept = "' . $deptPicking . '"),0) as raf_left from order_size left join order_list on order_size.order_list = order_list.order_list left join size on size.size_no = order_size.size_no where order_list.order_list = "' . $order_list . '" and size.size_no = "' . $size_no . '"');
@@ -147,30 +162,31 @@ class RafProductionController extends Controller
         }
     }
 
-    public function fetchplanningdate($order_list, $raf_dept) {
+    public function fetchplanningdate($order_list, $raf_dept)
+    {
         if ($raf_dept == 'DEP000000001') {
-            $productionplannings = ProductionPlanning::select('production_planning.order_list','production_planning.startcut_date as startdate', 'production_planning.finishcut_date as finishdate')
-            ->where('production_planning.order_list', '=', $order_list)
-            ->where('production_planning.void','=','false')
-            ->get();
+            $productionplannings = ProductionPlanning::select('production_planning.order_list', 'production_planning.startcut_date as startdate', 'production_planning.finishcut_date as finishdate')
+                ->where('production_planning.order_list', '=', $order_list)
+                ->where('production_planning.void', '=', 'false')
+                ->get();
             return response()->json($productionplannings);
         } else if ($raf_dept == 'DEP000000002') {
-            $productionplannings = ProductionPlanning::select('production_planning.order_list','production_planning.startsew_date as startdate', 'production_planning.finishsew_date as finishdate')
-            ->where('production_planning.order_list', '=', $order_list)
-            ->where('production_planning.void','=','false')
-            ->get();
+            $productionplannings = ProductionPlanning::select('production_planning.order_list', 'production_planning.startsew_date as startdate', 'production_planning.finishsew_date as finishdate')
+                ->where('production_planning.order_list', '=', $order_list)
+                ->where('production_planning.void', '=', 'false')
+                ->get();
             return response()->json($productionplannings);
         } else if ($raf_dept == 'DEP000000003') {
-            $productionplannings = ProductionPlanning::select('production_planning.order_list','production_planning.startsew_date as startdate', 'production_planning.finishsew_date as finishdate')
-            ->where('production_planning.order_list', '=', $order_list)
-            ->where('production_planning.void','=','false')
-            ->get();
+            $productionplannings = ProductionPlanning::select('production_planning.order_list', 'production_planning.startsew_date as startdate', 'production_planning.finishsew_date as finishdate')
+                ->where('production_planning.order_list', '=', $order_list)
+                ->where('production_planning.void', '=', 'false')
+                ->get();
             return response()->json($productionplannings);
         } else if ($raf_dept == 'DEP000000004') {
-            $productionplannings = ProductionPlanning::select('production_planning.order_list','production_planning.startsew_date as startdate', 'production_planning.finishpack_date as finishdate')
-            ->where('production_planning.order_list', '=', $order_list)
-            ->where('production_planning.void','=','false')
-            ->get();
+            $productionplannings = ProductionPlanning::select('production_planning.order_list', 'production_planning.startsew_date as startdate', 'production_planning.finishpack_date as finishdate')
+                ->where('production_planning.order_list', '=', $order_list)
+                ->where('production_planning.void', '=', 'false')
+                ->get();
             return response()->json($productionplannings);
         }
     }
@@ -190,7 +206,7 @@ class RafProductionController extends Controller
 
         SetupIncrement::updateOrCreate([
             'models' => 'RafProduction'
-        ],[
+        ], [
             'models' => 'RafProduction',
             'last_number' => $request->raf_no,
         ]);
@@ -211,10 +227,11 @@ class RafProductionController extends Controller
             ->route('rafproduction.create');
     }
 
-    public function delete($id) {
-        $rafproduction = RafProduction::find($id);    
+    public function delete($id)
+    {
+        $rafproduction = RafProduction::find($id);
         $rafproduction->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted RAF Production ' . $rafproduction->raf_no;
@@ -230,7 +247,7 @@ class RafProductionController extends Controller
         return redirect('rafproduction/index');
     }
 
-    
+
     public function void(Request $request)
     {
         $rafproductions = RafProduction::findOrFail($request->id);

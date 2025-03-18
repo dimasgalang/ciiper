@@ -20,12 +20,21 @@ class ProPlanAccController extends Controller
 {
     public function index(Request $request)
     {
-        $proplanaccs = ProPlanAcc::select('proplan_acc.*', 'order_list.pobuyer_no', 'category.category_name', 'accesories.accesories_name')
-            ->leftJoin('order_list', 'proplan_acc.order_list', '=', 'order_list.order_list')
-            ->leftJoin('category', 'category.category_no', '=', 'proplan_acc.category_no')
-            ->leftJoin('accesories', 'proplan_acc.accesories_no', '=', 'accesories.accesories_no')
-            ->where('proplan_acc.void', '=', $request->void)
-            ->get();
+        if ($request->void) {
+            $proplanaccs = ProPlanAcc::select('proplan_acc.*', 'order_list.pobuyer_no', 'category.category_name', 'accesories.accesories_name')
+                ->leftJoin('order_list', 'proplan_acc.order_list', '=', 'order_list.order_list')
+                ->leftJoin('category', 'category.category_no', '=', 'proplan_acc.category_no')
+                ->leftJoin('accesories', 'proplan_acc.accesories_no', '=', 'accesories.accesories_no')
+                ->where('proplan_acc.void', '=', $request->void)
+                ->get();
+        } else {
+            $proplanaccs = ProPlanAcc::select('proplan_acc.*', 'order_list.pobuyer_no', 'category.category_name', 'accesories.accesories_name')
+                ->leftJoin('order_list', 'proplan_acc.order_list', '=', 'order_list.order_list')
+                ->leftJoin('category', 'category.category_no', '=', 'proplan_acc.category_no')
+                ->leftJoin('accesories', 'proplan_acc.accesories_no', '=', 'accesories.accesories_no')
+                ->where('proplan_acc.void', '=', 'false')
+                ->get();
+        }
         return view('proplanacc.index', compact('proplanaccs'));
     }
 

@@ -83,7 +83,7 @@
                                         <td>{{ $productiondept->dept_no }}</td>
                                         <td>{{ $productiondept->dept_name }}</td>
                                         <td align="center">
-                                            @if (request()->get('void') == 'false')
+                                            @if (request()->get('void') == 'false' || request()->get('void') == '')
                                             <a href="{{ route('productiondept.find', ['id' => $productiondept->id]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>

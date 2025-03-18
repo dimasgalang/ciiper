@@ -102,7 +102,7 @@
                                         <td class="text-center"><img id="sketch" src="{{ asset('/sketch/' . $ordermaster->sketch_file) }}" style="width: 200px;"></td>
                                         <td>{{ $ordermaster->remark }}</td>
                                         <td class="text-center">
-                                            @if (request()->get('void') == 'false')
+                                            @if (request()->get('void') == 'false' || request()->get('void') == '')
                                             <a href="{{ route('ordermaster.find', ['id' => $ordermaster->id]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>

@@ -16,10 +16,17 @@ class AccesoriesController extends Controller
 {
     public function index(Request $request)
     {
-        $accesories   = Accesories::select('accesories.*', 'category.category_name')
-            ->where('accesories.void', '=', $request->void)
-            ->leftJoin('category', 'category.category_no', '=', 'accesories.category_no')
-            ->get();
+        if ($request->void) {
+            $accesories   = Accesories::select('accesories.*', 'category.category_name')
+                ->where('accesories.void', '=', $request->void)
+                ->leftJoin('category', 'category.category_no', '=', 'accesories.category_no')
+                ->get();
+        } else {
+            $accesories   = Accesories::select('accesories.*', 'category.category_name')
+                ->where('accesories.void', '=', 'false')
+                ->leftJoin('category', 'category.category_no', '=', 'accesories.category_no')
+                ->get();
+        }
         return view('accesories.index', compact('accesories'));
     }
 
@@ -83,7 +90,7 @@ class AccesoriesController extends Controller
     {
         $accesories = Accesories::find($id);
         $categories = Category::all();
-        return view('accesories.update', compact('accesories','categories'));
+        return view('accesories.update', compact('accesories', 'categories'));
     }
 
     public function update(Request $request)

@@ -16,8 +16,13 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class BordirTypeController extends Controller
 {
-    public function index(Request $request) {
-        $bordirtypes = BordirType::select('*')->where('void','=',$request->void)->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $bordirtypes = BordirType::select('*')->where('void', '=', $request->void)->get();
+        } else {
+            $bordirtypes = BordirType::select('*')->where('void', '=', 'false')->get();
+        }
         return view('bordirtype.index', compact('bordirtypes'));
     }
 
@@ -29,11 +34,11 @@ class BordirTypeController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new BordirTypesImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new BordirTypesImport(), storage_path('app/public/excel/' . $nama_file));
         Storage::delete($path);
 
-        if($import) {
+        if ($import) {
             Alert::success('Import Successfully!', 'Bordir type data successfully imported!');
             return redirect()->intended('bordirtype/index')->with(['success' => 'Data Berhasil Diimport!']);
         } else {
@@ -41,8 +46,9 @@ class BordirTypeController extends Controller
         }
     }
 
-    public function create() {
-        $setupincements = SetupIncrement::all()->where('models','=','BordirType')->last();
+    public function create()
+    {
+        $setupincements = SetupIncrement::all()->where('models', '=', 'BordirType')->last();
         return view('bordirtype.create', compact('setupincements'));
     }
 
@@ -60,7 +66,7 @@ class BordirTypeController extends Controller
         ]);
         SetupIncrement::updateOrCreate([
             'models' => 'BordirType'
-        ],[
+        ], [
             'models' => 'BordirType',
             'last_number' => $request->bordir_no,
         ]);
@@ -75,8 +81,9 @@ class BordirTypeController extends Controller
             ->route('bordirtype.create');
     }
 
-    public function delete($id) {
-        $bordirtypes = BordirType::find($id);    
+    public function delete($id)
+    {
+        $bordirtypes = BordirType::find($id);
         $bordirtypes->delete();
 
         $username = Auth::user()->name;
@@ -93,7 +100,8 @@ class BordirTypeController extends Controller
         return redirect('bordirtype/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $bordirtypes = BordirType::find($id);
         return view('bordirtype.update', compact('bordirtypes'));
     }

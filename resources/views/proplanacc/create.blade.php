@@ -106,7 +106,7 @@
                             <br>
                             <div class="row">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary btn-block">Create</button>
+                                    <button id="submit" type="submit" class="btn btn-primary btn-block">Create</button>
                                 </div>
                             </div>
                         </form>
@@ -183,6 +183,9 @@
     $("#accesories_no").select2({
           allowClear: true,
           placeholder: 'Choose Accesories',
+    });
+    $("#submit").click(function() {
+        $(this).hide();
     });
 </script>
 </html>

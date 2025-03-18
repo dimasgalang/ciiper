@@ -16,10 +16,17 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class FabricMillController extends Controller
 {
-    public function index(Request $request) {
-        $fabricmills   = FabricMill::select('*')
-        ->where('void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $fabricmills   = FabricMill::select('*')
+                ->where('void', '=', $request->void)
+                ->get();
+        } else {
+            $fabricmills   = FabricMill::select('*')
+                ->where('void', '=', 'false')
+                ->get();
+        }
         return view('fabricmill.index', compact('fabricmills'));
     }
 
@@ -31,11 +38,11 @@ class FabricMillController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new FabricMillsImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new FabricMillsImport(), storage_path('app/public/excel/' . $nama_file));
         Storage::delete($path);
 
-        if($import) {
+        if ($import) {
             Alert::success('Create Successfully!', 'Fabric Mill data successfully imported!');
             return redirect()->intended('fabricmill/index');
         } else {
@@ -43,8 +50,9 @@ class FabricMillController extends Controller
         }
     }
 
-    public function create() {
-        $setupincements = SetupIncrement::all()->where('models','=','FabricMill')->last();
+    public function create()
+    {
+        $setupincements = SetupIncrement::all()->where('models', '=', 'FabricMill')->last();
         return view('fabricmill.create', compact('setupincements'));
     }
 
@@ -63,7 +71,7 @@ class FabricMillController extends Controller
 
         SetupIncrement::updateOrCreate([
             'models' => 'FabricMill'
-        ],[
+        ], [
             'models' => 'FabricMill',
             'last_number' => $request->fabmill_no,
         ]);
@@ -78,10 +86,11 @@ class FabricMillController extends Controller
             ->route('fabricmill.create');
     }
 
-    public function delete($id) {
-        $fabricmills = FabricMill::find($id);    
+    public function delete($id)
+    {
+        $fabricmills = FabricMill::find($id);
         $fabricmills->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Fabric Mill ' . $fabricmills->fabmill_no;
@@ -96,7 +105,8 @@ class FabricMillController extends Controller
         return redirect('fabricmill/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $fabricmills = FabricMill::find($id);
         return view('fabricmill.update', compact('fabricmills'));
     }
@@ -138,7 +148,7 @@ class FabricMillController extends Controller
         return redirect('fabricmill/index');
     }
 
-    
+
     public function void(Request $request)
     {
         $fabricmills = FabricMill::findOrFail($request->id);

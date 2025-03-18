@@ -16,10 +16,17 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class MarketController extends Controller
 {
-    public function index(Request $request) {
-        $markets   = Market::select('*')
-        ->where('void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $markets   = Market::select('*')
+                ->where('void', '=', $request->void)
+                ->get();
+        } else {
+            $markets   = Market::select('*')
+                ->where('void', '=', 'false')
+                ->get();
+        }
         return view('market.index', compact('markets'));
     }
 
@@ -31,11 +38,11 @@ class MarketController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new MarketsImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new MarketsImport(), storage_path('app/public/excel/' . $nama_file));
         Storage::delete($path);
 
-        if($import) {
+        if ($import) {
             Alert::success('Import Successfully!', 'Market data successfully imported!');
             return redirect()->intended('market/index');
         } else {
@@ -43,8 +50,9 @@ class MarketController extends Controller
         }
     }
 
-    public function create() {
-        $setupincements = SetupIncrement::all()->where('models','=','Market')->last();
+    public function create()
+    {
+        $setupincements = SetupIncrement::all()->where('models', '=', 'Market')->last();
         return view('market.create', compact('setupincements'));
     }
 
@@ -62,7 +70,7 @@ class MarketController extends Controller
         ]);
         SetupIncrement::updateOrCreate([
             'models' => 'Market'
-        ],[
+        ], [
             'models' => 'Market',
             'last_number' => $request->market_no,
         ]);
@@ -77,10 +85,11 @@ class MarketController extends Controller
             ->route('market.create');
     }
 
-    public function delete($id) {
-        $markets = Market::find($id);    
+    public function delete($id)
+    {
+        $markets = Market::find($id);
         $markets->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Market ' . $markets->market_no;
@@ -95,7 +104,8 @@ class MarketController extends Controller
         return redirect('market/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $markets = Market::find($id);
         return view('market.update', compact('markets'));
     }
@@ -137,7 +147,7 @@ class MarketController extends Controller
         return redirect('market/index');
     }
 
-    
+
     public function void(Request $request)
     {
         $markets = Market::findOrFail($request->id);

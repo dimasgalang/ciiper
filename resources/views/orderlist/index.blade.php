@@ -130,7 +130,7 @@
                                         @endif
                                         <td class="text-center">
                                             @if($orderlist->status !== 'Finish')
-                                            @if (request()->get('void') == 'false')
+                                            @if (request()->get('void') == 'false' || request()->get('void') == '')
                                             <a class="btn btn-success btn-circle btn-sm btn-change-record" data-change-link="{{ route('orderlist.change', ['id' => $orderlist->id]) }}" data-change-name="{{ $orderlist->order_list }}" data-toggle="modal" data-target="#changeModal">
                                                 <i class="fas fa-check-square"></i>
                                             </a>
@@ -152,7 +152,7 @@
                                             @endif
                                             </a>
                                             @else
-                                            @if (request()->get('void') == 'false')
+                                            @if (request()->get('void') == 'false' || request()->get('void') == '')
                                             <a id="show-detail" class="btn btn-primary btn-circle btn-sm btn-show-detail" data-url="{{ route('orderlist.showordersize', $orderlist->order_list) }}" data-show-link="{{ $orderlist->order_list }}" data-show-title="{{ $orderlist->order_list }} - {{ $orderlist->pobuyer_no }}">
                                                 <i class="fas fa-info"></i>
                                             </a>

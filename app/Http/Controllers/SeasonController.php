@@ -16,10 +16,17 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class SeasonController extends Controller
 {
-    public function index(Request $request) {
-        $seasons   = Season::select('*')
-        ->where('void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $seasons   = Season::select('*')
+                ->where('void', '=', $request->void)
+                ->get();
+        } else {
+            $seasons   = Season::select('*')
+                ->where('void', '=', 'false')
+                ->get();
+        }
         return view('season.index', compact('seasons'));
     }
 
@@ -31,11 +38,11 @@ class SeasonController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new SeasonsImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new SeasonsImport(), storage_path('app/public/excel/' . $nama_file));
         Storage::delete($path);
 
-        if($import) {
+        if ($import) {
             Alert::success('Import Successfully!', 'Season data successfully imported!');
             return redirect()->intended('season/index');
         } else {
@@ -43,9 +50,10 @@ class SeasonController extends Controller
         }
     }
 
-    public function create() {
-        $setupincements = SetupIncrement::all()->where('models','=','Season')->last();
-        $seasonscats = ['SUMMER', 'SPRING','FALL','WINTER'];
+    public function create()
+    {
+        $setupincements = SetupIncrement::all()->where('models', '=', 'Season')->last();
+        $seasonscats = ['SUMMER', 'SPRING', 'FALL', 'WINTER'];
         return view('season.create', compact('setupincements', 'seasonscats'));
     }
 
@@ -64,7 +72,7 @@ class SeasonController extends Controller
 
         SetupIncrement::updateOrCreate([
             'models' => 'Season'
-        ],[
+        ], [
             'models' => 'Season',
             'last_number' => $request->season_no,
         ]);
@@ -80,10 +88,11 @@ class SeasonController extends Controller
             ->route('season.create');
     }
 
-    public function delete($id) {
-        $seasons = Season::find($id);    
+    public function delete($id)
+    {
+        $seasons = Season::find($id);
         $seasons->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Season ' . $seasons->season_no;
@@ -99,9 +108,10 @@ class SeasonController extends Controller
         return redirect('season/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $seasons = Season::find($id);
-        $seasonscats = ['SUMMER', 'SPRING','FALL','WINTER'];
+        $seasonscats = ['SUMMER', 'SPRING', 'FALL', 'WINTER'];
         return view('season.update', compact('seasons', 'seasonscats'));
     }
 
@@ -144,7 +154,7 @@ class SeasonController extends Controller
         return redirect('season/index');
     }
 
-    
+
     public function void(Request $request)
     {
         $seasons = Season::findOrFail($request->id);

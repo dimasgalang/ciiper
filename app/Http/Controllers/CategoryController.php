@@ -16,15 +16,23 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class CategoryController extends Controller
 {
-    public function index(Request $request) {
-        $categories   = Category::select('*')
-        ->where('void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $categories   = Category::select('*')
+                ->where('void', '=', $request->void)
+                ->get();
+        } else {
+            $categories   = Category::select('*')
+                ->where('void', '=', 'false')
+                ->get();
+        }
         return view('category.index', compact('categories'));
     }
 
-    public function create() {
-        $setupincements = SetupIncrement::all()->where('models','=','Category')->last();
+    public function create()
+    {
+        $setupincements = SetupIncrement::all()->where('models', '=', 'Category')->last();
         return view('category.create', compact('setupincements'));
     }
 
@@ -42,7 +50,7 @@ class CategoryController extends Controller
         ]);
         SetupIncrement::updateOrCreate([
             'models' => 'Category'
-        ],[
+        ], [
             'models' => 'Category',
             'last_number' => $request->category_no,
         ]);
@@ -57,8 +65,9 @@ class CategoryController extends Controller
             ->route('category.create');
     }
 
-    public function delete($id) {
-        $categories = Category::find($id);    
+    public function delete($id)
+    {
+        $categories = Category::find($id);
         $categories->delete();
 
         $username = Auth::user()->name;
@@ -75,7 +84,8 @@ class CategoryController extends Controller
         return redirect('category/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $categories = Category::find($id);
         return view('category.update', compact('categories'));
     }
@@ -116,7 +126,7 @@ class CategoryController extends Controller
         return redirect('category/index');
     }
 
-    
+
     public function void(Request $request)
     {
         $categories = Category::findOrFail($request->id);

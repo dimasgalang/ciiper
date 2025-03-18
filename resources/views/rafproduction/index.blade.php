@@ -93,7 +93,7 @@
                                         <td>{{ $rafproduction->raf_qty }}</td>
                                         <td>{{ $rafproduction->remark }}</td>
                                         <td class="text-center">
-                                            @if (request()->get('void') == 'false')
+                                            @if (request()->get('void') == 'false' || request()->get('void') == '')
                                             <a href="{{ route('rafproduction.find', ['id' => $rafproduction->id]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>

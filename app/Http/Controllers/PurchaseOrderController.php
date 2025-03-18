@@ -16,10 +16,17 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class PurchaseOrderController extends Controller
 {
-    public function index(Request $request) {
-        $pos   = PurchaseOrder::select('*')
-        ->where('void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $pos   = PurchaseOrder::select('*')
+                ->where('void', '=', $request->void)
+                ->get();
+        } else {
+            $pos   = PurchaseOrder::select('*')
+                ->where('void', '=', 'false')
+                ->get();
+        }
         return view('po.index', compact('pos'));
     }
 
@@ -31,24 +38,25 @@ class PurchaseOrderController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new PurchaseOrdersImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new PurchaseOrdersImport(), storage_path('app/public/excel/' . $nama_file));
         Storage::delete($path);
 
-        if($import) {
+        if ($import) {
             Alert::success('Import Successfully!', 'Purchase Order data successfully imported!');
             return redirect()->intended('po/index');
         } else {
             return redirect()->intended('po/index')->with(['error' => 'Data Gagal Diimport!']);
         }
     }
-    
-    public function create() {
+
+    public function create()
+    {
         $pos = PurchaseOrder::all()->last();
-        $setupincements = SetupIncrement::all()->where('models','=','PurchaseOrder')->last();
+        $setupincements = SetupIncrement::all()->where('models', '=', 'PurchaseOrder')->last();
         $potypes = ['E', 'C', 'K'];
         // dd($pos);
-        return view('po.create', compact('pos', 'potypes','setupincements'));
+        return view('po.create', compact('pos', 'potypes', 'setupincements'));
     }
 
     public function store(Request $request)
@@ -66,7 +74,7 @@ class PurchaseOrderController extends Controller
 
         SetupIncrement::updateOrCreate([
             'models' => 'PurchaseOrder'
-        ],[
+        ], [
             'models' => 'PurchaseOrder',
             'last_number' => $request->po_no,
         ]);
@@ -82,10 +90,11 @@ class PurchaseOrderController extends Controller
             ->route('po.create');
     }
 
-    public function delete($id) {
-        $pos = PurchaseOrder::find($id);    
+    public function delete($id)
+    {
+        $pos = PurchaseOrder::find($id);
         $pos->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Purchase Order ' . $pos->po_no;
@@ -101,7 +110,8 @@ class PurchaseOrderController extends Controller
         return redirect('po/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $pos = PurchaseOrder::find($id);
         return view('po.update', compact('pos'));
     }
@@ -145,7 +155,7 @@ class PurchaseOrderController extends Controller
         return redirect('po/index');
     }
 
-    
+
     public function void(Request $request)
     {
         $pos = PurchaseOrder::findOrFail($request->id);

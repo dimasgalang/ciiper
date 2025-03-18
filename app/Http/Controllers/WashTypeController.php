@@ -16,10 +16,17 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class WashTypeController extends Controller
 {
-    public function index(Request $request) {
-        $washtypes   = WashType::select('*')
-        ->where('void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $washtypes   = WashType::select('*')
+                ->where('void', '=', $request->void)
+                ->get();
+        } else {
+            $washtypes   = WashType::select('*')
+                ->where('void', '=', 'false')
+                ->get();
+        }
         return view('washtype.index', compact('washtypes'));
     }
 
@@ -31,11 +38,11 @@ class WashTypeController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new WashTypesImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new WashTypesImport(), storage_path('app/public/excel/' . $nama_file));
         Storage::delete($path);
 
-        if($import) {
+        if ($import) {
             Alert::success('Import Successfully!', 'Wash Type data successfully imported!');
             return redirect()->intended('washtype/index');
         } else {
@@ -43,8 +50,9 @@ class WashTypeController extends Controller
         }
     }
 
-    public function create() {
-        $setupincements = SetupIncrement::all()->where('models','=','WashType')->last();
+    public function create()
+    {
+        $setupincements = SetupIncrement::all()->where('models', '=', 'WashType')->last();
         return view('washtype.create', compact('setupincements'));
     }
 
@@ -62,7 +70,7 @@ class WashTypeController extends Controller
         ]);
         SetupIncrement::updateOrCreate([
             'models' => 'WashType'
-        ],[
+        ], [
             'models' => 'WashType',
             'last_number' => $request->wash_no,
         ]);
@@ -77,10 +85,11 @@ class WashTypeController extends Controller
             ->route('washtype.create');
     }
 
-    public function delete($id) {
-        $washtypes = WashType::find($id);    
+    public function delete($id)
+    {
+        $washtypes = WashType::find($id);
         $washtypes->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Wash Type ' . $washtypes->wash_no;
@@ -95,7 +104,8 @@ class WashTypeController extends Controller
         return redirect('washtype/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $washtypes = WashType::find($id);
         return view('washtype.update', compact('washtypes'));
     }
@@ -136,7 +146,7 @@ class WashTypeController extends Controller
         return redirect('washtype/index');
     }
 
-    
+
     public function void(Request $request)
     {
         $washtypes = WashType::findOrFail($request->id);

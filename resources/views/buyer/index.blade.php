@@ -87,7 +87,7 @@
                                         <td>{{ $buyer->buyer_address }}</td>
                                         <td>{{ $buyer->buyer_contact }}</td>
                                         <td class="text-center">
-                                            @if (request()->get('void') == 'false')
+                                            @if (request()->get('void') == 'false' || request()->get('void') == '')
                                             <a href="{{ route('buyer.find', ['id' => $buyer->id]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>

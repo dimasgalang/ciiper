@@ -119,7 +119,7 @@
                             <br>
                             <div class="row">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary btn-block">Create</button>
+                                    <button id="submit" type="submit" class="btn btn-primary btn-block">Create</button>
                                 </div>
                             </div>
                         </form>
@@ -245,6 +245,9 @@
             $('#raf_left').text('RAF Qty : ' + value.raf_left);
             $('#raf_qty').attr("max",value.raf_left);
         }
+    });
+    $("#submit").click(function() {
+        $(this).hide();
     });
 </script>
 </html>

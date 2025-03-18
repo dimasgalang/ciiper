@@ -89,7 +89,7 @@
                                         <td>{{ $proplanacc->accesories_name }}</td>
                                         <td>{{ date('dmy', strtotime($proplanacc->item_date)) }}</td>
                                         <td class="text-center">
-                                            @if (request()->get('void') == 'false')
+                                            @if (request()->get('void') == 'false' || request()->get('void') == '')
                                             <a href="{{ route('proplanacc.find', ['id' => $proplanacc->id]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>

@@ -18,13 +18,23 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class FabricationController extends Controller
 {
-    public function index(Request $request) {
-        $fabrications = Fabrication::select('fabrication.*', 'purchase_order.po_master','fabric_mill.fabmill_name')
-        ->leftJoin('order_master', 'order_master.order_trans', '=', 'fabrication.order_trans')
-        ->leftJoin('purchase_order', 'purchase_order.po_no', '=', 'order_master.po_no')
-        ->leftJoin('fabric_mill', 'fabrication.fabmill_no', '=', 'fabric_mill.fabmill_no')
-        ->where('fabrication.void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $fabrications = Fabrication::select('fabrication.*', 'purchase_order.po_master', 'fabric_mill.fabmill_name')
+                ->leftJoin('order_master', 'order_master.order_trans', '=', 'fabrication.order_trans')
+                ->leftJoin('purchase_order', 'purchase_order.po_no', '=', 'order_master.po_no')
+                ->leftJoin('fabric_mill', 'fabrication.fabmill_no', '=', 'fabric_mill.fabmill_no')
+                ->where('fabrication.void', '=', $request->void)
+                ->get();
+        } else {
+            $fabrications = Fabrication::select('fabrication.*', 'purchase_order.po_master', 'fabric_mill.fabmill_name')
+                ->leftJoin('order_master', 'order_master.order_trans', '=', 'fabrication.order_trans')
+                ->leftJoin('purchase_order', 'purchase_order.po_no', '=', 'order_master.po_no')
+                ->leftJoin('fabric_mill', 'fabrication.fabmill_no', '=', 'fabric_mill.fabmill_no')
+                ->where('fabrication.void', '=', 'false')
+                ->get();
+        }
         return view('fabrication.index', compact('fabrications'));
     }
 
@@ -36,11 +46,11 @@ class FabricationController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new FabricationsImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new FabricationsImport(), storage_path('app/public/excel/' . $nama_file));
         Storage::delete($path);
 
-        if($import) {
+        if ($import) {
             Alert::success('Import Successfully!', 'Fabrication data successfully imported!');
             return redirect()->intended('fabrication/index');
         } else {
@@ -48,13 +58,14 @@ class FabricationController extends Controller
         }
     }
 
-    public function create() {
+    public function create()
+    {
         $ordermasters = OrderMaster::select('order_master.*', 'purchase_order.po_master')
-        ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
-        ->get();
-        $setupincements = SetupIncrement::all()->where('models','=','Fabrication')->last();
+            ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
+            ->get();
+        $setupincements = SetupIncrement::all()->where('models', '=', 'Fabrication')->last();
         $fabmills = FabricMill::all();
-        return view('fabrication.create', compact('ordermasters', 'setupincements','fabmills'));
+        return view('fabrication.create', compact('ordermasters', 'setupincements', 'fabmills'));
     }
 
     public function store(Request $request)
@@ -71,7 +82,7 @@ class FabricationController extends Controller
         ]);
         SetupIncrement::updateOrCreate([
             'models' => 'Fabrication'
-        ],[
+        ], [
             'models' => 'Fabrication',
             'last_number' => $request->fab_no,
         ]);
@@ -90,10 +101,11 @@ class FabricationController extends Controller
             ->route('fabrication.create');
     }
 
-    public function delete($id) {
-        $fabrication = Fabrication::find($id);    
+    public function delete($id)
+    {
+        $fabrication = Fabrication::find($id);
         $fabrication->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Fabrication ' . $fabrication->fab_no;
@@ -108,15 +120,16 @@ class FabricationController extends Controller
         return redirect('fabrication/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $fabrications = Fabrication::find($id);
-        $ordermasters = OrderMaster::select('order_master.po_no','purchase_order.po_master','fabrication.*')
-        ->leftJoin('purchase_order','order_master.po_no','=','purchase_order.po_no')
-        ->leftJoin('fabrication','order_master.order_trans','=','fabrication.order_trans')
-        ->where('fabrication.id', '=', $id)
-        ->get();
+        $ordermasters = OrderMaster::select('order_master.po_no', 'purchase_order.po_master', 'fabrication.*')
+            ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
+            ->leftJoin('fabrication', 'order_master.order_trans', '=', 'fabrication.order_trans')
+            ->where('fabrication.id', '=', $id)
+            ->get();
         $fabmills = FabricMill::all();
-        return view('fabrication.update', compact('fabrications','ordermasters','fabmills'));
+        return view('fabrication.update', compact('fabrications', 'ordermasters', 'fabmills'));
     }
 
     public function update(Request $request)
@@ -164,7 +177,7 @@ class FabricationController extends Controller
         return redirect('fabrication/index');
     }
 
-    
+
     public function void(Request $request)
     {
         $fabrications = Fabrication::findOrFail($request->id);

@@ -16,10 +16,17 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class SizeController extends Controller
 {
-    public function index(Request $request) {
-        $sizes   = Size::select('*')
-        ->where('void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $sizes   = Size::select('*')
+                ->where('void', '=', $request->void)
+                ->get();
+        } else {
+            $sizes   = Size::select('*')
+                ->where('void', '=', 'false')
+                ->get();
+        }
         return view('size.index', compact('sizes'));
     }
 
@@ -31,11 +38,11 @@ class SizeController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new SizesImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new SizesImport(), storage_path('app/public/excel/' . $nama_file));
         Storage::delete($path);
 
-        if($import) {
+        if ($import) {
             Alert::success('Import Successfully!', 'Size data successfully imported!');
             return redirect()->intended('size/index');
         } else {
@@ -43,8 +50,9 @@ class SizeController extends Controller
         }
     }
 
-    public function create() {
-        $setupincements = SetupIncrement::all()->where('models','=','Size')->last();
+    public function create()
+    {
+        $setupincements = SetupIncrement::all()->where('models', '=', 'Size')->last();
         return view('size.create', compact('setupincements'));
     }
 
@@ -62,7 +70,7 @@ class SizeController extends Controller
         ]);
         SetupIncrement::updateOrCreate([
             'models' => 'Size'
-        ],[
+        ], [
             'models' => 'Size',
             'last_number' => $request->size_no,
         ]);
@@ -77,10 +85,11 @@ class SizeController extends Controller
             ->route('size.create');
     }
 
-    public function delete($id) {
-        $sizes = Size::find($id);    
+    public function delete($id)
+    {
+        $sizes = Size::find($id);
         $sizes->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Size ' . $sizes->size_no;
@@ -95,7 +104,8 @@ class SizeController extends Controller
         return redirect('size/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $sizes = Size::find($id);
         return view('size.update', compact('sizes'));
     }
@@ -136,7 +146,7 @@ class SizeController extends Controller
         return redirect('size/index');
     }
 
-    
+
     public function void(Request $request)
     {
         $sizes = Size::findOrFail($request->id);

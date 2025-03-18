@@ -17,11 +17,19 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class BrandController extends Controller
 {
-    public function index(Request $request) {
-        $brands   = Brand::select('brand.*', 'buyer.buyer_name')
-        ->leftJoin('buyer', 'brand.buyer_no', '=', 'buyer.buyer_no')
-        ->where('brand.void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $brands   = Brand::select('brand.*', 'buyer.buyer_name')
+                ->leftJoin('buyer', 'brand.buyer_no', '=', 'buyer.buyer_no')
+                ->where('brand.void', '=', $request->void)
+                ->get();
+        } else {
+            $brands   = Brand::select('brand.*', 'buyer.buyer_name')
+                ->leftJoin('buyer', 'brand.buyer_no', '=', 'buyer.buyer_no')
+                ->where('brand.void', '=', 'false')
+                ->get();
+        }
         return view('brand.index', compact('brands'));
     }
 
@@ -33,11 +41,11 @@ class BrandController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new BrandsImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new BrandsImport(), storage_path('app/public/excel/' . $nama_file));
         Storage::delete($path);
 
-        if($import) {
+        if ($import) {
             Alert::success('Import Successfully!', 'Brand data successfully imported!');
             return redirect()->intended('brand/index');
         } else {
@@ -45,9 +53,10 @@ class BrandController extends Controller
         }
     }
 
-    public function create() {
+    public function create()
+    {
         $buyers   = Buyer::all();
-        $setupincements = SetupIncrement::all()->where('models','=','Brand')->last();
+        $setupincements = SetupIncrement::all()->where('models', '=', 'Brand')->last();
         $genders = ['Mens', 'Ladies'];
         return view('brand.create', compact('buyers', 'setupincements', 'genders'));
     }
@@ -66,7 +75,7 @@ class BrandController extends Controller
         ]);
         SetupIncrement::updateOrCreate([
             'models' => 'Brand'
-        ],[
+        ], [
             'models' => 'Brand',
             'last_number' => $request->brand_no,
         ]);
@@ -83,10 +92,11 @@ class BrandController extends Controller
             ->route('brand.create');
     }
 
-    public function delete($id) {
-        $brands = Brand::find($id);    
+    public function delete($id)
+    {
+        $brands = Brand::find($id);
         $brands->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Brand ' . $brands->brand_no;
@@ -101,7 +111,8 @@ class BrandController extends Controller
         return redirect('brand/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $brands = Brand::find($id);
         $genders = ['Mens', 'Ladies'];
         return view('brand.update', compact('brands', 'genders'));

@@ -97,7 +97,7 @@
                             <br>
                             <div class="row">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary btn-block">Create</button>
+                                    <button id="submit" type="submit" class="btn btn-primary btn-block">Create</button>
                                 </div>
                             </div>
                         </form>
@@ -130,6 +130,9 @@
         } else if (po_type == 'K') {
             document.getElementById("po_master").value = "{{ date('y') . date('n') . 'K'  }}" + po_number
         }
+    });
+    $("#submit").click(function() {
+        $(this).hide();
     });
 </script>
 </html>

@@ -16,10 +16,17 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class FactoryController extends Controller
 {
-    public function index(Request $request) {
-        $factorys   = Factory::select('*')
-        ->where('void','=',$request->void)
-        ->get();
+    public function index(Request $request)
+    {
+        if ($request->void) {
+            $factorys   = Factory::select('*')
+                ->where('void', '=', $request->void)
+                ->get();
+        } else {
+            $factorys   = Factory::select('*')
+                ->where('void', '=', 'false')
+                ->get();
+        }
         return view('factory.index', compact('factorys'));
     }
 
@@ -31,11 +38,11 @@ class FactoryController extends Controller
 
         $file = $request->file('file');
         $nama_file = $file->hashName();
-        $path = $file->storeAs('public/excel/',$nama_file);
-        $import = Excel::import(new FactorysImport(), storage_path('app/public/excel/'.$nama_file));
+        $path = $file->storeAs('public/excel/', $nama_file);
+        $import = Excel::import(new FactorysImport(), storage_path('app/public/excel/' . $nama_file));
         Storage::delete($path);
 
-        if($import) {
+        if ($import) {
             Alert::success('Import Successfully!', 'Factory data successfully imported!');
             return redirect()->intended('factory/index');
         } else {
@@ -43,8 +50,9 @@ class FactoryController extends Controller
         }
     }
 
-    public function create() {
-        $setupincements = SetupIncrement::all()->where('models','=','Factory')->last();
+    public function create()
+    {
+        $setupincements = SetupIncrement::all()->where('models', '=', 'Factory')->last();
         return view('factory.create', compact('setupincements'));
     }
 
@@ -62,13 +70,14 @@ class FactoryController extends Controller
         ]);
         SetupIncrement::updateOrCreate([
             'models' => 'Factory'
-        ],[
+        ], [
             'models' => 'Factory',
             'last_number' => $request->factory_no,
         ]);
         Factory::create([
             'factory_no' => $request->factory_no,
             'factory_name' => $request->factory_name,
+            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Factory ' . $request->factory_no . ' successfully created!');
@@ -76,10 +85,11 @@ class FactoryController extends Controller
             ->route('factory.create');
     }
 
-    public function delete($id) {
-        $factorys = Factory::find($id);    
+    public function delete($id)
+    {
+        $factorys = Factory::find($id);
         $factorys->delete();
-        
+
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Factory ' . $factorys->factory_no;
@@ -94,7 +104,8 @@ class FactoryController extends Controller
         return redirect('factory/index');
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $factorys = Factory::find($id);
         return view('factory.update', compact('factorys'));
     }
@@ -126,7 +137,7 @@ class FactoryController extends Controller
         $factorys = Factory::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
-            'factory_no' => 'required|max:225|',
+            'factory_no' => 'required|max:255|',
             'factory_name' => 'required|max:255',
         ]);
 
@@ -147,7 +158,7 @@ class FactoryController extends Controller
         return redirect('factory/index');
     }
 
-    
+
     public function void(Request $request)
     {
         $factorys = Factory::findOrFail($request->id);

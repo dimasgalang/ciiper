@@ -109,7 +109,7 @@
                             <br>
                             <div class="row">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary btn-block">Create</button>
+                                    <button id="submit" type="submit" class="btn btn-primary btn-block">Create</button>
                                 </div>
                             </div>
                         </form>
@@ -160,6 +160,9 @@
     $("#order_list").select2({
           allowClear: true,
           placeholder: 'Choose Order List',
+    });
+    $("#submit").click(function() {
+        $(this).hide();
     });
 </script>
 </html>

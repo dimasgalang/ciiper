@@ -81,7 +81,7 @@
                             <br>
                             <div class="row">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary btn-block">Create</button>
+                                    <button id="submit" type="submit" class="btn btn-primary btn-block">Create</button>
                                 </div>
                             </div>
                         </form>
@@ -101,6 +101,9 @@
 <script type="text/javascript">
     $("#season_cat").select2({
           allowClear: true
+    });
+    $("#submit").click(function() {
+        $(this).hide();
     });
 </script>
 </html>

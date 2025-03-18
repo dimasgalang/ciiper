@@ -123,7 +123,7 @@
                                     </div>
                                     <br>
                                     <div>
-                                        <label>Bordir Type :</label>
+                                        <label>Embordir / Print Type :</label>
                                         <select class="form-control" id="bordir_no" name="bordir_no">
                                             @foreach($bordirtypes as $bordirtype)
                                             <option value="{{ $bordirtype->bordir_no }}">{{ $bordirtype->bordir_type }}</option>
@@ -238,7 +238,7 @@
                                 </div>
                                 <div class="col-xl-6">
                                     <div id="accesoriesPack">
-                                        <label>Accesories Sewing :</label>
+                                        <label>Accesories Packing :</label>
                                         <div class="row">
                                             <div class="col-xl-5">
                                                 <select class="form-control accesories_pack" id="accesories_pack" name="accesories_pack[]" >
@@ -343,7 +343,7 @@
                             <br>
                             <div class="row">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary btn-block">Create</button>
+                                    <button id="submit" type="submit" class="btn btn-primary btn-block">Create</button>
                                 </div>
                             </div>
                         </form>
@@ -439,6 +439,9 @@
     $('.accesories_pack').select2({
         allowClear: true,
         placeholder: 'Choose Accesories',
+    });
+    $("#submit").click(function() {
+        $(this).hide();
     });
 </script>
 </html>

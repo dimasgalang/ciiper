@@ -339,48 +339,84 @@ class OrderMasterController extends Controller
             ->addIndexColumn()
             ->addColumn('samplebadge', function ($row) {
                 $sampleBadge = '';
-                if ($row->average_sample < 50) {
-                    $sampleBadge = '<center><a class="btn btn-danger btn-icon-split btn-sm btn-show-detail-sample"><span class="text">' . $row->average_sample . '%</span></a></center>';
-                } else if (($row->average_sample >= 50) && ($row->average_sample < 100)) {
-                    $sampleBadge = '<center><a class="btn btn-warning btn-icon-split btn-sm btn-show-detail-sample"><span class="text">' . $row->average_sample . '%</span></a></center>';
-                } else if ($row->average_sample == 100) {
-                    $sampleBadge = '<center><a class="btn btn-success btn-icon-split btn-sm btn-show-detail-sample"><span class="text">' . $row->average_sample . '%</span></a></center>';
+                if ($row->has_sample == 'Yes') {
+                    $sampleBadge = '<center><a class="btn btn-success btn-circle btn-sm"><i class="fas fa-check"></i></a></center>';
+                } else {
+                    $sampleBadge = '<center><a class="btn btn-danger btn-circle btn-sm"><i class="fas fa-times"></i></a></center>';
                 }
                 return $sampleBadge;
             })
             ->addColumn('mibadge', function ($row) {
                 $miBadge = '';
-                if ($row->average_mi < 50) {
-                    $miBadge = '<center><a class="btn btn-danger btn-icon-split btn-sm btn-show-detail-mi"><span class="text">' . $row->average_mi . '%</span></a></center>';
-                } else if (($row->average_mi >= 50) && ($row->average_mi < 100)) {
-                    $miBadge = '<center><a class="btn btn-warning btn-icon-split btn-sm btn-show-detail-mi"><span class="text">' . $row->average_mi . '%</span></a></center>';
-                } else if ($row->average_mi == 100) {
-                    $miBadge = '<center><a class="btn btn-success btn-icon-split btn-sm btn-show-detail-mi"><span class="text">' . $row->average_mi . '%</span></a></center>';
+                if ($row->has_mi == 'Yes') {
+                    $miBadge = '<center><a class="btn btn-success btn-circle btn-sm"><i class="fas fa-check"></i></a></center>';
+                } else {
+                    $miBadge = '<center><a class="btn btn-danger btn-circle btn-sm"><i class="fas fa-times"></i></a></center>';
                 }
                 return $miBadge;
             })
             ->addColumn('fabbadge', function ($row) {
                 $fabBadge = '';
-                if ($row->average_fabric < 50) {
-                    $fabBadge = '<center><a class="btn btn-danger btn-icon-split btn-sm btn-show-detail-fab"><span class="text">' . $row->average_fabric . '%</span></a></center>';
-                } else if (($row->average_fabric >= 50) && ($row->average_fabric < 100)) {
-                    $fabBadge = '<center><a class="btn btn-warning btn-icon-split btn-sm btn-show-detail-fab"><span class="text">' . $row->average_fabric . '%</span></a></center>';
-                } else if ($row->average_fabric == 100) {
-                    $fabBadge = '<center><a class="btn btn-success btn-icon-split btn-sm btn-show-detail-sampfable"><span class="text">' . $row->average_fabric . '%</span></a></center>';
+                if ($row->has_fab_cart == 'Yes') {
+                    $fabBadge = '<center><a class="btn btn-success btn-circle btn-sm"><i class="fas fa-check"></i></a></center>';
+                } else {
+                    $fabBadge = '<center><a class="btn btn-danger btn-circle btn-sm"><i class="fas fa-times"></i></a></center>';
                 }
                 return $fabBadge;
             })
             ->addColumn('accbadge', function ($row) {
                 $accBadge = '';
-                if ($row->average_acc < 50) {
-                    $accBadge = '<center><a class="btn btn-danger btn-icon-split btn-sm btn-show-detail-acc"><span class="text">' . $row->average_acc . '%</span></a></center>';
-                } else if (($row->average_acc >= 50) && ($row->average_acc < 100)) {
-                    $accBadge = '<center><a class="btn btn-warning btn-icon-split btn-sm btn-show-detail-acc"><span class="text">' . $row->average_acc . '%</span></a></center>';
-                } else if ($row->average_acc == 100) {
-                    $accBadge = '<center><a class="btn btn-success btn-icon-split btn-sm btn-show-detail-acc"><span class="text">' . $row->average_acc . '%</span></a></center>';
+                if ($row->has_acc_cart == 'Yes') {
+                    $accBadge = '<center><a class="btn btn-success btn-circle btn-sm"><i class="fas fa-check"></i></a></center>';
+                } else {
+                    $accBadge = '<center><a class="btn btn-danger btn-circle btn-sm"><i class="fas fa-times"></i></a></center>';
                 }
                 return $accBadge;
             })
+            // ->addColumn('samplebadge', function ($row) {
+            //     $sampleBadge = '';
+            //     if ($row->average_sample < 50) {
+            //         $sampleBadge = '<center><a class="btn btn-danger btn-icon-split btn-sm btn-show-detail-sample"><span class="text">' . $row->average_sample . '%</span></a></center>';
+            //     } else if (($row->average_sample >= 50) && ($row->average_sample < 100)) {
+            //         $sampleBadge = '<center><a class="btn btn-warning btn-icon-split btn-sm btn-show-detail-sample"><span class="text">' . $row->average_sample . '%</span></a></center>';
+            //     } else if ($row->average_sample == 100) {
+            //         $sampleBadge = '<center><a class="btn btn-success btn-icon-split btn-sm btn-show-detail-sample"><span class="text">' . $row->average_sample . '%</span></a></center>';
+            //     }
+            //     return $sampleBadge;
+            // })
+            // ->addColumn('mibadge', function ($row) {
+            //     $miBadge = '';
+            //     if ($row->average_mi < 50) {
+            //         $miBadge = '<center><a class="btn btn-danger btn-icon-split btn-sm btn-show-detail-mi"><span class="text">' . $row->average_mi . '%</span></a></center>';
+            //     } else if (($row->average_mi >= 50) && ($row->average_mi < 100)) {
+            //         $miBadge = '<center><a class="btn btn-warning btn-icon-split btn-sm btn-show-detail-mi"><span class="text">' . $row->average_mi . '%</span></a></center>';
+            //     } else if ($row->average_mi == 100) {
+            //         $miBadge = '<center><a class="btn btn-success btn-icon-split btn-sm btn-show-detail-mi"><span class="text">' . $row->average_mi . '%</span></a></center>';
+            //     }
+            //     return $miBadge;
+            // })
+            // ->addColumn('fabbadge', function ($row) {
+            //     $fabBadge = '';
+            //     if ($row->average_fabric < 50) {
+            //         $fabBadge = '<center><a class="btn btn-danger btn-icon-split btn-sm btn-show-detail-fab"><span class="text">' . $row->average_fabric . '%</span></a></center>';
+            //     } else if (($row->average_fabric >= 50) && ($row->average_fabric < 100)) {
+            //         $fabBadge = '<center><a class="btn btn-warning btn-icon-split btn-sm btn-show-detail-fab"><span class="text">' . $row->average_fabric . '%</span></a></center>';
+            //     } else if ($row->average_fabric == 100) {
+            //         $fabBadge = '<center><a class="btn btn-success btn-icon-split btn-sm btn-show-detail-sampfable"><span class="text">' . $row->average_fabric . '%</span></a></center>';
+            //     }
+            //     return $fabBadge;
+            // })
+            // ->addColumn('accbadge', function ($row) {
+            //     $accBadge = '';
+            //     if ($row->average_acc < 50) {
+            //         $accBadge = '<center><a class="btn btn-danger btn-icon-split btn-sm btn-show-detail-acc"><span class="text">' . $row->average_acc . '%</span></a></center>';
+            //     } else if (($row->average_acc >= 50) && ($row->average_acc < 100)) {
+            //         $accBadge = '<center><a class="btn btn-warning btn-icon-split btn-sm btn-show-detail-acc"><span class="text">' . $row->average_acc . '%</span></a></center>';
+            //     } else if ($row->average_acc == 100) {
+            //         $accBadge = '<center><a class="btn btn-success btn-icon-split btn-sm btn-show-detail-acc"><span class="text">' . $row->average_acc . '%</span></a></center>';
+            //     }
+            //     return $accBadge;
+            // })
             ->addColumn('balance_cut_colored', function ($row) {
                 if ($row->balance_cut < 0) {
                     return '<font color="red"> ' . $row->balance_cut . '</font>';

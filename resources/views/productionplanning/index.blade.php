@@ -110,7 +110,9 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $productionplanning->po_master }}</td>
                                         <td>{{ $productionplanning->pobuyer_no }}</td>
-                                        @if ($productionplanning->average_sample < 50)
+
+                                        <!-- Average Table -->
+                                        <!-- @if ($productionplanning->average_sample < 50)
                                         <td align="center"><a id="show-detail-sample" class="btn btn-danger btn-icon-split btn-sm btn-show-detail-sample" data-url-sample="{{ route('proplandetail.fetchdetailsample', $productionplanning->order_list) }}" data-show-title-sample="{{ $productionplanning->order_list }} - {{ $productionplanning->pobuyer_no }}">
                                             <span class="text">{{ $productionplanning->average_sample }}%</span>
                                         </a></td>
@@ -152,18 +154,20 @@
                                         <td align="center"><a id="show-detail-fabric" class="btn btn-success btn-icon-split btn-sm btn-show-detail-fabric" data-url-fabric="{{ route('proplandetail.fetchdetailfabric', $productionplanning->order_list) }}" data-show-title-fabric="{{ $productionplanning->order_list }} - {{ $productionplanning->pobuyer_no }}">
                                             <span class="text">{{ $productionplanning->average_fabric }}%</span>
                                         </a></td>
-                                        @endif
+                                        @endif -->
 
                                         <!-- @if (((now()->diffInDays("2025-03-03")) <= 7) && ((now()->diffInDays("2025-03-03")) > 3) && (now() < $productionplanning->fab_date))
                                         @endif -->
-                                        @if (((now()->diffInDays($productionplanning->fab_date)) <= 7) && ((now()->diffInDays($productionplanning->fab_date)) > 3) && (now() < $productionplanning->fab_date))
+                                        <!-- @if (((now()->diffInDays($productionplanning->fab_date)) <= 7) && ((now()->diffInDays($productionplanning->fab_date)) > 3) && (now() < $productionplanning->fab_date))
                                         <td style="color:orange">{{ date('dmy', strtotime($productionplanning->fab_date)) }}</td>
                                         @elseif ((((now()->diffInDays($productionplanning->fab_date)) <= 3) && ((now()->diffInDays($productionplanning->fab_date)) > 0) && (now() < $productionplanning->fab_date)) || (now() > $productionplanning->fab_date))
                                         <td style="color:red">{{ date('dmy', strtotime($productionplanning->fab_date)) }}</td>
                                         @else
                                         <td>{{ date('dmy', strtotime($productionplanning->fab_date)) }}</td>
-                                        @endif
-                                        <!-- @if($productionplanning->has_sample == 'Yes')
+                                        @endif -->
+
+                                        <!-- Stop Average Table -->
+                                        @if($productionplanning->has_sample == 'Yes')
                                              <td class="text-center">
                                                 <a class="btn btn-success btn-circle btn-sm">
                                                     <i class="fas fa-check"></i>
@@ -216,8 +220,8 @@
                                                     <i class="fas fa-times"></i>
                                                 </a>
                                             </td>
-                                        @endif -->
-                                        @if ($productionplanning->average_acc < 50)
+                                        @endif
+                                        <!-- @if ($productionplanning->average_acc < 50)
                                         <td align="center"><a id="show-detail-acc" class="btn btn-danger btn-icon-split btn-sm btn-show-detail-acc" data-url-acc="{{ route('proplandetail.fetchdetailacc', $productionplanning->order_list) }}" data-show-title-acc="{{ $productionplanning->order_list }} - {{ $productionplanning->pobuyer_no }}">
                                             <span class="text">{{ $productionplanning->average_acc }}</span>
                                         </a></td>
@@ -229,7 +233,7 @@
                                         <td align="center"><a id="show-detail-acc" class="btn btn-success btn-icon-split btn-sm btn-show-detail-acc" data-url-acc="{{ route('proplandetail.fetchdetailacc', $productionplanning->order_list) }}" data-show-title-acc="{{ $productionplanning->order_list }} - {{ $productionplanning->pobuyer_no }}">
                                             <span class="text">{{ $productionplanning->average_acc }}</span>
                                         </a></td>
-                                        @endif
+                                        @endif -->
 
                                         <!-- Acc Date -->
                                         <!-- @if (((now()->diffInDays($productionplanning->acc_date)) <= 7) && ((now()->diffInDays($productionplanning->acc_date)) > 3) && (now() < $productionplanning->acc_date))

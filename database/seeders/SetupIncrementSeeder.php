@@ -29,5 +29,9 @@ class SetupIncrementSeeder extends Seeder
             'models' => 'Size',
             'last_number' => 'SIZ000000006'
         ]);
+        DB::table('setup_increment')->insert([
+            'models' => 'ProPlanAcc',
+            'last_number' => 'PPA000000000'
+        ]);
     }
 }

@@ -162,9 +162,9 @@ class ProductionPlanningController extends Controller
         ]);
 
         for ($i = 0; $i < count($request->accesories_sew); $i++) {
-            $getLastPPAcc = SetupIncrement::all()->where('models', '=', 'ProPlanAcc')->last();
-            if (count($getLastPPAcc[0]) == 0) {
-                $new_number = 'PPA' . str_pad(intval(substr($getLastPPAcc[0]->last_number, 3, 9)) + 1, 9, '0', STR_PAD_LEFT);
+            $getLastPPAcc = SetupIncrement::all()->where('models', '=', 'ProPlanAcc')->last()->get();
+            if (count($getLastPPAcc) == 0) {
+                $new_number = 'PPA' . str_pad(intval(substr($getLastPPAcc->last_number, 3, 9)) + 1, 9, '0', STR_PAD_LEFT);
             } else {
                 $new_number = 'PPA' . str_pad(1, 9, '0', STR_PAD_LEFT);
             }
@@ -187,9 +187,9 @@ class ProductionPlanningController extends Controller
         }
 
         for ($i = 0; $i < count($request->accesories_pack); $i++) {
-            $getLastPPAcc = SetupIncrement::all()->where('models', '=', 'ProPlanAcc')->last();
-            if (count($getLastPPAcc[0]) == 0) {
-                $new_number = 'PPA' . str_pad(intval(substr($getLastPPAcc[0]->last_number, 3, 9)) + 1, 9, '0', STR_PAD_LEFT);
+            $getLastPPAcc = SetupIncrement::all()->where('models', '=', 'ProPlanAcc')->last()->get();
+            if (count($getLastPPAcc) == 0) {
+                $new_number = 'PPA' . str_pad(intval(substr($getLastPPAcc->last_number, 3, 9)) + 1, 9, '0', STR_PAD_LEFT);
             } else {
                 $new_number = 'PPA' . str_pad(1, 9, '0', STR_PAD_LEFT);
             }

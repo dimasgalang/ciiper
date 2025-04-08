@@ -131,6 +131,8 @@
                                 <label>Sketch Image :</label>
                                 <br>
                                 <input class="file" type="file" id="sketch_file" name="sketch_file">
+                                <br>
+                                <img id="preview" src="#" height="200"/>
                             </div>
                             <br>
                             <div>
@@ -158,6 +160,12 @@
 @include('layout.footer')
 </body>
 <script type="text/javascript">
+    sketch_file.onchange = evt => {
+        const [file] = sketch_file.files
+        if (file) {
+            preview.src = URL.createObjectURL(file)
+        }
+    }
     $("#season_no").select2({
           allowClear: true,
           placeholder: 'Choose Season',

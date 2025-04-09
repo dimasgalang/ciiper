@@ -130,7 +130,7 @@
                             <div>
                                 <label>Sketch Image :</label>
                                 <br>
-                                <input class="file" type="file" id="sketch_file" name="sketch_file">
+                                <input class="file" type="file" id="sketch_file" name="sketch_file" accept="image/png, image/jpg, image/jpeg">
                                 <br>
                                 <img id="preview" src="#" height="200"/>
                             </div>

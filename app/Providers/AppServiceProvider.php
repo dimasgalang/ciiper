@@ -52,9 +52,12 @@ class AppServiceProvider extends ServiceProvider
                 $countAlert = 0;
                 // $now = "2025-06-20";
                 $formatedFrom = Carbon::parse($now);
+                $bordirdate = DB::select('select production_planning.*,order_list.pobuyer_no from production_planning left join order_list on production_planning.order_list = order_list.order_list where "' . $now . '" >= DATE_SUB(bordir_approve, INTERVAL 7 DAY) and "' . $now . '" <= bordir_approve');
                 $fabdate = DB::select('select production_planning.*,order_list.pobuyer_no from production_planning left join order_list on production_planning.order_list = order_list.order_list where "' . $now . '" >= DATE_SUB(fab_date, INTERVAL 7 DAY) and "' . $now . '" <= fab_date');
                 $accdate = DB::select('select production_planning.*,order_list.pobuyer_no from production_planning left join order_list on production_planning.order_list = order_list.order_list where "' . $now . '" >= DATE_SUB(acc_date, INTERVAL 7 DAY) and "' . $now . '" <= acc_date');
                 $patterndate = DB::select('select production_planning.*,order_list.pobuyer_no from production_planning left join order_list on production_planning.order_list = order_list.order_list where "' . $now . '" >= DATE_SUB(pattern_date, INTERVAL 7 DAY) and "' . $now . '" <= pattern_date');
+                $sampletestdate = DB::select('select production_planning.*,order_list.pobuyer_no from production_planning left join order_list on production_planning.order_list = order_list.order_list where "' . $now . '" >= DATE_SUB(sampletest_date, INTERVAL 7 DAY) and "' . $now . '" <= sampletest_date');
+                $reqmarkerdate = DB::select('select production_planning.*,order_list.pobuyer_no from production_planning left join order_list on production_planning.order_list = order_list.order_list where "' . $now . '" >= DATE_SUB(reqmarker_date, INTERVAL 7 DAY) and "' . $now . '" <= reqmarker_date');
                 $markerdate = DB::select('select production_planning.*,order_list.pobuyer_no from production_planning left join order_list on production_planning.order_list = order_list.order_list where "' . $now . '" >= DATE_SUB(marker_date, INTERVAL 7 DAY) and "' . $now . '" <= marker_date');
                 $pilotrundate = DB::select('select production_planning.*,order_list.pobuyer_no from production_planning left join order_list on production_planning.order_list = order_list.order_list where "' . $now . '" >= DATE_SUB(pilotrun_date, INTERVAL 7 DAY) and "' . $now . '" <= pilotrun_date');
                 $ppmdate = DB::select('select production_planning.*,order_list.pobuyer_no from production_planning left join order_list on production_planning.order_list = order_list.order_list where "' . $now . '" >= DATE_SUB(ppm_date, INTERVAL 7 DAY) and "' . $now . '" <= ppm_date');
@@ -67,6 +70,17 @@ class AppServiceProvider extends ServiceProvider
                 // dd($markerdate);
                 // dd(count($patterndate));
 
+                for ($i = 0; $i < count($bordirdate); $i++) {
+                    if ($bordirdate) {
+                        if (Carbon::parse($bordirdate[$i]->bordir_approve)->diffInDays($formatedFrom) == 0) {
+                            $messageBordir = 'Reminder Embordir Approve (' . $bordirdate[$i]->pobuyer_no . ') = ' . $bordirdate[$i]->bordir_approve . ' (' . Carbon::parse($bordirdate[$i]->bordir_approve)->diffInHours($formatedFrom) . ' Hours Left)';
+                        } else {
+                            $messageBordir = 'Reminder Embordir Approve (' . $bordirdate[$i]->pobuyer_no . ') = ' . $bordirdate[$i]->bordir_approve . ' (' . Carbon::parse($bordirdate[$i]->bordir_approve)->diffInDays($formatedFrom) . ' Days Left)';
+                        }
+                        $dataReminder[0][$countAlert] = $messageBordir;
+                        $countAlert++;
+                    }
+                }
                 for ($i = 0; $i < count($fabdate); $i++) {
                     if ($fabdate) {
                         if (Carbon::parse($fabdate[$i]->fab_date)->diffInDays($formatedFrom) == 0) {
@@ -97,6 +111,29 @@ class AppServiceProvider extends ServiceProvider
                             $messagePattern = 'Reminder Pattern Date (' . $patterndate[$i]->pobuyer_no . ') = ' . $patterndate[$i]->pattern_date . ' (' . Carbon::parse($patterndate[$i]->pattern_date)->diffInDays($formatedFrom) . ' Days Left)';
                         }
                         $dataReminder[0][$countAlert] = $messagePattern;
+                        $countAlert++;
+                    }
+                }
+
+                for ($i = 0; $i < count($sampletestdate); $i++) {
+                    if ($sampletestdate) {
+                        if (Carbon::parse($sampletestdate[$i]->sampletest_date)->diffInDays($formatedFrom) == 0) {
+                            $messageSampleTest = 'Reminder Sample Test Date (' . $sampletestdate[$i]->pobuyer_no . ') = ' . $sampletestdate[$i]->sampletest_date . ' (' . Carbon::parse($sampletestdate[$i]->sampletest_date)->diffInHours($formatedFrom) . ' Hours Left)';
+                        } else {
+                            $messageSampleTest = 'Reminder Sample Test Date (' . $sampletestdate[$i]->pobuyer_no . ') = ' . $sampletestdate[$i]->sampletest_date . ' (' . Carbon::parse($sampletestdate[$i]->sampletest_date)->diffInDays($formatedFrom) . ' Days Left)';
+                        }
+                        $dataReminder[0][$countAlert] = $messageSampleTest;
+                        $countAlert++;
+                    }
+                }
+                for ($i = 0; $i < count($reqmarkerdate); $i++) {
+                    if ($reqmarkerdate) {
+                        if (Carbon::parse($reqmarkerdate[$i]->reqmarker_date)->diffInDays($formatedFrom) == 0) {
+                            $messageReqMarker = 'Reminder Req Marker Date (' . $reqmarkerdate[$i]->pobuyer_no . ') = ' . $reqmarkerdate[$i]->reqmarker_date . ' (' . Carbon::parse($reqmarkerdate[$i]->reqmarker_date)->diffInHours($formatedFrom) . ' Hours Left)';
+                        } else {
+                            $messageReqMarker = 'Reminder Req Marker Date (' . $reqmarkerdate[$i]->pobuyer_no . ') = ' . $reqmarkerdate[$i]->reqmarker_date . ' (' . Carbon::parse($reqmarkerdate[$i]->reqmarker_date)->diffInDays($formatedFrom) . ' Days Left)';
+                        }
+                        $dataReminder[0][$countAlert] = $messageReqMarker;
                         $countAlert++;
                     }
                 }
@@ -188,7 +225,7 @@ class AppServiceProvider extends ServiceProvider
                         $countAlert++;
                     }
                 }
-
+                // dd($dataReminder);
                 View::share(['roleusers' => $roleusers, 'logs' => $logs, 'datareminders' => $dataReminder]);
             }
         });

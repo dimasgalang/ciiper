@@ -183,7 +183,13 @@
                                             </td>
                                         @endif
                                         @if($productionplanning->sample_date)
-                                        <td>{{ date('dmy', strtotime($productionplanning->sample_date)) }}</td>
+                                            @if (((now()->diffInDays($productionplanning->sample_date)) <= 7) && ((now()->diffInDays($productionplanning->sample_date)) > 3) && (now() < $productionplanning->sample_date))
+                                            <td style="color:orange">{{ date('dmy', strtotime($productionplanning->sample_date)) }}</td>
+                                            @elseif ((((now()->diffInDays($productionplanning->sample_date)) <= 3) && ((now()->diffInDays($productionplanning->sample_date)) > 0) && (now() < $productionplanning->sample_date)))
+                                            <td style="color:red">{{ date('dmy', strtotime($productionplanning->sample_date)) }}</td>
+                                            @else
+                                            <td>{{ date('dmy', strtotime($productionplanning->sample_date)) }}</td>
+                                            @endif
                                         @else
                                         <td>{{ $productionplanning->sample_date }}</td>
                                         @endif
@@ -201,7 +207,13 @@
                                             </td>
                                         @endif
                                         @if($productionplanning->mi_date)
-                                        <td>{{ date('dmy', strtotime($productionplanning->mi_date)) }}</td>
+                                            @if (((now()->diffInDays($productionplanning->mi_date)) <= 7) && ((now()->diffInDays($productionplanning->mi_date)) > 3) && (now() < $productionplanning->mi_date))
+                                            <td style="color:orange">{{ date('dmy', strtotime($productionplanning->mi_date)) }}</td>
+                                            @elseif ((((now()->diffInDays($productionplanning->mi_date)) <= 3) && ((now()->diffInDays($productionplanning->mi_date)) > 0) && (now() < $productionplanning->mi_date)))
+                                            <td style="color:red">{{ date('dmy', strtotime($productionplanning->mi_date)) }}</td>
+                                            @else
+                                            <td>{{ date('dmy', strtotime($productionplanning->mi_date)) }}</td>
+                                            @endif
                                         @else
                                         <td>{{ $productionplanning->mi_date }}</td>
                                         @endif
@@ -219,7 +231,13 @@
                                             </td>
                                         @endif
                                         @if($productionplanning->fab_date)
-                                        <td>{{ date('dmy', strtotime($productionplanning->fab_date)) }}</td>
+                                            @if (((now()->diffInDays($productionplanning->fab_date)) <= 7) && ((now()->diffInDays($productionplanning->fab_date)) > 3) && (now() < $productionplanning->fab_date))
+                                            <td style="color:orange">{{ date('dmy', strtotime($productionplanning->fab_date)) }}</td>
+                                            @elseif ((((now()->diffInDays($productionplanning->fab_date)) <= 3) && ((now()->diffInDays($productionplanning->fab_date)) > 0) && (now() < $productionplanning->fab_date)))
+                                            <td style="color:red">{{ date('dmy', strtotime($productionplanning->fab_date)) }}</td>
+                                            @else
+                                            <td>{{ date('dmy', strtotime($productionplanning->fab_date)) }}</td>
+                                            @endif
                                         @else
                                         <td>{{ $productionplanning->fab_date }}</td>
                                         @endif
@@ -270,7 +288,7 @@
                                         
                                         @if (((now()->diffInDays($productionplanning->bordir_approve)) <= 7) && ((now()->diffInDays($productionplanning->bordir_approve)) > 3) && (now() < $productionplanning->bordir_approve))
                                         <td style="color:orange">{{ date('dmy', strtotime($productionplanning->bordir_approve)) }}</td>
-                                        @elseif ((((now()->diffInDays($productionplanning->bordir_approve)) <= 3) && ((now()->diffInDays($productionplanning->bordir_approve)) > 0) && (now() < $productionplanning->bordir_approve)) || (now() > $productionplanning->bordir_approve))
+                                        @elseif ((((now()->diffInDays($productionplanning->bordir_approve)) <= 3) && ((now()->diffInDays($productionplanning->bordir_approve)) > 0) && (now() < $productionplanning->bordir_approve)))
                                         <td style="color:red">{{ date('dmy', strtotime($productionplanning->bordir_approve)) }}</td>
                                         @else
                                         <td>{{ date('dmy', strtotime($productionplanning->bordir_approve)) }}</td>
@@ -280,7 +298,7 @@
                                         
                                         @if (((now()->diffInDays($productionplanning->pattern_date)) <= 7) && ((now()->diffInDays($productionplanning->pattern_date)) > 3) && (now() < $productionplanning->pattern_date))
                                         <td style="color:orange">{{ date('dmy', strtotime($productionplanning->pattern_date)) }}</td>
-                                        @elseif ((((now()->diffInDays($productionplanning->pattern_date)) <= 3) && ((now()->diffInDays($productionplanning->pattern_date)) > 0) && (now() < $productionplanning->pattern_date)) || (now() > $productionplanning->pattern_date))
+                                        @elseif ((((now()->diffInDays($productionplanning->pattern_date)) <= 3) && ((now()->diffInDays($productionplanning->pattern_date)) > 0) && (now() < $productionplanning->pattern_date)))
                                         <td style="color:red">{{ date('dmy', strtotime($productionplanning->pattern_date)) }}</td>
                                         @else
                                         <td>{{ date('dmy', strtotime($productionplanning->pattern_date)) }}</td>
@@ -288,7 +306,7 @@
                                         
                                         @if (((now()->diffInDays($productionplanning->sampletest_date)) <= 7) && ((now()->diffInDays($productionplanning->sampletest_date)) > 3) && (now() < $productionplanning->sampletest_date))
                                         <td style="color:orange">{{ date('dmy', strtotime($productionplanning->sampletest_date)) }}</td>
-                                        @elseif ((((now()->diffInDays($productionplanning->sampletest_date)) <= 3) && ((now()->diffInDays($productionplanning->sampletest_date)) > 0) && (now() < $productionplanning->sampletest_date)) || (now() > $productionplanning->sampletest_date))
+                                        @elseif ((((now()->diffInDays($productionplanning->sampletest_date)) <= 3) && ((now()->diffInDays($productionplanning->sampletest_date)) > 0) && (now() < $productionplanning->sampletest_date)))
                                         <td style="color:red">{{ date('dmy', strtotime($productionplanning->sampletest_date)) }}</td>
                                         @else
                                         <td>{{ date('dmy', strtotime($productionplanning->sampletest_date)) }}</td>
@@ -296,7 +314,7 @@
 
                                         @if (((now()->diffInDays($productionplanning->reqmarker_date)) <= 7) && ((now()->diffInDays($productionplanning->reqmarker_date)) > 3) && (now() < $productionplanning->reqmarker_date))
                                         <td style="color:orange">{{ date('dmy', strtotime($productionplanning->reqmarker_date)) }}</td>
-                                        @elseif ((((now()->diffInDays($productionplanning->reqmarker_date)) <= 3) && ((now()->diffInDays($productionplanning->reqmarker_date)) >= 0) && (now() < $productionplanning->reqmarker_date)) || (now() > $productionplanning->reqmarker_date))
+                                        @elseif ((((now()->diffInDays($productionplanning->reqmarker_date)) <= 3) && ((now()->diffInDays($productionplanning->reqmarker_date)) >= 0) && (now() < $productionplanning->reqmarker_date)) )
                                         <td style="color:red">{{ date('dmy', strtotime($productionplanning->reqmarker_date)) }}</td>
                                         @else
                                         <td>{{ date('dmy', strtotime($productionplanning->reqmarker_date)) }}</td>
@@ -304,7 +322,7 @@
                                         
                                         @if (((now()->diffInDays($productionplanning->marker_date)) <= 7) && ((now()->diffInDays($productionplanning->marker_date)) > 3) && (now() < $productionplanning->marker_date))
                                         <td style="color:orange">{{ date('dmy', strtotime($productionplanning->marker_date)) }}</td>
-                                        @elseif ((((now()->diffInDays($productionplanning->marker_date)) <= 3) && ((now()->diffInDays($productionplanning->marker_date)) >= 0) && (now() < $productionplanning->marker_date)) || (now() > $productionplanning->marker_date))
+                                        @elseif ((((now()->diffInDays($productionplanning->marker_date)) <= 3) && ((now()->diffInDays($productionplanning->marker_date)) >= 0) && (now() < $productionplanning->marker_date)))
                                         <td style="color:red">{{ date('dmy', strtotime($productionplanning->marker_date)) }}</td>
                                         @else
                                         <td>{{ date('dmy', strtotime($productionplanning->marker_date)) }}</td>
@@ -312,7 +330,7 @@
 
                                         @if (((now()->diffInDays($productionplanning->pilotrun_date)) <= 7) && ((now()->diffInDays($productionplanning->pilotrun_date)) > 3) && (now() < $productionplanning->pilotrun_date))
                                         <td style="color:orange">{{ date('dmy', strtotime($productionplanning->pilotrun_date)) }}</td>
-                                        @elseif ((((now()->diffInDays($productionplanning->pilotrun_date)) <= 3) && ((now()->diffInDays($productionplanning->pilotrun_date)) > 0) && (now() < $productionplanning->pilotrun_date)) || (now() > $productionplanning->pilotrun_date))
+                                        @elseif ((((now()->diffInDays($productionplanning->pilotrun_date)) <= 3) && ((now()->diffInDays($productionplanning->pilotrun_date)) > 0) && (now() < $productionplanning->pilotrun_date)))
                                         <td style="color:red">{{ date('dmy', strtotime($productionplanning->pilotrun_date)) }}</td>
                                         @else
                                         <td>{{ date('dmy', strtotime($productionplanning->pilotrun_date)) }}</td>
@@ -320,7 +338,7 @@
 
                                         @if (((now()->diffInDays($productionplanning->ppm_date)) <= 7) && ((now()->diffInDays($productionplanning->ppm_date)) > 3) && (now() < $productionplanning->ppm_date))
                                         <td style="color:orange">{{ date('dmy', strtotime($productionplanning->ppm_date)) }}</td>
-                                        @elseif ((((now()->diffInDays($productionplanning->ppm_date)) <= 3) && ((now()->diffInDays($productionplanning->ppm_date)) > 0) && (now() < $productionplanning->ppm_date)) || (now() > $productionplanning->ppm_date))
+                                        @elseif ((((now()->diffInDays($productionplanning->ppm_date)) <= 3) && ((now()->diffInDays($productionplanning->ppm_date)) > 0) && (now() < $productionplanning->ppm_date)))
                                         <td style="color:red">{{ date('dmy', strtotime($productionplanning->ppm_date)) }}</td>
                                         @else
                                         <td>{{ date('dmy', strtotime($productionplanning->ppm_date)) }}</td>
@@ -328,7 +346,7 @@
 
                                         @if (((now()->diffInDays($productionplanning->startcut_date)) <= 7) && ((now()->diffInDays($productionplanning->startcut_date)) > 3) && (now() < $productionplanning->startcut_date))
                                         <td style="color:orange">{{ date('dmy', strtotime($productionplanning->startcut_date)) }}</td>
-                                        @elseif ((((now()->diffInDays($productionplanning->startcut_date)) <= 3) && ((now()->diffInDays($productionplanning->startcut_date)) > 0) && (now() < $productionplanning->startcut_date)) || (now() > $productionplanning->startcut_date))
+                                        @elseif ((((now()->diffInDays($productionplanning->startcut_date)) <= 3) && ((now()->diffInDays($productionplanning->startcut_date)) > 0) && (now() < $productionplanning->startcut_date)))
                                         <td style="color:red">{{ date('dmy', strtotime($productionplanning->startcut_date)) }}</td>
                                         @else
                                         <td>{{ date('dmy', strtotime($productionplanning->startcut_date)) }}</td>
@@ -336,7 +354,7 @@
 
                                         @if (((now()->diffInDays($productionplanning->finishcut_date)) <= 7) && ((now()->diffInDays($productionplanning->finishcut_date)) > 3) && (now() < $productionplanning->finishcut_date))
                                         <td style="color:orange">{{ date('dmy', strtotime($productionplanning->finishcut_date)) }}</td>
-                                        @elseif ((((now()->diffInDays($productionplanning->finishcut_date)) <= 3) && ((now()->diffInDays($productionplanning->finishcut_date)) > 0) && (now() < $productionplanning->finishcut_date)) || (now() > $productionplanning->finishcut_date))
+                                        @elseif ((((now()->diffInDays($productionplanning->finishcut_date)) <= 3) && ((now()->diffInDays($productionplanning->finishcut_date)) > 0) && (now() < $productionplanning->finishcut_date)))
                                         <td style="color:red">{{ date('dmy', strtotime($productionplanning->finishcut_date)) }}</td>
                                         @else
                                         <td>{{ date('dmy', strtotime($productionplanning->finishcut_date)) }}</td>
@@ -344,7 +362,7 @@
 
                                         @if (((now()->diffInDays($productionplanning->startsew_date)) <= 7) && ((now()->diffInDays($productionplanning->startsew_date)) > 3) && (now() < $productionplanning->startsew_date))
                                         <td style="color:orange">{{ date('dmy', strtotime($productionplanning->startsew_date)) }}</td>
-                                        @elseif ((((now()->diffInDays($productionplanning->startsew_date)) <= 3) && ((now()->diffInDays($productionplanning->startsew_date)) > 0) && (now() < $productionplanning->startsew_date)) || (now() > $productionplanning->startsew_date))
+                                        @elseif ((((now()->diffInDays($productionplanning->startsew_date)) <= 3) && ((now()->diffInDays($productionplanning->startsew_date)) > 0) && (now() < $productionplanning->startsew_date)))
                                         <td style="color:red">{{ date('dmy', strtotime($productionplanning->startsew_date)) }}</td>
                                         @else
                                         <td>{{ date('dmy', strtotime($productionplanning->startsew_date)) }}</td>
@@ -352,7 +370,7 @@
 
                                         @if (((now()->diffInDays($productionplanning->finishsew_date)) <= 7) && ((now()->diffInDays($productionplanning->finishsew_date)) > 3) && (now() < $productionplanning->finishsew_date))
                                         <td style="color:orange">{{ date('dmy', strtotime($productionplanning->finishsew_date)) }}</td>
-                                        @elseif ((((now()->diffInDays($productionplanning->finishsew_date)) <= 3) && ((now()->diffInDays($productionplanning->finishsew_date)) > 0) && (now() < $productionplanning->finishsew_date)) || (now() > $productionplanning->finishsew_date))
+                                        @elseif ((((now()->diffInDays($productionplanning->finishsew_date)) <= 3) && ((now()->diffInDays($productionplanning->finishsew_date)) > 0) && (now() < $productionplanning->finishsew_date)))
                                         <td style="color:red">{{ date('dmy', strtotime($productionplanning->finishsew_date)) }}</td>
                                         @else
                                         <td>{{ date('dmy', strtotime($productionplanning->finishsew_date)) }}</td>
@@ -360,7 +378,7 @@
 
                                         @if (((now()->diffInDays($productionplanning->finishpack_date)) <= 7) && ((now()->diffInDays($productionplanning->finishpack_date)) > 3) && (now() < $productionplanning->finishpack_date))
                                         <td style="color:orange">{{ date('dmy', strtotime($productionplanning->finishpack_date)) }}</td>
-                                        @elseif ((((now()->diffInDays($productionplanning->finishpack_date)) <= 3) && ((now()->diffInDays($productionplanning->finishpack_date)) > 0) && (now() < $productionplanning->finishpack_date)) || (now() > $productionplanning->finishpack_date))
+                                        @elseif ((((now()->diffInDays($productionplanning->finishpack_date)) <= 3) && ((now()->diffInDays($productionplanning->finishpack_date)) > 0) && (now() < $productionplanning->finishpack_date)))
                                         <td style="color:red">{{ date('dmy', strtotime($productionplanning->finishpack_date)) }}</td>
                                         @else
                                         <td>{{ date('dmy', strtotime($productionplanning->finishpack_date)) }}</td>

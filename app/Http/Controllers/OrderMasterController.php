@@ -67,14 +67,14 @@ class OrderMasterController extends Controller
 
     public function create()
     {
-        $setupincements = SetupIncrement::all()->where('models', '=', 'OrderMaster')->last();
+        $setupincrements = SetupIncrement::all()->where('models', '=', 'OrderMaster')->last();
         $seasons = Season::all();
         $buyers = Buyer::all();
         $brands = Brand::all();
         $styles = Style::all();
         $followups = FollowUp::all();
         $pos = PurchaseOrder::all();
-        return view('ordermaster.create', compact('setupincements', 'seasons', 'buyers', 'brands', 'styles', 'followups', 'pos'));
+        return view('ordermaster.create', compact('setupincrements', 'seasons', 'buyers', 'brands', 'styles', 'followups', 'pos'));
     }
 
     public function showlist($order_trans)

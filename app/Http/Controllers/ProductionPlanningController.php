@@ -401,4 +401,104 @@ class ProductionPlanningController extends Controller
         Alert::success('Restore Successfully!', 'Production Planning ' . $productionplannings->plan_no . ' successfully restored!');
         return redirect('productionplanning/index');
     }
+
+
+    public function updatesample(Request $request)
+    {
+        $productionplannings = ProductionPlanning::findOrFail($request->update_id_sample);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Update Sample ' . $productionplannings->plan_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        if ($request->update_has_sample == "Yes") {
+            $productionplannings->fill([
+                'has_sample' => $request->update_has_sample,
+                'sample_date' => $request->update_sample_date
+            ]);
+        } else {
+
+            $productionplannings->fill([
+                'has_sample' => $request->update_has_sample,
+                'sample_date' => null
+            ]);
+        }
+
+        $productionplannings->save();
+
+        Alert::success('Update Successfully!', 'Sample Production Planning ' . $productionplannings->plan_no . ' successfully updated!');
+        return redirect('productionplanning/index');
+    }
+
+    public function updatemi(Request $request)
+    {
+        $productionplannings = ProductionPlanning::findOrFail($request->update_id_mi);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Update MI ' . $productionplannings->plan_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        if ($request->update_has_mi == "Yes") {
+            $productionplannings->fill([
+                'has_mi' => $request->update_has_mi,
+                'mi_date' => $request->update_mi_date
+            ]);
+        } else {
+
+            $productionplannings->fill([
+                'has_mi' => $request->update_has_mi,
+                'mi_date' => null
+            ]);
+        }
+
+        $productionplannings->save();
+
+        Alert::success('Update Successfully!', 'Sample Production Planning ' . $productionplannings->plan_no . ' successfully updated!');
+        return redirect('productionplanning/index');
+    }
+
+    public function updatefab(Request $request)
+    {
+        $productionplannings = ProductionPlanning::findOrFail($request->update_id_fab);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Update Fab Cart ' . $productionplannings->plan_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        if ($request->update_has_fab == "Yes") {
+            $productionplannings->fill([
+                'has_fab_cart' => $request->update_has_fab,
+                'fab_date' => $request->update_fab_date
+            ]);
+        } else {
+
+            $productionplannings->fill([
+                'has_fab_cart' => $request->update_has_fab,
+                'fab_date' => null
+            ]);
+        }
+
+        $productionplannings->save();
+
+        Alert::success('Update Successfully!', 'Sample Production Planning ' . $productionplannings->plan_no . ' successfully updated!');
+        return redirect('productionplanning/index');
+    }
 }

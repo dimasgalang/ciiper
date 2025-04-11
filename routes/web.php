@@ -370,6 +370,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/productionplanning/store', [ProductionPlanningController::class, 'store'])->name('productionplanning.store');
     Route::get('/productionplanning/find/{id}', [ProductionPlanningController::class, 'find'])->name('productionplanning.find');
     Route::post('/productionplanning/update', [ProductionPlanningController::class, 'update'])->name('productionplanning.update');
+    Route::post('/productionplanning/updatesample', [ProductionPlanningController::class, 'updatesample'])->name('productionplanning.updatesample');
+    Route::post('/productionplanning/updatemi', [ProductionPlanningController::class, 'updatemi'])->name('productionplanning.updatemi');
+    Route::post('/productionplanning/updatefab', [ProductionPlanningController::class, 'updatefab'])->name('productionplanning.updatefab');
     Route::get('/productionplanning/masterqty/{order_trans}', [ProductionPlanningController::class, 'masterqty'])->name('productionplanning.masterqty');
     Route::get('/productionplanning/fetchorderlist/{order_trans}', [ProductionPlanningController::class, 'fetchorderlist'])->name('productionplanning.fetchorderlist');
 

@@ -70,20 +70,22 @@
                             <table class="table-responsive table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>#</th>
                                         <th>Master PO</th>
                                         <th>PO Buyer</th>
                                         <th>Sample</th>
+                                        <th>Sample Date</th>
                                         <th>MI</th>
-                                        <th>Fab Cart</th>
-                                        <th>Fab</th>
-                                        <th>Acc Cart</th>
-                                        <th>Acc Sewing</th>
-                                        <th>Acc Packing</th>
-                                        <th>Bordir Approve</th>
+                                        <th>MI Date</th>
+                                        <th>Fab. Cart</th>
+                                        <th>Fab Date</th>
+                                        <th>Acc. Cart</th>
+                                        <th>Acc. Sewing</th>
+                                        <th>Acc. Packing</th>
+                                        <th>Emb. Approve</th>
                                         <th>Pattern</th>
                                         <th>Sample Test</th>
-                                        <th>Req Marker</th>
+                                        <th>Req. Marker</th>
                                         <th>Marker</th>
                                         <th>Pilot Run</th>
                                         <th>PPM</th>
@@ -92,14 +94,14 @@
                                         <th>Start Sew.</th>
                                         <th>Finish Sew.</th>
                                         <th>Finish Pack.</th>
-                                        <th bgcolor="lightyellow">RAF Cut</th>
-                                        <th bgcolor="lightyellow">Balance Cut</th>
-                                        <th bgcolor="lightyellow">RAF Sew</th>
-                                        <th bgcolor="lightyellow">Balance Sew</th>
-                                        <th bgcolor="lightyellow">RAF Iron</th>
+                                        <th bgcolor="lightyellow">Cut. Output</th>
+                                        <th bgcolor="lightyellow">Balance Cut.</th>
+                                        <th bgcolor="lightyellow">Sew. Output</th>
+                                        <th bgcolor="lightyellow">Balance Sew.</th>
+                                        <th bgcolor="lightyellow">Iron Output</th>
                                         <th bgcolor="lightyellow">Balance Iron</th>
-                                        <th bgcolor="lightyellow">RAF Pack</th>
-                                        <th bgcolor="lightyellow">Balance Pack</th>
+                                        <th bgcolor="lightyellow">Pack. Output</th>
+                                        <th bgcolor="lightyellow">Balance Pack.</th>
                                         <th bgcolor="lightyellow">Remark</th>
                                         <th>Action</th>
                                     </tr>
@@ -169,44 +171,58 @@
                                         <!-- Stop Average Table -->
                                         @if($productionplanning->has_sample == 'Yes')
                                              <td class="text-center">
-                                                <a class="btn btn-success btn-circle btn-sm">
+                                                <a class="btn btn-success btn-circle btn-sm btn-update-sample-record" data-update-sample-link="{{ route('productionplanning.updatesample', ['id' => $productionplanning->id]) }}" data-update-id-sample="{{ $productionplanning->id }}" data-update-sample-name="{{ $productionplanning->pobuyer_no }}" data-update-sample-has="{{ $productionplanning->has_sample }}" data-update-sample-date="{{ $productionplanning->sample_date }}" data-toggle="modal" data-target="#updateSampleModal">
                                                     <i class="fas fa-check"></i>
                                                 </a>
                                             </td>
                                         @else
                                             <td class="text-center">
-                                                <a class="btn btn-danger btn-circle btn-sm">
+                                                <a class="btn btn-danger btn-circle btn-sm btn-update-sample-record" data-update-sample-link="{{ route('productionplanning.updatesample', ['id' => $productionplanning->id]) }}" data-update-id-sample="{{ $productionplanning->id }}" data-update-sample-name="{{ $productionplanning->pobuyer_no }}" data-update-sample-has="{{ $productionplanning->has_sample }}" data-update-sample-date="{{ $productionplanning->sample_date }}" data-toggle="modal" data-target="#updateSampleModal">
                                                     <i class="fas fa-times"></i>
                                                 </a>
                                             </td>
+                                        @endif
+                                        @if($productionplanning->sample_date)
+                                        <td>{{ date('dmy', strtotime($productionplanning->sample_date)) }}</td>
+                                        @else
+                                        <td>{{ $productionplanning->sample_date }}</td>
                                         @endif
                                         @if($productionplanning->has_mi == 'Yes')
                                              <td class="text-center">
-                                                <a class="btn btn-success btn-circle btn-sm">
+                                                <a class="btn btn-success btn-circle btn-sm btn-update-mi-record" data-update-mi-link="{{ route('productionplanning.updatemi', ['id' => $productionplanning->id]) }}" data-update-id-mi="{{ $productionplanning->id }}" data-update-mi-name="{{ $productionplanning->pobuyer_no }}" data-update-mi-has="{{ $productionplanning->has_mi }}" data-update-mi-date="{{ $productionplanning->mi_date }}" data-toggle="modal" data-target="#updateMIModal">
                                                     <i class="fas fa-check"></i>
                                                 </a>
                                             </td>
                                         @else
                                             <td class="text-center">
-                                                <a class="btn btn-danger btn-circle btn-sm">
+                                                <a class="btn btn-danger btn-circle btn-sm btn-update-mi-record" data-update-mi-link="{{ route('productionplanning.updatemi', ['id' => $productionplanning->id]) }}" data-update-id-mi="{{ $productionplanning->id }}" data-update-mi-name="{{ $productionplanning->pobuyer_no }}" data-update-mi-has="{{ $productionplanning->has_mi }}" data-update-mi-date="{{ $productionplanning->mi_date }}" data-toggle="modal" data-target="#updateMIModal">
                                                     <i class="fas fa-times"></i>
                                                 </a>
                                             </td>
+                                        @endif
+                                        @if($productionplanning->mi_date)
+                                        <td>{{ date('dmy', strtotime($productionplanning->mi_date)) }}</td>
+                                        @else
+                                        <td>{{ $productionplanning->mi_date }}</td>
                                         @endif
                                         @if($productionplanning->has_fab_cart == 'Yes')
                                              <td class="text-center">
-                                                <a class="btn btn-success btn-circle btn-sm">
+                                                <a class="btn btn-success btn-circle btn-sm btn-update-fab-record" data-update-fab-link="{{ route('productionplanning.updatefab', ['id' => $productionplanning->id]) }}" data-update-id-fab="{{ $productionplanning->id }}" data-update-fab-name="{{ $productionplanning->pobuyer_no }}" data-update-fab-has="{{ $productionplanning->has_fab_cart }}" data-update-fab-date="{{ $productionplanning->fab_date }}" data-toggle="modal" data-target="#updateFabModal">
                                                     <i class="fas fa-check"></i>
                                                 </a>
                                             </td>
                                         @else
                                             <td class="text-center">
-                                                <a class="btn btn-danger btn-circle btn-sm">
+                                                <a class="btn btn-danger btn-circle btn-sm btn-update-fab-record" data-update-fab-link="{{ route('productionplanning.updatefab', ['id' => $productionplanning->id]) }}" data-update-id-fab="{{ $productionplanning->id }}" data-update-fab-name="{{ $productionplanning->pobuyer_no }}" data-update-fab-has="{{ $productionplanning->has_fab_cart }}" data-update-fab-date="{{ $productionplanning->fab_date }}" data-toggle="modal" data-target="#updateFabModal">
                                                     <i class="fas fa-times"></i>
                                                 </a>
                                             </td>
                                         @endif
+                                        @if($productionplanning->fab_date)
+                                        <td>{{ date('dmy', strtotime($productionplanning->fab_date)) }}</td>
+                                        @else
                                         <td>{{ $productionplanning->fab_date }}</td>
+                                        @endif
                                         
                                         @if($productionplanning->has_acc_cart == 'Yes')
                                              <td class="text-center">
@@ -409,6 +425,107 @@
         <!-- End of Main Content -->
 
         <!-- Modal -->
+        <div class="modal fade" id="updateSampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="update-sample-title" class="modal-title" id="exampleModalLabel">Update Sample</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    
+                    <form action="{{ route('productionplanning.updatesample') }}" method="POST">
+                        @csrf
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <input type="hidden" id="update_id_sample" name="update_id_sample">
+                                    <label>Has Sample?</label>
+                                    <select class="form-control" id="update_has_sample" name="update_has_sample">
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                    <br>
+                                    <label>Sample Date :</label>
+                                    <input class="form-control" type="date" id="update_sample_date" name="update_sample_date" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                <button type="submit" class="btn btn-success">Confirm</button>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="updateMIModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="update-mi-title" class="modal-title" id="exampleModalLabel">Update MI</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    
+                    <form action="{{ route('productionplanning.updatemi') }}" method="POST">
+                        @csrf
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <input type="hidden" id="update_id_mi" name="update_id_mi">
+                                    <label>Has MI?</label>
+                                    <select class="form-control" id="update_has_mi" name="update_has_mi">
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                    <br>
+                                    <label>MI Date :</label>
+                                    <input class="form-control" type="date" id="update_mi_date" name="update_mi_date" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                <button type="submit" class="btn btn-success">Confirm</button>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="updateFabModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="update-fab-title" class="modal-title" id="exampleModalLabel">Update Fab Cart</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    
+                    <form action="{{ route('productionplanning.updatefab') }}" method="POST">
+                        @csrf
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <input type="hidden" id="update_id_fab" name="update_id_fab">
+                                    <label>Has Fab Cart?</label>
+                                    <select class="form-control" id="update_has_fab" name="update_has_fab">
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                    <br>
+                                    <label>Fab Date :</label>
+                                    <input class="form-control" type="date" id="update_fab_date" name="update_fab_date" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                <button type="submit" class="btn btn-success">Confirm</button>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
         <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
                 <div class="modal-content">
@@ -614,6 +731,71 @@
     $('.btn-restore-record').on('click', function () {
             $('#btn-confirm-restore').attr('href', $(this).data('restore-link'));
             $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan Production Planning ' + $(this).data('restore-name') + '?');
+    });
+    $('.btn-update-sample-record').on('click', function () {
+        var has_sample = $(this).data('update-sample-has');
+        var sample_date = $(this).data('update-sample-date');
+        var id = $(this).data('update-id-sample');
+        if (has_sample == "Yes") {
+            document.getElementById("update_has_sample").options.selectedIndex = 0;
+        } else {
+            document.getElementById("update_has_sample").options.selectedIndex = 1;
+        }
+        $('#update_has_sample').change(function(){
+            if ($(this).val() == "Yes") {
+                $('#update_sample_date').prop('required',true);
+            } else {
+                $('#update_sample_date').removeAttr('required');
+                $("#update_sample_date").val(null);
+            }
+        })
+        $("#update_id_sample").val(id);
+        $("#update_sample_date").val(sample_date);
+        $("#modal-text-record-update-sample").text('Apakah anda yakin ingin mengupdate Sample Production Planning ' + $(this).data('update-sample-name') + '?');
+    });
+    $('.btn-update-mi-record').on('click', function () {
+        var has_mi = $(this).data('update-mi-has');
+        var mi_date = $(this).data('update-mi-date');
+        var id = $(this).data('update-id-mi');
+        if (has_mi == "Yes") {
+            document.getElementById("update_has_mi").options.selectedIndex = 0;
+        } else {
+            document.getElementById("update_has_mi").options.selectedIndex = 1;
+        }
+        
+        $('#update_has_mi').change(function(){
+            if ($(this).val() == "Yes") {
+                $('#update_mi_date').prop('required',true);
+            } else {
+                $('#update_mi_date').removeAttr('required');
+                $("#update_mi_date").val(null);
+            }
+        })
+        $("#update_id_mi").val(id);
+        $("#update_mi_date").val(mi_date);
+        $("#modal-text-record-update-mi").text('Apakah anda yakin ingin mengupdate MI Production Planning ' + $(this).data('update-mi-name') + '?');
+    });
+    
+    $('.btn-update-fab-record').on('click', function () {
+        var has_fab_cart = $(this).data('update-fab-has');
+        var fab_date = $(this).data('update-fab-date');
+        var id = $(this).data('update-id-fab');
+        if (has_fab_cart == "Yes") {
+            document.getElementById("update_has_fab").options.selectedIndex = 0;
+        } else {
+            document.getElementById("update_has_fab").options.selectedIndex = 1;
+        }
+        $('#update_has_fab').change(function(){
+            if ($(this).val() == "Yes") {
+                $('#update_fab_date').prop('required',true);
+            } else {
+                $('#update_fab_date').removeAttr('required');
+                $("#update_fab_date").val(null);
+            }
+        })
+        $("#update_id_fab").val(id);
+        $("#update_fab_date").val(fab_date);
+        $("#modal-text-record-update-fab").text('Apakah anda yakin ingin mengupdate Fab Cart Production Planning ' + $(this).data('update-fab-name') + '?');
     });
 </script>
 <script type="text/javascript">

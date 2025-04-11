@@ -58,8 +58,8 @@
                             @endif
                             <div>
                                 <label>Order Trans :</label>
-                                @if($setupincements->last_number ?? '')
-                                <input class="form-control" type="text" id="order_trans" name="order_trans" value="{{ 'ORM' . str_pad(intval(substr($setupincements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
+                                @if($setupincrements->last_number ?? '')
+                                <input class="form-control" type="text" id="order_trans" name="order_trans" value="{{ 'ORM' . str_pad(intval(substr($setupincrements->last_number,3,9)) + 1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @else
                                 <input class="form-control" type="text" id="order_trans" name="order_trans" value="{{ 'ORM' . str_pad(1,9,'0',STR_PAD_LEFT) }}" required readonly>
                                 @endif

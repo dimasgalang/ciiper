@@ -106,7 +106,7 @@
                                             <a href="{{ route('ordermaster.find', ['id' => $ordermaster->id]) }}" class="btn btn-primary btn-circle btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a id="show-orderlist" class="btn btn-primary btn-circle btn-sm btn-show-orderlist" data-orderlist-url="{{ route('ordermaster.orderlist', $ordermaster->order_trans) }}" data-ordersize-url="{{ route('ordermaster.ordersize', $ordermaster->order_trans) }}" data-rafproduction-url="{{ route('ordermaster.rafproduction', $ordermaster->order_trans) }}" data-rafcutting-url="{{ route('ordermaster.rafcutting', $ordermaster->order_trans) }}" data-rafsewing-url="{{ route('ordermaster.rafsewing', $ordermaster->order_trans) }}" data-rafiron-url="{{ route('ordermaster.rafiron', $ordermaster->order_trans) }}" data-rafpacking-url="{{ route('ordermaster.rafpacking', $ordermaster->order_trans) }}" data-fab-url="{{ route('ordermaster.fab', $ordermaster->order_trans) }}" data-shipment-url="{{ route('ordermaster.shipment', $ordermaster->order_trans) }}" data-style-url="{{ route('ordermaster.style', $ordermaster->order_trans) }}" data-productionplanning-url="{{ route('ordermaster.productionplanning', $ordermaster->order_trans) }}"  data-show-orderlist-link="{{ $ordermaster->order_trans }}" data-show-orderlist-title="{{ $ordermaster->order_trans }} - {{ $ordermaster->po_master }}" data-show-image="{{ asset('/sketch/' . $ordermaster->sketch_file) }}">
+                                            <a id="show-orderlist" class="btn btn-primary btn-circle btn-sm btn-show-orderlist" data-orderlist-url="{{ route('ordermaster.orderlist', $ordermaster->order_trans) }}" data-ordersize-url="{{ route('ordermaster.ordersize', $ordermaster->order_trans) }}" data-rafproduction-url="{{ route('ordermaster.rafproduction', $ordermaster->order_trans) }}" data-rafcutting-url="{{ route('ordermaster.rafcutting', $ordermaster->order_trans) }}" data-rafsewing-url="{{ route('ordermaster.rafsewing', $ordermaster->order_trans) }}" data-rafiron-url="{{ route('ordermaster.rafiron', $ordermaster->order_trans) }}" data-rafpacking-url="{{ route('ordermaster.rafpacking', $ordermaster->order_trans) }}" data-fab-url="{{ route('ordermaster.fab', $ordermaster->order_trans) }}" data-shipment-url="{{ route('ordermaster.shipment', $ordermaster->order_trans) }}" data-style-url="{{ route('ordermaster.style', $ordermaster->order_trans) }}" data-productionplanning-url="{{ route('ordermaster.productionplanning', $ordermaster->order_trans) }}" data-proplanacc-url="{{ route('ordermaster.proplanacc', $ordermaster->order_trans) }}" data-show-orderlist-link="{{ $ordermaster->order_trans }}" data-show-orderlist-title="{{ $ordermaster->order_trans }} - {{ $ordermaster->po_master }}" data-show-image="{{ asset('/sketch/' . $ordermaster->sketch_file) }}">
                                                 <i class="fas fa-info"></i>
                                             </a>
                                             <!-- <a class="btn btn-danger btn-circle btn-sm btn-delete-record" data-delete-link="delete/{{ $ordermaster->id }}" data-delete-name="{{ $ordermaster->order_trans }}" data-toggle="modal" data-target="#deleteModal">
@@ -196,6 +196,7 @@
                             <button class="tablinks" onclick="openModal(event, 'Order List')">Order List</button>
                             <button class="tablinks" onclick="openModal(event, 'Order Size')">Order Size</button>
                             <button class="tablinks" onclick="openModal(event, 'Production Planning')">Production Planning</button>
+                            <button class="tablinks" onclick="openModal(event, 'Accesories Sewing')">Accesories Sewing</button>
                             <button class="tablinks" onclick="openModal(event, 'Cutting')">Cutting</button>
                             <button class="tablinks" onclick="openModal(event, 'Sewing')">Sewing</button>
                             <button class="tablinks" onclick="openModal(event, 'Iron')">Iron</button>
@@ -389,6 +390,49 @@
                                                     <th>RAF Pack.</th>
                                                     <th>Balance Pack.</th>
                                                     <th>Remark</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="Accesories Sewing" class="tabcontent">
+                            <div class="d-flex flex-row align-items-center justify-content-between" style="margin-top: 10px;">
+                                <h6 class="m-0 font-weight-bold text-primary"></h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-blue-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                            aria-labelledby="dropdownMenuLink">
+                                        <!-- <div class="dropdown-header">Action:</div> -->
+                                        <a class="dropdown-item" href="{{ route('proplanacc.create') }}" target="_blank">Create Production Planning Accesories</a>
+                                        <!-- <a class="dropdown-item" href="#">Export Excel</a> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <!-- <div class="col-xl-3 col-md-6 mb-4">
+                                    <center><img id="sketch-PIC" src="" style="width: 200px;"></center>
+                                </div> -->
+                                <div class="col-xl-12 col-md-6 mb-4">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-modal table-sm" id="table-proplanacc" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>PO Buyer</th>
+                                                    <th>Lot No</th>
+                                                    <th>Accesories Name</th>
+                                                    <th>Item Date</th>
+                                                    <th>Qty</th>
+                                                    <th>Unit</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -902,6 +946,7 @@
             var jsonShipment = $(this).data('shipment-url'); 
             var jsonStyle = $(this).data('style-url'); 
             var jsonProductionPlanning = $(this).data('productionplanning-url'); 
+            var jsonProPlanAcc = $(this).data('proplanacc-url'); 
             var sketchIMG = $(this).data('show-image');
             $('#sketch-PIC').attr('src', sketchIMG);
             $.get(jsonOrderList, function (data) {
@@ -1163,7 +1208,27 @@
                                                     $('#filter-data-ordersize').click(function(){
                                                         tableOrderSize.draw();
                                                     });
-                                                    $('#orderlistModal').modal('show');
+                                                    $.get(jsonProPlanAcc, function (data) {
+                                                        var tableProPlanAcc = $('#table-proplanacc').DataTable({
+                                                            destroy: true,
+                                                            processing: true,
+                                                            responsive: true,
+                                                            ajax: jsonProPlanAcc,
+                                                            columns: [
+                                                                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                                                                { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
+                                                                { data: 'lot_no', name: 'lot_no', orderable: false },
+                                                                { data: 'accesories_name', name: 'accesories_name', orderable: false },
+                                                                { data: 'proplanacc_date_formated', name: 'proplanacc_date_formated', orderable: false },
+                                                                { data: 'qty', name: 'qty', orderable: false },
+                                                                { data: 'accesories_unit', name: 'accesories_unit', orderable: false },
+                                                            ],
+                                                        });
+                                                        $('#filter-data-proplanacc').click(function(){
+                                                            tableProPlanAcc.draw();
+                                                        });
+                                                        $('#orderlistModal').modal('show');
+                                                    });
                                                 });
                                             });
                                         });

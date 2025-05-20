@@ -119,6 +119,18 @@ class OrderMasterController extends Controller
             ->addIndexColumn()
             ->make(true);
     }
+    public function showproplanacc($order_trans)
+    {
+        $proplanacc = DB::select('select order_list.pobuyer_no,order_list.lot_no,proplan_acc.item_date,proplan_acc.qty,accesories.accesories_name,accesories.accesories_unit from order_list left join order_master on order_master.order_trans = order_list.order_trans inner join proplan_acc on proplan_acc.order_list = order_list.order_list left join accesories on proplan_acc.accesories_no = accesories.accesories_no where order_master.order_trans = "' . $order_trans . '" and proplan_acc.void = "false"');
+        // return response()->json($ordersizes);
+        return DataTables::of($proplanacc)
+            ->addIndexColumn()
+            ->addColumn('proplanacc_date_formated', function ($row) {
+                return date('dmy', strtotime($row->item_date));
+            })
+            ->rawColumns(['proplanacc_date_formated'])
+            ->make(true);
+    }
 
     public function showrafproduction($order_trans)
     {

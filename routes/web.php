@@ -179,6 +179,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/ordermaster/rafiron/{order_trans}', [OrderMasterController::class, 'showrafiron'])->name('ordermaster.rafiron');
     Route::post('/ordermaster/rafiron/{order_trans}', [OrderMasterController::class, 'showrafiron'])->name('ordermaster.rafiron');
     Route::get('/ordermaster/rafpacking/{order_trans}', [OrderMasterController::class, 'showrafpacking'])->name('ordermaster.rafpacking');
+    Route::get('/ordermaster/proplanacc/{order_trans}', [OrderMasterController::class, 'showproplanacc'])->name('ordermaster.proplanacc');
     Route::post('/ordermaster/rafpacking/{order_trans}', [OrderMasterController::class, 'showrafpacking'])->name('ordermaster.rafpacking');
     Route::get('/ordermaster/fab/{order_trans}', [OrderMasterController::class, 'showfab'])->name('ordermaster.fab');
     Route::get('/ordermaster/style/{order_trans}', [OrderMasterController::class, 'showstyle'])->name('ordermaster.style');

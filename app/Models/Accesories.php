@@ -13,6 +13,7 @@ class Accesories extends Model
         'accesories_no',
         'category_no',
         'accesories_name',
+        'accesories_unit',
         'void',
     ];
 }

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('accesories_no');
             $table->string('category_no');
             $table->string('accesories_name');
+            $table->string('accesories_unit');
             $table->string('void');
             $table->timestamps();
         });

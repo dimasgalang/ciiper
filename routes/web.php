@@ -373,6 +373,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/productionplanning/updatesample', [ProductionPlanningController::class, 'updatesample'])->name('productionplanning.updatesample');
     Route::post('/productionplanning/updatemi', [ProductionPlanningController::class, 'updatemi'])->name('productionplanning.updatemi');
     Route::post('/productionplanning/updatefab', [ProductionPlanningController::class, 'updatefab'])->name('productionplanning.updatefab');
+    Route::post('/productionplanning/updateacc', [ProductionPlanningController::class, 'updateacc'])->name('productionplanning.updateacc');
     Route::get('/productionplanning/masterqty/{order_trans}', [ProductionPlanningController::class, 'masterqty'])->name('productionplanning.masterqty');
     Route::get('/productionplanning/fetchorderlist/{order_trans}', [ProductionPlanningController::class, 'fetchorderlist'])->name('productionplanning.fetchorderlist');
 
@@ -396,12 +397,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/proplanacc/void/{id}', [ProPlanAccController::class, 'void'])->name('proplanacc.void');
     Route::get('/proplanacc/restore/{id}', [ProPlanAccController::class, 'restore'])->name('proplanacc.restore');
     Route::get('/proplanacc/create', [ProPlanAccController::class, 'create'])->name('proplanacc.create');
+    Route::get('/proplanacc/add/{order_trans}/{order_list}', [ProPlanAccController::class, 'add'])->name('proplanacc.add');
     Route::post('/proplanacc/store', [ProPlanAccController::class, 'store'])->name('proplanacc.store');
     Route::get('/proplanacc/find/{id}', [ProPlanAccController::class, 'find'])->name('proplanacc.find');
     Route::post('/proplanacc/update', [ProPlanAccController::class, 'update'])->name('proplanacc.update');
     Route::get('/proplanacc/fetchaccesories/{category_no}', [ProPlanAccController::class, 'fetchaccesories'])->name('proplandetail.fetchaccesories');
-    Route::get('/proplanacc/fetchaccsew/{order_list}', [ProPlanAccController::class, 'fetchaccsew'])->name('proplandetail.fetchaccsew');
-    Route::get('/proplanacc/fetchaccpack/{order_list}', [ProPlanAccController::class, 'fetchaccpack'])->name('proplandetail.fetchaccpack');
+    Route::get('/proplanacc/fetchaccsew/{order_list}', [ProPlanAccController::class, 'fetchaccsew'])->name('proplanacc.fetchaccsew');
+    Route::get('/proplanacc/fetchaccpack/{order_list}', [ProPlanAccController::class, 'fetchaccpack'])->name('proplanacc.fetchaccpack');
 
     //Alert
     Route::get('/alert/index', [AlertReminderController::class, 'index'])->name('alert.index');

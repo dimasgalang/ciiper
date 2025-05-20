@@ -59,6 +59,7 @@ class AccesoriesController extends Controller
             'accesories_no' => $request->accesories_no,
             'category_no' => $request->category_no,
             'accesories_name' => $request->accesories_name,
+            'accesories_unit' => $request->accesories_unit,
             'void' => 'false'
         ]);
 
@@ -111,6 +112,7 @@ class AccesoriesController extends Controller
             'accesories_no' => 'required|max:255|',
             'category_no' => 'required|max:255|',
             'accesories_name' => 'required|max:255',
+            'accesories_unit' => 'required|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -123,6 +125,7 @@ class AccesoriesController extends Controller
             'accesories_no' => $request->accesories_no,
             'category_no' => $request->category_no,
             'accesories_name' => $request->accesories_name,
+            'accesories_unit' => $request->accesories_unit,
         ]);
 
         $accesories->save();

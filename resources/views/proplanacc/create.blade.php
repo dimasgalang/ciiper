@@ -104,6 +104,11 @@
                                 <input class="form-control" type="date" id="item_date" name="item_date">
                             </div>
                             <br>
+                            <div>
+                                <label>Qty :</label>
+                                <input class="form-control" type="number" id="qty" name="qty">
+                            </div>
+                            <br>
                             <div class="row">
                                 <div class="col-12">
                                     <button id="submit" type="submit" class="btn btn-primary btn-block">Create</button>

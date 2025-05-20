@@ -498,7 +498,40 @@ class ProductionPlanningController extends Controller
 
         $productionplannings->save();
 
-        Alert::success('Update Successfully!', 'Sample Production Planning ' . $productionplannings->plan_no . ' successfully updated!');
+        Alert::success('Update Successfully!', 'Fabric Production Planning ' . $productionplannings->plan_no . ' successfully updated!');
+        return redirect('productionplanning/index');
+    }
+
+    public function updateacc(Request $request)
+    {
+        $productionplannings = ProductionPlanning::findOrFail($request->update_id_acc);
+        $username = Auth::user()->name;
+        $storeTime = Carbon::now();
+        $message = 'Update Acc Cart ' . $productionplannings->plan_no;
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
+        if ($request->update_has_acc == "Yes") {
+            $productionplannings->fill([
+                'has_acc_cart' => $request->update_has_acc,
+                'acc_date' => $request->update_acc_date
+            ]);
+        } else {
+
+            $productionplannings->fill([
+                'has_acc_cart' => $request->update_has_acc,
+                'acc_date' => null
+            ]);
+        }
+
+        $productionplannings->save();
+
+        Alert::success('Update Successfully!', 'Accesories Production Planning ' . $productionplannings->plan_no . ' successfully updated!');
         return redirect('productionplanning/index');
     }
 }

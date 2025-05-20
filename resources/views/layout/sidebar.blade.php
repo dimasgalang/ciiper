@@ -88,7 +88,7 @@
                 <a class="collapse-item" href="{{ route('orderlist.index') }}">Order List</a>
                 <a class="collapse-item" href="{{ route('ordersize.index') }}">Order Size</a>
                 <a class="collapse-item" href="{{ route('productionplanning.index') }}">Production Planning</a>
-                <a class="collapse-item" href="{{ route('proplandetail.index') }}">Prod. Plan. Detail</a>
+                <!-- <a class="collapse-item" href="{{ route('proplandetail.index') }}">Prod. Plan. Detail</a> -->
                 <a class="collapse-item" href="{{ route('proplanacc.index') }}">Prod. Plan. Accesories</a>
                 <a class="collapse-item" href="{{ route('fabrication.index') }}">Fabrication</a>
                 <a class="collapse-item" href="{{ route('rafproduction.index') }}">RAF Production</a>

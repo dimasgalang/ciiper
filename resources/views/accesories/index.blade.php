@@ -74,6 +74,7 @@
                                         <th>Accesories No</th>
                                         <th>Category</th>
                                         <th>Accesories Name</th>
+                                        <th>Unit</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -84,6 +85,7 @@
                                         <td>{{ $accesory->accesories_no }}</td>
                                         <td>{{ $accesory->category_name }}</td>
                                         <td>{{ $accesory->accesories_name }}</td>
+                                        <td>{{ $accesory->accesories_unit }}</td>
                                         <td class="text-center">
                                             @if (request()->get('void') == 'false' || request()->get('void') == '')
                                             <a href="{{ route('accesories.find', ['id' => $accesory->id]) }}" class="btn btn-primary btn-circle btn-sm">

@@ -78,6 +78,11 @@
                                 <input class="form-control" type="text" id="accesories_name" name="accesories_name" value="{{ $accesories->accesories_name }}">
                             </div>
                             <br>
+                            <div>
+                                <label>Accesories Unit :</label>
+                                <input class="form-control" type="text" id="accesories_unit" name="accesories_unit" value="{{ $accesories->accesories_unit }}">
+                            </div>
+                            <br>
                             <div class="row">
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary btn-block">Update</button>

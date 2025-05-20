@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('category_no');
             $table->string('accesories_no');
             $table->date('item_date');
+            $table->integer('qty');
             $table->string('void');
             $table->timestamps();
         });

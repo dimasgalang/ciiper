@@ -80,6 +80,7 @@
                                         <th>Fab. Cart</th>
                                         <th>Fab Date</th>
                                         <th>Acc. Cart</th>
+                                        <th>Acc. Date</th>
                                         <th>Acc. Sewing</th>
                                         <th>Acc. Packing</th>
                                         <th>Emb. Approve</th>
@@ -244,13 +245,13 @@
                                         
                                         @if($productionplanning->has_acc_cart == 'Yes')
                                              <td class="text-center">
-                                                <a class="btn btn-success btn-circle btn-sm">
+                                                <a class="btn btn-success btn-circle btn-sm btn-update-acc-record" data-update-acc-link="{{ route('productionplanning.updateacc', ['id' => $productionplanning->id]) }}" data-update-id-acc="{{ $productionplanning->id }}" data-update-acc-name="{{ $productionplanning->pobuyer_no }}" data-update-acc-has="{{ $productionplanning->has_acc_cart }}" data-update-acc-date="{{ $productionplanning->acc_date }}" data-toggle="modal" data-target="#updateAccModal">
                                                     <i class="fas fa-check"></i>
                                                 </a>
                                             </td>
                                         @else
                                             <td class="text-center">
-                                                <a class="btn btn-danger btn-circle btn-sm">
+                                                <a class="btn btn-danger btn-circle btn-sm btn-update-acc-record" data-update-acc-link="{{ route('productionplanning.updateacc', ['id' => $productionplanning->id]) }}" data-update-id-acc="{{ $productionplanning->id }}" data-update-acc-name="{{ $productionplanning->pobuyer_no }}" data-update-acc-has="{{ $productionplanning->has_acc_cart }}" data-update-acc-date="{{ $productionplanning->acc_date }}" data-toggle="modal" data-target="#updateAccModal">
                                                     <i class="fas fa-times"></i>
                                                 </a>
                                             </td>
@@ -270,18 +271,22 @@
                                         @endif -->
 
                                         <!-- Acc Date -->
-                                        <!-- @if (((now()->diffInDays($productionplanning->acc_date)) <= 7) && ((now()->diffInDays($productionplanning->acc_date)) > 3) && (now() < $productionplanning->acc_date))
-                                        <td style="color:orange">{{ date('dmy', strtotime($productionplanning->acc_date)) }}</td>
-                                        @elseif ((((now()->diffInDays($productionplanning->acc_date)) <= 3) && ((now()->diffInDays($productionplanning->acc_date)) > 0) && (now() < $productionplanning->acc_date)) || (now() > $productionplanning->acc_date))
-                                        <td style="color:red">{{ date('dmy', strtotime($productionplanning->acc_date)) }}</td>
+                                        @if($productionplanning->acc_date)
+                                            @if (((now()->diffInDays($productionplanning->acc_date)) <= 7) && ((now()->diffInDays($productionplanning->acc_date)) > 3) && (now() < $productionplanning->acc_date))
+                                            <td style="color:orange">{{ date('dmy', strtotime($productionplanning->acc_date)) }}</td>
+                                            @elseif ((((now()->diffInDays($productionplanning->acc_date)) <= 3) && ((now()->diffInDays($productionplanning->acc_date)) > 0) && (now() < $productionplanning->acc_date)) || (now() > $productionplanning->acc_date))
+                                            <td style="color:red">{{ date('dmy', strtotime($productionplanning->acc_date)) }}</td>
+                                            @else
+                                            <td>{{ date('dmy', strtotime($productionplanning->acc_date)) }}</td>
+                                            @endif
                                         @else
-                                        <td>{{ date('dmy', strtotime($productionplanning->acc_date)) }}</td>
-                                        @endif -->
+                                        <td>{{ $productionplanning->acc_date }}</td>
+                                        @endif
 
-                                        <td align="center"><a id="show-detail-sew" class="btn btn-success btn-icon-split btn-sm btn-show-detail-sew" data-url-sew="{{ route('proplandetail.fetchaccsew', $productionplanning->order_list) }}" data-show-title-sew="{{ $productionplanning->order_list }} - {{ $productionplanning->pobuyer_no }}">
+                                        <td align="center"><a id="show-detail-sew" class="btn btn-success btn-icon-split btn-sm btn-show-detail-sew" data-url-sew="{{ route('proplanacc.fetchaccsew', $productionplanning->order_list) }}" data-show-title-sew="{{ $productionplanning->order_list }} - {{ $productionplanning->pobuyer_no }}" data-url-add-sew="{{ route('proplanacc.add', ['order_trans' => $productionplanning->order_trans, 'order_list' => $productionplanning->order_list]) }}">
                                             <span class="text">Detail</span>
                                         </a></td>
-                                        <td align="center"><a id="show-detail-pack" class="btn btn-success btn-icon-split btn-sm btn-show-detail-pack" data-url-pack="{{ route('proplandetail.fetchaccpack', $productionplanning->order_list) }}" data-show-title-pack="{{ $productionplanning->order_list }} - {{ $productionplanning->pobuyer_no }}">
+                                        <td align="center"><a id="show-detail-pack" class="btn btn-success btn-icon-split btn-sm btn-show-detail-pack" data-url-pack="{{ route('proplanacc.fetchaccpack', $productionplanning->order_list) }}" data-show-title-pack="{{ $productionplanning->order_list }} - {{ $productionplanning->pobuyer_no }}" data-url-add-pack="{{ route('proplanacc.add', ['order_trans' => $productionplanning->order_trans, 'order_list' => $productionplanning->order_list]) }}">
                                             <span class="text">Detail</span>
                                         </a></td>
                                         
@@ -543,6 +548,40 @@
             </div>
         </div>
 
+        <div class="modal fade" id="updateAccModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="update-acc-title" class="modal-title" id="exampleModalLabel">Update Acc Cart</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    
+                    <form action="{{ route('productionplanning.updateacc') }}" method="POST">
+                        @csrf
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <input type="hidden" id="update_id_acc" name="update_id_acc">
+                                    <label>Has Acc Cart?</label>
+                                    <select class="form-control" id="update_has_acc" name="update_has_acc">
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                    <br>
+                                    <label>Acc Date :</label>
+                                    <input class="form-control" type="date" id="update_acc_date" name="update_acc_date" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                <button type="submit" class="btn btn-success">Confirm</button>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
 
         <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" role="document" >
@@ -644,7 +683,7 @@
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                         aria-labelledby="dropdownMenuLink">
                                     <!-- <div class="dropdown-header">Action:</div> -->
-                                    <a class="dropdown-item" href="{{ route('proplandetail.create') }}" target="_blank">Create Production Planning Detail</a>
+                                    <a class="dropdown-item" href="{{ route('proplanacc.create') }}" target="_blank">Create Production Planning Detail</a>
                                     <!-- <a class="dropdown-item" href="#">Export Excel</a> -->
                                 </div>
                             </div>
@@ -697,7 +736,7 @@
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                         aria-labelledby="dropdownMenuLink">
                                     <!-- <div class="dropdown-header">Action:</div> -->
-                                    <a class="dropdown-item" href="{{ route('proplandetail.create') }}" target="_blank">Create Production Planning Detail</a>
+                                    <a id="proplanacc_add" class="dropdown-item" href="{{ route('proplanacc.create') }}" target="_blank">Create Production Planning Detail</a>
                                     <!-- <a class="dropdown-item" href="#">Export Excel</a> -->
                                 </div>
                             </div>
@@ -712,6 +751,8 @@
                                                 <th>No</th>
                                                 <th>Accesories</th>
                                                 <th>Date</th>
+                                                <th>Qty</th>
+                                                <th>Unit</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -815,6 +856,28 @@
         $("#update_fab_date").val(fab_date);
         $("#modal-text-record-update-fab").text('Apakah anda yakin ingin mengupdate Fab Cart Production Planning ' + $(this).data('update-fab-name') + '?');
     });
+
+    $('.btn-update-acc-record').on('click', function () {
+        var has_acc_cart = $(this).data('update-acc-has');
+        var acc_date = $(this).data('update-acc-date');
+        var id = $(this).data('update-id-acc');
+        if (has_acc_cart == "Yes") {
+            document.getElementById("update_has_acc").options.selectedIndex = 0;
+        } else {
+            document.getElementById("update_has_acc").options.selectedIndex = 1;
+        }
+        $('#update_has_acc').change(function(){
+            if ($(this).val() == "Yes") {
+                $('#update_acc_date').prop('required',true);
+            } else {
+                $('#update_acc_date').removeAttr('required');
+                $("#update_acc_date").val(null);
+            }
+        })
+        $("#update_id_acc").val(id);
+        $("#update_acc_date").val(fab_date);
+        $("#modal-text-record-update-acc").text('Apakah anda yakin ingin mengupdate Acc Cart Production Planning ' + $(this).data('update-acc-name') + '?');
+    });
 </script>
 <script type="text/javascript">
     $('.btn-show-detail-sample').on('click', function () {
@@ -916,6 +979,7 @@
     $(document).ready(function () {
         $('body').on('click', '#show-detail-sew', function() {
             var jsonAccDetail = $(this).data('url-sew');
+            // document.getElementById("proplanacc_add").href = $(this).data('url-add-sew');
             $.get(jsonAccDetail, function (data) {
                 $('#accModal').modal('show');
                 var tableAccDetail = $('#table-acc-detail').DataTable({
@@ -927,6 +991,8 @@
                             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                             { data: 'accesories_name', name: 'accesories_name', orderable: false },
                             { data: 'item_date_formated', name: 'item_date_formated', orderable: false },
+                            { data: 'qty', name: 'qty', orderable: false },
+                            { data: 'accesories_unit', name: 'accesories_unit', orderable: false },
                         ],
                     });
             })
@@ -935,6 +1001,7 @@
     $(document).ready(function () {
         $('body').on('click', '#show-detail-pack', function() {
             var jsonPackDetail = $(this).data('url-pack');
+            // document.getElementById("proplanacc_add").href = $(this).data('url-add-pack');
             $.get(jsonPackDetail, function (data) {
                 $('#accModal').modal('show');
                 var tablePackDetail = $('#table-acc-detail').DataTable({
@@ -946,6 +1013,8 @@
                             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                             { data: 'accesories_name', name: 'accesories_name', orderable: false },
                             { data: 'item_date_formated', name: 'item_date_formated', orderable: false },
+                            { data: 'qty', name: 'qty', orderable: false },
+                            { data: 'accesories_unit', name: 'accesories_unit', orderable: false },
                         ],
                     });
             })

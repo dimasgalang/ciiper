@@ -50,6 +50,18 @@ class ProPlanAccController extends Controller
         return view('proplanacc.create', compact('ordermasters', 'orderlists', 'setupincements', 'categories', 'accesories'));
     }
 
+    public function add(Request $request)
+    {
+        $setupincements = SetupIncrement::all()->where('models', '=', 'ProPlanAcc')->last();
+        $ordermasters = OrderMaster::select('order_master.*', 'purchase_order.po_master')
+            ->leftJoin('purchase_order', 'order_master.po_no', '=', 'purchase_order.po_no')
+            ->get();
+        $orderlists = OrderList::all();
+        $categories = Category::all();
+        $accesories = Accesories::all();
+        return view('proplanacc.create', compact('ordermasters', 'orderlists', 'setupincements', 'categories', 'accesories'));
+    }
+
     public function fetchaccesories($category_no)
     {
         $accesories = Accesories::select('accesories.*')->where('category_no', '=', $category_no)->get();
@@ -58,7 +70,7 @@ class ProPlanAccController extends Controller
 
     public function fetchaccsew($order_list)
     {
-        $proplanacc = ProPlanAcc::select('proplan_acc.*', 'accesories.accesories_name')
+        $proplanacc = ProPlanAcc::select('proplan_acc.*', 'accesories.accesories_name', 'accesories.accesories_unit')
             ->leftJoin('accesories', 'accesories.accesories_no', '=', 'proplan_acc.accesories_no')
             ->where('order_list', '=', $order_list)
             ->where('proplan_acc.category_no', '=', 'CAT000000006')
@@ -74,7 +86,7 @@ class ProPlanAccController extends Controller
 
     public function fetchaccpack($order_list)
     {
-        $proplanacc = ProPlanAcc::select('proplan_acc.*', 'accesories.accesories_name')
+        $proplanacc = ProPlanAcc::select('proplan_acc.*', 'accesories.accesories_name', 'accesories.accesories_unit')
             ->leftJoin('accesories', 'accesories.accesories_no', '=', 'proplan_acc.accesories_no')
             ->where('order_list', '=', $order_list)
             ->where('proplan_acc.category_no', '=', 'CAT000000005')
@@ -113,6 +125,7 @@ class ProPlanAccController extends Controller
             'accesories_no' => $request->accesories_no,
             'category_no' => $request->category_no,
             'item_date' => $request->item_date,
+            'qty' => $request->qty,
             'void' => 'false'
         ]);
 
@@ -151,6 +164,7 @@ class ProPlanAccController extends Controller
             'accesories_no' => 'required|max:255',
             'category_no' => 'required|max:255',
             'item_date' => 'required',
+            'qty' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -165,6 +179,7 @@ class ProPlanAccController extends Controller
             'accesories_no' => $request->accesories_no,
             'category_no' => $request->category_no,
             'item_date' => $request->item_date,
+            'qty' => $request->qty,
         ]);
 
         $proplanaccs->save();

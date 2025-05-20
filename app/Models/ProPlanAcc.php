@@ -16,6 +16,7 @@ class ProPlanAcc extends Model
         'order_list',
         'accesories_no',
         'item_date',
+        'qty',
         'void',
     ];
 }

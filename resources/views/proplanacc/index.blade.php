@@ -76,6 +76,7 @@
                                         <th>Category</th>
                                         <th>Accesories</th>
                                         <th>Item Date</th>
+                                        <th>Qty</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -88,6 +89,7 @@
                                         <td>{{ $proplanacc->category_name }}</td>
                                         <td>{{ $proplanacc->accesories_name }}</td>
                                         <td>{{ date('dmy', strtotime($proplanacc->item_date)) }}</td>
+                                        <td>{{ $proplanacc->qty }}</td>
                                         <td class="text-center">
                                             @if (request()->get('void') == 'false' || request()->get('void') == '')
                                             <a href="{{ route('proplanacc.find', ['id' => $proplanacc->id]) }}" class="btn btn-primary btn-circle btn-sm">

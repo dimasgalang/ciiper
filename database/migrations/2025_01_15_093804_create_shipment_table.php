@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('ship_no')->unique();
             $table->string('order_list');
             $table->string('market_no');
-            $table->string('ship_no');
             $table->string('size_no');
             $table->integer('ship_qty');
             $table->integer('carton_qty');

@@ -121,8 +121,8 @@ class OrderMasterController extends Controller
     }
     public function showproplanacc($order_trans)
     {
-        $proplanacc = DB::select('select order_list.pobuyer_no,order_list.lot_no,proplan_acc.item_date,proplan_acc.qty,accesories.accesories_name,category.category_name,accesories.accesories_unit from order_list left join order_master on order_master.order_trans = order_list.order_trans inner join proplan_acc on proplan_acc.order_list = order_list.order_list left join accesories on proplan_acc.accesories_no = accesories.accesories_no left join category on category.category_no = proplan_acc.category_no where order_master.order_trans = "' . $order_trans . '" and proplan_acc.void = "false"');
-        // return response()->json($ordersizes);
+        $proplanacc = DB::select('select order_list.order_list,order_list.pobuyer_no,order_list.lot_no,proplan_acc.item_date,proplan_acc.qty,accesories.accesories_name,category.category_name,accesories.accesories_unit from order_list left join order_master on order_master.order_trans = order_list.order_trans inner join proplan_acc on proplan_acc.order_list = order_list.order_list left join accesories on proplan_acc.accesories_no = accesories.accesories_no left join category on category.category_no = proplan_acc.category_no where order_master.order_trans = "' . $order_trans . '" and proplan_acc.void = "false"');
+        // return response()->json($proplanacc);
         return DataTables::of($proplanacc)
             ->addIndexColumn()
             ->addColumn('proplanacc_date_formated', function ($row) {

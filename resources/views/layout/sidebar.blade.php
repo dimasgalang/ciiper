@@ -91,7 +91,7 @@
                 <!-- <a class="collapse-item" href="{{ route('proplandetail.index') }}">Prod. Plan. Detail</a> -->
                 <a class="collapse-item" href="{{ route('proplanacc.index') }}">Prod. Plan. Accesories</a>
                 <a class="collapse-item" href="{{ route('fabrication.index') }}">Fabrication</a>
-                <a class="collapse-item" href="{{ route('rafproduction.index') }}">RAF Production</a>
+                <a class="collapse-item" href="{{ route('rafproduction.index') }}">Output Production</a>
                 <a class="collapse-item" href="{{ route('shipment.index') }}">Shipment</a>
             </div>
         </div>

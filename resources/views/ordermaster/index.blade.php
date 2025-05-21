@@ -429,6 +429,7 @@
                                                     <th>No</th>
                                                     <th>PO Buyer</th>
                                                     <th>Lot No</th>
+                                                    <th>Category</th>
                                                     <th>Accesories Name</th>
                                                     <th>Item Date</th>
                                                     <th>Qty</th>
@@ -1218,6 +1219,7 @@
                                                                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                                                                 { data: 'pobuyer_no', name: 'pobuyer_no', orderable: false },
                                                                 { data: 'lot_no', name: 'lot_no', orderable: false },
+                                                                { data: 'category_name', name: 'category_name', orderable: false },
                                                                 { data: 'accesories_name', name: 'accesories_name', orderable: false },
                                                                 { data: 'proplanacc_date_formated', name: 'proplanacc_date_formated', orderable: false },
                                                                 { data: 'qty', name: 'qty', orderable: false },

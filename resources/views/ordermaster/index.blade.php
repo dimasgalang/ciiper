@@ -196,7 +196,7 @@
                             <button class="tablinks" onclick="openModal(event, 'Order List')">Order List</button>
                             <button class="tablinks" onclick="openModal(event, 'Order Size')">Order Size</button>
                             <button class="tablinks" onclick="openModal(event, 'Production Planning')">Production Planning</button>
-                            <button class="tablinks" onclick="openModal(event, 'Accesories Sewing')">Accesories Sewing</button>
+                            <button class="tablinks" onclick="openModal(event, 'Accesories')">Accesories</button>
                             <button class="tablinks" onclick="openModal(event, 'Cutting')">Cutting</button>
                             <button class="tablinks" onclick="openModal(event, 'Sewing')">Sewing</button>
                             <button class="tablinks" onclick="openModal(event, 'Iron')">Iron</button>
@@ -400,7 +400,7 @@
                             </div>
                         </div>
 
-                        <div id="Accesories Sewing" class="tabcontent">
+                        <div id="Accesories" class="tabcontent">
                             <div class="d-flex flex-row align-items-center justify-content-between" style="margin-top: 10px;">
                                 <h6 class="m-0 font-weight-bold text-primary"></h6>
                                 <div class="dropdown no-arrow">

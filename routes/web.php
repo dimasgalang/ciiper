@@ -242,6 +242,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/rafproduction/update', [RafProductionController::class, 'update'])->name('rafproduction.update');
     Route::get('/rafproduction/fetchorderlist/{order_trans}', [RafProductionController::class, 'fetchorderlist'])->name('rafproduction.fetchorderlist');
     Route::get('/rafproduction/fetchordersize/{order_list}', [RafProductionController::class, 'fetchordersize'])->name('rafproduction.fetchordersize');
+    Route::get('/rafproduction/fetchcartonleft/{order_list}', [RafProductionController::class, 'fetchcartonleft'])->name('rafproduction.fetchcartonleft');
     Route::get('/rafproduction/fetchrafleft/{order_list}/{raf_dept}/{size_no}', [RafProductionController::class, 'fetchrafleft'])->name('rafproduction.fetchrafleft');
     Route::get('/rafproduction/fetchplanningdate/{order_list}/{raf_dept}', [RafProductionController::class, 'fetchplanningdate'])->name('rafproduction.fetchplanningdate');
 

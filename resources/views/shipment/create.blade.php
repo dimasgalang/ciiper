@@ -188,14 +188,14 @@
         var order_list = document.getElementById('order_list').value;
         if (order_list) {
             $.ajax({
-                url: '/shipment/fetchcartonleft/'+order_list,
+                url: '/rafproduction/fetchcartonleft/'+order_list,
                 type: "GET",
                 dataType: "json",
                 success:function(data) {
                     if (data.length > 0) {
                         $.each(data, function(key, value) {
-                                $('#carton_ready').text('Carton Qty : ' + (value.carton_balance));
-                                $('#carton_qty').attr("max", (value.carton_balance));
+                                $('#carton_ready').text('Carton Qty : ' + (value.sum_carton));
+                                $('#carton_qty').attr("max", (value.sum_carton));
                         });
                     } else {
                         $('#carton_ready').text('Ship Qty : ' + 0);

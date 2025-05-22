@@ -17,6 +17,7 @@ class RafProduction extends Model
         'raf_dept',
         'raf_date',
         'raf_qty',
+        'carton_qty',
         'remark',
         'void'
     ];

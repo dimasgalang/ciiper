@@ -201,7 +201,7 @@
                             <button class="tablinks" onclick="openModal(event, 'Sewing')">Sewing</button>
                             <button class="tablinks" onclick="openModal(event, 'Iron')">Iron</button>
                             <button class="tablinks" onclick="openModal(event, 'Packing')">Packing</button>
-                            <!-- <button class="tablinks" onclick="openModal(event, 'RAF Production')">RAF Production</button> -->
+                            <!-- <button class="tablinks" onclick="openModal(event, 'Output Production')">Output Production</button> -->
                             <button class="tablinks" onclick="openModal(event, 'Fabrication')">Fabrication</button>
                             <button class="tablinks" onclick="openModal(event, 'Shipment')">Shipment</button>
                         </div>
@@ -276,7 +276,7 @@
                                                     <th>DC PO Qty (Dzn)</th>
                                                     <th>DC PO Qty (Pcs)</th>
                                                     <th>Carton Qty (Pcs)</th>
-                                                    <th>RAF Qty (Pcs)</th>
+                                                    <th>Output Qty (Pcs)</th>
                                                     <th>Balance</th>
                                                     <th>Ex Factory</th>
                                                     <th>Vsl Date</th>
@@ -497,9 +497,9 @@
                                                     <th>DC PO Qty</th>
                                                     <th>Size</th>
                                                     <th>Size Qty</th>
-                                                    <th>RAF Date</th>
-                                                    <th>RAF Qty</th>
-                                                    <th>Total RAF</th>
+                                                    <th>Output Date</th>
+                                                    <th>Output Qty</th>
+                                                    <th>Total Output</th>
                                                     <th>Balance</th>
                                                 </tr>
                                             </thead>
@@ -564,9 +564,9 @@
                                                     <th>DC PO Qty</th>
                                                     <th>Size</th>
                                                     <th>Size Qty</th>
-                                                    <th>RAF Date</th>
-                                                    <th>RAF Qty</th>
-                                                    <th>Total RAF</th>
+                                                    <th>Output Date</th>
+                                                    <th>Output Qty</th>
+                                                    <th>Total Output</th>
                                                     <th>Balance</th>
                                                 </tr>
                                             </thead>
@@ -631,9 +631,9 @@
                                                     <th>DC PO Qty</th>
                                                     <th>Size</th>
                                                     <th>Size Qty</th>
-                                                    <th>RAF Date</th>
-                                                    <th>RAF Qty</th>
-                                                    <th>Total RAF</th>
+                                                    <th>Output Date</th>
+                                                    <th>Output Qty</th>
+                                                    <th>Total Output</th>
                                                     <th>Balance</th>
                                                 </tr>
                                             </thead>
@@ -698,10 +698,13 @@
                                                     <th>DC PO Qty</th>
                                                     <th>Size</th>
                                                     <th>Size Qty</th>
-                                                    <th>RAF Date</th>
-                                                    <th>RAF Qty</th>
-                                                    <th>Total RAF</th>
-                                                    <th>Balance</th>
+                                                    <th>Output Date</th>
+                                                    <th>Output Qty</th>
+                                                    <th>Total Output</th>
+                                                    <th>Output Balance</th>
+                                                    <th>Carton Qty</th>
+                                                    <th>Total Carton</th>
+                                                    <th>Carton Balance</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -1128,6 +1131,9 @@
                                             { data: 'raf_qty', name: 'raf_qty', orderable: false },
                                             { data: 'totalraf', name: 'totalraf', orderable: false },
                                             { data: 'balance_color', name: 'balance_color', orderable: false },
+                                            { data: 'carton_qty', name: 'carton_qty', orderable: false },
+                                            { data: 'totalcarton', name: 'totalcarton', orderable: false },
+                                            { data: 'carton_balance_color', name: 'carton_balance_color', orderable: false },
                                         ],
                                     });
                                     $('#filter-data-packing').click(function(){

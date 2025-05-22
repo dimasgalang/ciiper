@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('raf_no')->unique();
             $table->date('raf_date');
             $table->integer('raf_qty');
+            $table->integer('carton_qty')->nullable();
             $table->string('raf_dept');
             $table->string('remark')->nullable();
             $table->string('void')->nullable();

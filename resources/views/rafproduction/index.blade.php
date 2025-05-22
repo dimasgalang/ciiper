@@ -17,19 +17,19 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">RAF Production List</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Output Production List</h1>
                     <div>
                     <!-- <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#importModal"><i
-                        class="fas fa-plus fa-sm text-white-50"></i> Import RAF Production</a> -->
+                        class="fas fa-plus fa-sm text-white-50"></i> Import Output Production</a> -->
                     <a href="{{ route('rafproduction.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-plus fa-sm text-white-50"></i> Create RAF Production</a>
+                            class="fas fa-plus fa-sm text-white-50"></i> Create Output Production</a>
                     </div>
                 </div>
                 
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
-                        <h6 class="m-0 font-weight-bold text-primary">RAF Production Data</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Output Production Data</h6>
                         <form method="GET" id="form-void">
                                 <select name="void" id="void" class="form-control" onchange="document.getElementById('form-void').submit()" style="width: 300px;">
                                     <option disabled selected hidden>Select Status</option>
@@ -77,6 +77,7 @@
                                         <th>RAF Dept</th>
                                         <th>Size</th>
                                         <th>RAF Qty</th>
+                                        <th>Carton Qty</th>
                                         <th>Remark</th>
                                         <th>Action</th>
                                     </tr>
@@ -91,6 +92,7 @@
                                         <td>{{ $rafproduction->dept_name }}</td>
                                         <td>{{ $rafproduction->size }}</td>
                                         <td>{{ $rafproduction->raf_qty }}</td>
+                                        <td>{{ $rafproduction->carton_qty }}</td>
                                         <td>{{ $rafproduction->remark }}</td>
                                         <td class="text-center">
                                             @if (request()->get('void') == 'false' || request()->get('void') == '')
@@ -183,7 +185,7 @@
             <div class="modal-dialog modal-md" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="modal-title" class="modal-title" id="exampleModalLabel">Import RAF Production</h5>
+                        <h5 id="modal-title" class="modal-title" id="exampleModalLabel">Import Output Production</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">x</span>
                         </button>
@@ -217,15 +219,15 @@
 <script>
     $('.btn-delete-record').on('click', function () {
             $('#btn-confirm').attr('href', $(this).data('delete-link'));
-            $("#modal-text-record").text('Apakah anda yakin ingin menghapus RAF Production ' + $(this).data('delete-name') + '?');
+            $("#modal-text-record").text('Apakah anda yakin ingin menghapus Output Production ' + $(this).data('delete-name') + '?');
     });
     $('.btn-void-record').on('click', function () {
             $('#btn-confirm-void').attr('href', $(this).data('void-link'));
-            $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus RAF Production ' + $(this).data('void-name') + '?');
+            $("#modal-text-record-void").text('Apakah anda yakin ingin menghapus Output Production ' + $(this).data('void-name') + '?');
     });
     $('.btn-restore-record').on('click', function () {
             $('#btn-confirm-restore').attr('href', $(this).data('restore-link'));
-            $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan RAF Production ' + $(this).data('restore-name') + '?');
+            $("#modal-text-record-restore").text('Apakah anda yakin ingin mengembalikan Output Production ' + $(this).data('restore-name') + '?');
     });
 </script>
 </html>

@@ -71,25 +71,17 @@ class RafProductionController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated RAF Production ' . $request->raf_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
-
 
         $rafproductions = RafProduction::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
             'order_trans' => 'required|max:255',
-            'order_list' => 'required|max:225|',
-            'size_no' => 'required|max:225|',
-            'raf_no' => 'required|max:225|',
-            'raf_date' => 'required|max:225|',
-            'raf_qty' => 'required|max:225|',
-            'raf_dept' => 'required|max:225|',
+            'order_list' => 'required|max:255|',
+            'order_size_no' => 'required|max:255|',
+            'raf_no' => 'required|max:255|',
+            'raf_date' => 'required|max:255|',
+            'raf_qty' => 'required',
+            'raf_dept' => 'required|max:255|',
         ]);
 
         if ($validator->fails()) {
@@ -101,7 +93,7 @@ class RafProductionController extends Controller
         $rafproductions->fill([
             'order_trans' => $request->order_trans,
             'order_list' => $request->order_list,
-            'size_no' => $request->size_no,
+            'size_no' => $request->order_size_no,
             'raf_no' => $request->raf_no,
             'raf_date' => $request->raf_date,
             'raf_qty' => $request->raf_qty,
@@ -110,6 +102,13 @@ class RafProductionController extends Controller
         ]);
 
         $rafproductions->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'RAF Production ' . $request->raf_no . ' successfully updated!');
         return redirect('rafproduction/index');
@@ -162,6 +161,14 @@ class RafProductionController extends Controller
         }
     }
 
+    public function fetchcartonleft($order_list)
+    {
+        $orderlists = OrderList::select('order_list.carton_qty', DB::raw('ifnull((select sum(raf_production.carton_qty) from raf_production where order_list = "' . $order_list . '" and raf_production.void = "false"),0) as sum_carton'), DB::raw('ifnull(((order_list.carton_qty) - ifnull((select sum(raf_production.carton_qty) from raf_production where order_list = "' . $order_list . '" and raf_production.void = "false"),0)),0) as carton_balance'))
+            ->where('order_list.order_list', '=', $order_list)
+            ->get();
+        return response()->json($orderlists);
+    }
+
     public function fetchplanningdate($order_list, $raf_dept)
     {
         if ($raf_dept == 'DEP000000001') {
@@ -196,13 +203,6 @@ class RafProductionController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created RAF Production ' . $request->raf_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'plus',
-            'color' => 'bg-primary',
-        ]);
 
         SetupIncrement::updateOrCreate([
             'models' => 'RafProduction'
@@ -218,8 +218,17 @@ class RafProductionController extends Controller
             'raf_no' => $request->raf_no,
             'raf_date' => $request->raf_date,
             'raf_qty' => $request->raf_qty,
+            'carton_qty' => $request->carton_qty,
             'remark' => $request->remark,
             'void' => 'false'
+        ]);
+
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
         ]);
 
         Alert::success('Create Successfully!', 'RAF Production ' . $request->raf_no . ' successfully created!');

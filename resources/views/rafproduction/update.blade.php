@@ -16,14 +16,14 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Update RAF Production</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Update Output Production</h1>
                 </div>
                 
 
                 <!-- Approach -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Form Update RAF Production</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Update Output Production</h6>
                     </div>
                     <div class="card-body">
                         <form method="post" action="{{ route('rafproduction.update') }}" enctype="multipart/form-data">
@@ -93,11 +93,17 @@
                                 <label id="raf_left">RAF Qty :</label>
                                 <input class="form-control" type="number" id="raf_qty" name="raf_qty" value="{{ $rafproductions->raf_qty }}" required>
                             </div>
+                            <div id="carton_input">
+                            <br>
+                                <input class="form-control" type="hidden" id="carton_qty_temp" value="{{ $rafproductions->carton_qty }}">
+                                <label id="carton_left">Carton Qty :</label>
+                                <input class="form-control" type="number" id="carton_qty" name="carton_qty" min="0" max="1" value="{{ $rafproductions->carton_qty }}" required>
+                            </div>
                             <br>
                             <div>
                                 <input class="form-control" type="hidden" id="raf_dept_temp" name="raf_dept_temp" value="{{ $rafproductions->raf_dept }}">
                                 <label>RAF Dept :</label>
-                                <select class="form-control" id="raf_dept" name="raf_dept" readonly>
+                                <select class="form-control" id="raf_dept" name="raf_dept">
                                     <option></option>
                                     @foreach($productiondepts as $productiondept)
                                         <option value="{{ $productiondept->dept_no }}" {{ $rafproductions->raf_dept == $productiondept->dept_no  ? 'selected' : ''}}>{{ $productiondept->dept_name }}</option>
@@ -144,10 +150,12 @@
         var raf_dept = $('#raf_dept').val();
         var raf_dept_temp = $('#raf_dept_temp').val();
         var raf_qty_temp = $('#raf_qty_temp').val();
+        var carton_qty_temp = $('#carton_qty_temp').val();
+        var order_size_no = document.getElementById('order_size_no').value;
         var order_list = document.getElementById('order_list').value;
         if (raf_dept) {
             $.ajax({
-                url: '/rafproduction/fetchrafleft/'+order_list+'/'+raf_dept,
+                url: '/rafproduction/fetchrafleft/'+order_list+'/'+raf_dept+'/'+order_size_no,
                 type: "GET",
                 dataType: "json",
                 success:function(data) {
@@ -163,10 +171,31 @@
                     }
                 }
             });
+            
+            $.ajax({
+                url: '/rafproduction/fetchcartonleft/'+order_list,
+                type: "GET",
+                dataType: "json",
+                success:function(data) {
+                    if (data.length > 0) {
+                        $.each(data, function(key, value) {
+                            var allowcarton = parseInt(carton_qty_temp) + parseInt(value.carton_balance);
+                            $('#carton_left').text('Carton Qty : ' + allowcarton);
+                            $('#carton_qty').attr("max",allowcarton);
+                        });
+                    } else {
+                        $('#carton_left').text('Carton Qty : ' + 0);
+                        $('#carton_qty').attr("max",0);
+                    }
+                }
+            });
         } else{
             var allowraf = parseInt(raf_qty) + parseInt(value.raf_left);
             $('#raf_left').text('RAF Qty : ' + allowraf);
             $('#raf_qty').attr("max",allowraf);
+            var allowcarton = parseInt(carton_qty) + parseInt(value.carton_balance);
+            $('#carton_left').text('Carton Qty : ' + allowcarton);
+            $('#carton_qty').attr("max",allowcarton);
         }
     });
     $("#order_trans").select2({
@@ -191,10 +220,19 @@
         var raf_dept = $(this).val();
         var raf_qty_temp = $('#raf_qty_temp').val();
         var raf_qty = $('#raf_qty').val();
+        var carton_qty_temp = $('#carton_qty_temp').val();
         var order_list = document.getElementById('order_list').value;
+        var order_size_no = document.getElementById('order_size_no').value;
         if (raf_dept) {
+            if(raf_dept == "DEP000000004") {
+                $('#carton_input').show();
+                document.getElementById("carton_qty").value = carton_qty_temp;
+            } else {
+                document.getElementById("carton_qty").value = "0";
+                $('#carton_input').hide();
+            }
             $.ajax({
-                url: '/rafproduction/fetchrafleft/'+order_list+'/'+raf_dept,
+                url: '/rafproduction/fetchrafleft/'+order_list+'/'+raf_dept+'/'+order_size_no,
                 type: "GET",
                 dataType: "json",
                 success:function(data) {

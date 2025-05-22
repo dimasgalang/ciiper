@@ -17,14 +17,14 @@
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Create RAF Production</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Create Output Production</h1>
                 </div>
                 
 
                 <!-- Approach -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Form Create RAF Production</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Create Output Production</h6>
                     </div>
                     <div class="card-body">
                         <form method="post" action="{{ route('rafproduction.store') }}" enctype="multipart/form-data">
@@ -103,13 +103,18 @@
                             </div>
                             <br>
                             <div>
-                                <label id="raf_plan_date">RAF Date :</label>
+                                <label id="raf_plan_date">Output Date :</label>
                                 <input class="date form-control" type="date" id="raf_date" name="raf_date" required>
                             </div>
                             <br>
                             <div>
-                                <label id="raf_left">RAF Qty :</label>
+                                <label id="raf_left">Output Qty :</label>
                                 <input class="form-control" type="number" id="raf_qty" name="raf_qty" min="1" max="1">
+                            </div>
+                            <div id="carton_input">
+                            <br>
+                                <label id="carton_left">Carton Qty :</label>
+                                <input class="form-control" type="number" id="carton_qty" name="carton_qty" min="1" max="1">
                             </div>
                             <br>
                             <div>
@@ -196,6 +201,75 @@
           allowClear: true,
           placeholder: 'Choose Departement',
     });
+    $(document).on("change", "#raf_dept", function(e){
+        e.preventDefault();
+        var raf_dept = $(this).val();
+        var order_list = document.getElementById('order_list').value;
+        $('#raf_left').text('Output Qty : ');
+        $('#raf_qty').attr("max",0);
+        $.ajax({
+                url: '/rafproduction/fetchordersize/'+order_list,
+                type: "GET",
+                dataType: "json",
+                success:function(data) {
+                    $('#size_no').empty();
+                    $('#size_no').append('<option></option>');
+                    $.each(data, function(key, value) {
+                        $('#size_no').append('<option value="'+ value.size_no +'">'+ value.size +'</option>');
+                    });
+                    $('#size_no').removeAttr('disabled');
+                }
+            });
+            $.ajax({
+                url: '/rafproduction/fetchplanningdate/'+order_list+'/'+raf_dept,
+                type: "GET",
+                dataType: "json",
+                success:function(data) {
+                    if (data.length > 0) {
+                        $.each(data, function(key, value) {
+                            $('#raf_plan_date').text('Output Date : Min = ' + value.startdate + ', Max = ' + value.finishdate);
+                            $('#raf_date').attr("max",value.finishdate);
+                            $('#raf_date').attr("min",value.startdate);
+                            $('#raf_date').val(value.startdate);
+                        });
+                    } else {
+                        $('#raf_plan_date').text('Output Date : ');
+                        $('#raf_date').removeAttribute("min");
+                        $('#raf_date').removeAttribute("max");
+                    }
+                }
+            });
+        if (raf_dept) {
+            if (raf_dept == "DEP000000004") {
+                $('#carton_input').show();
+                $.ajax({
+                    url: '/rafproduction/fetchcartonleft/'+order_list,
+                    type: "GET",
+                    dataType: "json",
+                    success:function(data) {
+                        if (data.length > 0) {
+                            $.each(data, function(key, value) {
+                                    $('#carton_left').text('Carton Qty : ' + (value.carton_balance));
+                                    $('#carton_qty').attr("max", (value.carton_balance));
+                            });
+                        } else {
+                            $('#carton_left').text('Ship Qty : ' + 0);
+                            $('#carton_qty').attr("max", 0);
+                        }
+                    }
+                });
+            } else {
+                $('#carton_input').hide();
+                $('#carton_left').text('Output Qty : ');
+                $('#carton_qty').attr("max",0);
+            }
+        } else{
+            $('#size_no').empty();
+            $('#size_no').attr('disabled','disabled');
+            $('#carton_left').text('Output Qty : ' + value.carton_balance);
+            $('#carton_qty').attr("max",value.carton_balance);
+        }
+    });
     $("#size_no").select2({
           allowClear: true,
           placeholder: 'Choose Size',
@@ -213,36 +287,18 @@
                 success:function(data) {
                     if (data.length > 0) {
                         $.each(data, function(key, value) {
-                            $('#raf_left').text('RAF Qty : ' + value.raf_left);
+                            $('#raf_left').text('Output Qty : ' + value.raf_left);
                             $('#raf_qty').attr("max",value.raf_left);
                         });
                     } else {
-                        $('#raf_left').text('RAF Qty : ' + 0);
+                        $('#raf_left').text('Output Qty : ' + 0);
                         $('#raf_qty').attr("max",0);
                     }
                 }
             });
-            $.ajax({
-                url: '/rafproduction/fetchplanningdate/'+order_list+'/'+raf_dept,
-                type: "GET",
-                dataType: "json",
-                success:function(data) {
-                    if (data.length > 0) {
-                        $.each(data, function(key, value) {
-                            $('#raf_plan_date').text('RAF Date : Min = ' + value.startdate + ', Max = ' + value.finishdate);
-                            $('#raf_date').attr("max",value.finishdate);
-                            $('#raf_date').attr("min",value.startdate);
-                            $('#raf_date').val(value.startdate);
-                        });
-                    } else {
-                        $('#raf_plan_date').text('RAF Date : ');
-                        $('#raf_date').removeAttribute("min");
-                        $('#raf_date').removeAttribute("max");
-                    }
-                }
-            });
+            
         } else{
-            $('#raf_left').text('RAF Qty : ' + value.raf_left);
+            $('#raf_left').text('Output Qty : ' + value.raf_left);
             $('#raf_qty').attr("max",value.raf_left);
         }
     });

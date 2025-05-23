@@ -57,6 +57,11 @@ class BordirTypeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Bordir Type ' . $request->bordir_no;
+        BordirType::create([
+            'bordir_no' => $request->bordir_no,
+            'bordir_type' => $request->bordir_type,
+            'void' => 'false',
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -69,11 +74,6 @@ class BordirTypeController extends Controller
         ], [
             'models' => 'BordirType',
             'last_number' => $request->bordir_no,
-        ]);
-        BordirType::create([
-            'bordir_no' => $request->bordir_no,
-            'bordir_type' => $request->bordir_type,
-            'void' => 'false',
         ]);
 
         Alert::success('Create Successfully!', 'Bordir Type ' . $request->bordir_no . ' successfully created!');
@@ -111,13 +111,6 @@ class BordirTypeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Bordir Type ' . $request->bordir_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
         $bordirtypes = BordirType::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -137,6 +130,13 @@ class BordirTypeController extends Controller
         ]);
 
         $bordirtypes->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Bordir type ' . $bordirtypes->bordir_no . ' successfully updated!');
         return redirect('bordirtype/index');
@@ -148,6 +148,12 @@ class BordirTypeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Bordir Type ' . $bordirtypes->bordir_no;
+
+        $bordirtypes->fill([
+            'void' => 'true',
+        ]);
+
+        $bordirtypes->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -155,12 +161,6 @@ class BordirTypeController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $bordirtypes->fill([
-            'void' => 'true',
-        ]);
-
-        $bordirtypes->save();
 
         Alert::success('Void Successfully!', 'Bordir type ' . $bordirtypes->bordir_no . ' successfully voided!');
         return redirect('bordirtype/index');
@@ -172,6 +172,12 @@ class BordirTypeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Bordir Type ' . $bordirtypes->bordir_no;
+
+        $bordirtypes->fill([
+            'void' => 'false',
+        ]);
+
+        $bordirtypes->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -179,12 +185,6 @@ class BordirTypeController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $bordirtypes->fill([
-            'void' => 'false',
-        ]);
-
-        $bordirtypes->save();
 
         Alert::success('Restore Successfully!', 'Bordir type ' . $bordirtypes->bordir_no . ' successfully restored!');
         return redirect('bordirtype/index');

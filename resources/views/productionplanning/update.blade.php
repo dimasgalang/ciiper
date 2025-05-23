@@ -106,7 +106,7 @@
                                         <label>Wash Type :</label>
                                         <select class="form-control" id="wash_no" name="wash_no">
                                             @foreach($washtypes as $washtype)
-                                            <option value="{{ $washtype->wash_no }}" {{ $productionplannings[0]->wash_no == $washtype->wash_no  ? 'selected' : ''}}>{{ $washtype->wash_no }}</option>
+                                            <option value="{{ $washtype->wash_no }}" {{ $productionplannings[0]->wash_no == $washtype->wash_no  ? 'selected' : ''}}>{{ $washtype->wash_type }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -126,7 +126,7 @@
                                         <label>Bordir Type :</label>
                                         <select class="form-control" id="bordir_no" name="bordir_no">
                                             @foreach($bordirtypes as $bordirtype)
-                                            <option value="{{ $bordirtype->bordir_no }}" {{ $productionplannings[0]->bordir_no == $bordirtype->bordir_no  ? 'selected' : ''}}>{{ $bordirtype->bordir_no }}</option>
+                                            <option value="{{ $bordirtype->bordir_no }}" {{ $productionplannings[0]->bordir_no == $bordirtype->bordir_no  ? 'selected' : ''}}>{{ $bordirtype->bordir_type }}</option>
                                             @endforeach
                                         </select>
                                     </div>

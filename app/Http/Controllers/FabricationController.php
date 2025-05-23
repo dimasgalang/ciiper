@@ -73,6 +73,15 @@ class FabricationController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Fabrication ' . $request->fab_no;
+        Fabrication::create([
+            'order_trans' => $request->order_trans,
+            'fab_no' => $request->fab_no,
+            'fabmill_no' => $request->fabmill_no,
+            'fabrication' => $request->fabrication,
+            'po_fab' => $request->po_fab,
+            'etd' => $request->etd,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -85,15 +94,6 @@ class FabricationController extends Controller
         ], [
             'models' => 'Fabrication',
             'last_number' => $request->fab_no,
-        ]);
-        Fabrication::create([
-            'order_trans' => $request->order_trans,
-            'fab_no' => $request->fab_no,
-            'fabmill_no' => $request->fabmill_no,
-            'fabrication' => $request->fabrication,
-            'po_fab' => $request->po_fab,
-            'etd' => $request->etd,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Fabrication ' . $request->fab_no . ' successfully created!');
@@ -137,13 +137,6 @@ class FabricationController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Fabrication ' . $request->fab_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
         $fabrications = Fabrication::findOrFail($request->id);
 
@@ -172,6 +165,13 @@ class FabricationController extends Controller
         ]);
 
         $fabrications->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Fabrication ' . $request->fab_no . ' successfully updated!');
         return redirect('fabrication/index');
@@ -184,6 +184,12 @@ class FabricationController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Fabrication ' . $fabrications->fab_no;
+
+        $fabrications->fill([
+            'void' => 'true',
+        ]);
+
+        $fabrications->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -191,12 +197,6 @@ class FabricationController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $fabrications->fill([
-            'void' => 'true',
-        ]);
-
-        $fabrications->save();
 
         Alert::success('Void Successfully!', 'Fabrication ' . $fabrications->fab_no . ' successfully voided!');
         return redirect('fabrication/index');
@@ -208,6 +208,12 @@ class FabricationController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Fabrication ' . $fabrications->fab_no;
+
+        $fabrications->fill([
+            'void' => 'false',
+        ]);
+
+        $fabrications->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -215,12 +221,6 @@ class FabricationController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $fabrications->fill([
-            'void' => 'false',
-        ]);
-
-        $fabrications->save();
 
         Alert::success('Restore Successfully!', 'Fabrication ' . $fabrications->fab_no . ' successfully restored!');
         return redirect('fabrication/index');

@@ -62,6 +62,12 @@ class SeasonController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Season ' . $request->season_no;
+        Season::create([
+            'season_no' => $request->season_no,
+            'season_cat' => $request->season_cat,
+            'season_year' => $request->season_year,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -75,12 +81,6 @@ class SeasonController extends Controller
         ], [
             'models' => 'Season',
             'last_number' => $request->season_no,
-        ]);
-        Season::create([
-            'season_no' => $request->season_no,
-            'season_cat' => $request->season_cat,
-            'season_year' => $request->season_year,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Season ' . $request->season_no . ' successfully created!');
@@ -120,13 +120,6 @@ class SeasonController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Season ' . $request->season_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
         $seasons = Season::findOrFail($request->id);
 
@@ -149,6 +142,13 @@ class SeasonController extends Controller
         ]);
 
         $seasons->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Season ' . $request->season_no . ' successfully updated!');
         return redirect('season/index');
@@ -161,6 +161,12 @@ class SeasonController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Season ' . $seasons->season_no;
+
+        $seasons->fill([
+            'void' => 'true',
+        ]);
+
+        $seasons->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -168,12 +174,6 @@ class SeasonController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $seasons->fill([
-            'void' => 'true',
-        ]);
-
-        $seasons->save();
 
         Alert::success('Void Successfully!', 'Season ' . $seasons->season_no . ' successfully voided!');
         return redirect('season/index');
@@ -185,6 +185,12 @@ class SeasonController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Season ' . $seasons->season_no;
+
+        $seasons->fill([
+            'void' => 'false',
+        ]);
+
+        $seasons->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -192,12 +198,6 @@ class SeasonController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $seasons->fill([
-            'void' => 'false',
-        ]);
-
-        $seasons->save();
 
         Alert::success('Restore Successfully!', 'Season ' . $seasons->season_no . ' successfully restored!');
         return redirect('season/index');

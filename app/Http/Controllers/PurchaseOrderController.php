@@ -64,6 +64,12 @@ class PurchaseOrderController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Purchase Order ' . $request->po_no;
+        PurchaseOrder::create([
+            'po_no' => $request->po_no,
+            'po_master' => $request->po_master,
+            'po_desc' => $request->po_desc,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -77,12 +83,6 @@ class PurchaseOrderController extends Controller
         ], [
             'models' => 'PurchaseOrder',
             'last_number' => $request->po_no,
-        ]);
-        PurchaseOrder::create([
-            'po_no' => $request->po_no,
-            'po_master' => $request->po_master,
-            'po_desc' => $request->po_desc,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Purchase Order ' . $request->po_no . ' successfully created!');
@@ -121,13 +121,6 @@ class PurchaseOrderController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Purchase Order ' . $request->po_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
         $pos = PurchaseOrder::findOrFail($request->id);
 
@@ -150,6 +143,13 @@ class PurchaseOrderController extends Controller
         ]);
 
         $pos->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Purchase Order ' . $request->po_no . ' successfully update!');
         return redirect('po/index');
@@ -162,6 +162,12 @@ class PurchaseOrderController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Purchase Order ' . $pos->po_no;
+
+        $pos->fill([
+            'void' => 'true',
+        ]);
+
+        $pos->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -169,12 +175,6 @@ class PurchaseOrderController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $pos->fill([
-            'void' => 'true',
-        ]);
-
-        $pos->save();
 
         Alert::success('Void Successfully!', 'Purchase Order ' . $pos->po_no . ' successfully voided!');
         return redirect('po/index');
@@ -186,6 +186,12 @@ class PurchaseOrderController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Purchase Order ' . $pos->po_no;
+
+        $pos->fill([
+            'void' => 'false',
+        ]);
+
+        $pos->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -193,12 +199,6 @@ class PurchaseOrderController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $pos->fill([
-            'void' => 'false',
-        ]);
-
-        $pos->save();
 
         Alert::success('Restore Successfully!', 'Purchase Order ' . $pos->po_no . ' successfully restored!');
         return redirect('po/index');

@@ -70,7 +70,7 @@
                                 <select class="form-control" id="order_trans" name="order_trans">
                                     <option></option>
                                     @foreach($ordermasters as $ordermaster)
-                                    <option value="{{ $ordermaster->order_trans }}">{{ $ordermaster->order_trans . '-' . $ordermaster->po_master }}</option>
+                                    <option value="{{ $ordermaster->order_trans }}">{{ $ordermaster->order_trans }}-{{ $ordermaster->po_master}}-{{ $ordermaster->po_desc}}</option>
                                     @endforeach
                                 </select>
                             </div>

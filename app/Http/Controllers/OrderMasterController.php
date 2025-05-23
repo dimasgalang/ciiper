@@ -532,13 +532,6 @@ class OrderMasterController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Order Master ' . $request->order_trans;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'plus',
-            'color' => 'bg-primary',
-        ]);
 
         $request->validate([
             'sketch_file' => 'required|mimes:jpg,png|max:10240'
@@ -548,12 +541,6 @@ class OrderMasterController extends Controller
         $fileName = $file->getClientOriginalName();
         $file->storeAs('', $fileName, 'sketch_uploads');
 
-        SetupIncrement::updateOrCreate([
-            'models' => 'OrderMaster'
-        ], [
-            'models' => 'OrderMaster',
-            'last_number' => $request->order_trans,
-        ]);
         OrderMaster::create([
             'order_trans' => $request->order_trans,
             'season_no' => $request->season_no,
@@ -567,6 +554,19 @@ class OrderMasterController extends Controller
             'remark' => $request->remark,
             'sketch_file' => $fileName,
             'void' => 'false'
+        ]);
+        SetupIncrement::updateOrCreate([
+            'models' => 'OrderMaster'
+        ], [
+            'models' => 'OrderMaster',
+            'last_number' => $request->order_trans,
+        ]);
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
         ]);
 
         Alert::success('Create Successfully!', 'Order Master ' . $request->order_trans . ' successfully created!');
@@ -582,6 +582,8 @@ class OrderMasterController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Deleted Order Master ' . $ordermasters->order_trans;
+
+        Storage::disk('sketch_uploads')->delete($ordermasters->id);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -589,8 +591,6 @@ class OrderMasterController extends Controller
             'icon' => 'trash',
             'color' => 'bg-danger',
         ]);
-
-        Storage::disk('sketch_uploads')->delete($ordermasters->id);
         Alert::success('Delete Successfully!', 'Order Master ' . $ordermasters->order_trans . ' successfully deleted!');
         return redirect('ordermaster/index');
     }
@@ -612,14 +612,6 @@ class OrderMasterController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Order Master ' . $request->order_trans;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
-
         $ordermasters = OrderMaster::findOrFail($request->id);
 
         if ($request->hasFile('sketch_file')) {
@@ -699,6 +691,14 @@ class OrderMasterController extends Controller
         }
 
         $ordermasters->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
+
 
         Alert::success('Update Successfully!', 'Order Master ' . $request->order_trans . ' successfully updated!');
         return redirect('ordermaster/index')->with(['success' => 'Order Master berhasil diupdate!']);
@@ -732,6 +732,12 @@ class OrderMasterController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Order Master ' . $ordermasters->order_trans;
+
+        $ordermasters->fill([
+            'void' => 'true',
+        ]);
+
+        $ordermasters->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -739,12 +745,6 @@ class OrderMasterController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $ordermasters->fill([
-            'void' => 'true',
-        ]);
-
-        $ordermasters->save();
 
         Alert::success('Void Successfully!', 'Order Master ' . $ordermasters->order_trans . ' successfully voided!');
         return redirect('ordermaster/index');
@@ -756,6 +756,12 @@ class OrderMasterController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Order Master ' . $ordermasters->order_trans;
+
+        $ordermasters->fill([
+            'void' => 'false',
+        ]);
+
+        $ordermasters->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -763,12 +769,6 @@ class OrderMasterController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $ordermasters->fill([
-            'void' => 'false',
-        ]);
-
-        $ordermasters->save();
 
         Alert::success('Restore Successfully!', 'Order Master ' . $ordermasters->order_trans . ' successfully restored!');
         return redirect('ordermaster/index');

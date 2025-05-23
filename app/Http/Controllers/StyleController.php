@@ -66,6 +66,13 @@ class StyleController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Style ' . $request->style_no;
+        Style::create([
+            'brand_no' => $request->brand_no,
+            'style_no' => $request->style_no,
+            'style_name' => $request->style_name,
+            'style_desc' => $request->style_desc,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -79,13 +86,6 @@ class StyleController extends Controller
         ], [
             'models' => 'Style',
             'last_number' => $request->style_no,
-        ]);
-        Style::create([
-            'brand_no' => $request->brand_no,
-            'style_no' => $request->style_no,
-            'style_name' => $request->style_name,
-            'style_desc' => $request->style_desc,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Style ' . $request->style_no . ' successfully created!');
@@ -124,13 +124,6 @@ class StyleController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Style ' . $request->style_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
 
         $styles = Style::findOrFail($request->id);
@@ -156,6 +149,13 @@ class StyleController extends Controller
         ]);
 
         $styles->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Style ' . $request->style_no . ' successfully updated!');
         return redirect('style/index');
@@ -168,6 +168,12 @@ class StyleController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Style ' . $styles->style_no;
+
+        $styles->fill([
+            'void' => 'true',
+        ]);
+
+        $styles->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -175,12 +181,6 @@ class StyleController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $styles->fill([
-            'void' => 'true',
-        ]);
-
-        $styles->save();
 
         Alert::success('Void Successfully!', 'Style ' . $styles->style_no . ' successfully voided!');
         return redirect('style/index');
@@ -192,6 +192,12 @@ class StyleController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Style ' . $styles->style_no;
+
+        $styles->fill([
+            'void' => 'false',
+        ]);
+
+        $styles->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -199,12 +205,6 @@ class StyleController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $styles->fill([
-            'void' => 'false',
-        ]);
-
-        $styles->save();
 
         Alert::success('Restore Successfully!', 'Style ' . $styles->style_no . ' successfully restored!');
         return redirect('style/index');

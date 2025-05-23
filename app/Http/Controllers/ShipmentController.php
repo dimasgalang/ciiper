@@ -72,13 +72,6 @@ class ShipmentController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Shipment ' . $request->ship_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
         $shipments = RafProduction::findOrFail($request->id);
 
@@ -112,6 +105,13 @@ class ShipmentController extends Controller
         ]);
 
         $shipments->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Shipment ' . $request->ship_no . ' successfully updated!');
         return redirect('shipment/index');
@@ -147,6 +147,18 @@ class ShipmentController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Shipment ' . $request->ship_no;
+        Shipment::create([
+            'ship_no' => $request->ship_no,
+            'order_list' => $request->order_list,
+            'market_no' => $request->market_no,
+            'shipmode_no' => $request->shipmode_no,
+            'size_no' => $request->size_no,
+            'ship_qty' => $request->ship_qty,
+            'carton_qty' => $request->carton_qty,
+            'ship_date' => $request->ship_date,
+            'remark' => $request->remark,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -160,18 +172,6 @@ class ShipmentController extends Controller
         ], [
             'models' => 'Shipment',
             'last_number' => $request->ship_no,
-        ]);
-        Shipment::create([
-            'ship_no' => $request->ship_no,
-            'order_list' => $request->order_list,
-            'market_no' => $request->market_no,
-            'shipmode_no' => $request->shipmode_no,
-            'size_no' => $request->size_no,
-            'ship_qty' => $request->ship_qty,
-            'carton_qty' => $request->carton_qty,
-            'ship_date' => $request->ship_date,
-            'remark' => $request->remark,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Shipment ' . $request->ship_no . ' successfully created!');
@@ -217,6 +217,12 @@ class ShipmentController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Shipment ' . $shipments->ship_no;
+
+        $shipments->fill([
+            'void' => 'true',
+        ]);
+
+        $shipments->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -224,12 +230,6 @@ class ShipmentController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $shipments->fill([
-            'void' => 'true',
-        ]);
-
-        $shipments->save();
 
         Alert::success('Void Successfully!', 'Shipment ' . $shipments->ship_no . ' successfully voided!');
         return redirect('shipment/index');
@@ -241,6 +241,12 @@ class ShipmentController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Shipment ' . $shipments->ship_no;
+
+        $shipments->fill([
+            'void' => 'false',
+        ]);
+
+        $shipments->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -248,12 +254,6 @@ class ShipmentController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $shipments->fill([
-            'void' => 'false',
-        ]);
-
-        $shipments->save();
 
         Alert::success('Restore Successfully!', 'Shipment ' . $shipments->ship_no . ' successfully restored!');
         return redirect('shipment/index');

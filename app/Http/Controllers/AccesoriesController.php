@@ -42,6 +42,13 @@ class AccesoriesController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Accesories ' . $request->accesories_no;
+        Accesories::create([
+            'accesories_no' => $request->accesories_no,
+            'category_no' => $request->category_no,
+            'accesories_name' => $request->accesories_name,
+            'accesories_unit' => $request->accesories_unit,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -54,13 +61,6 @@ class AccesoriesController extends Controller
         ], [
             'models' => 'Accesories',
             'last_number' => $request->accesories_no,
-        ]);
-        Accesories::create([
-            'accesories_no' => $request->accesories_no,
-            'category_no' => $request->category_no,
-            'accesories_name' => $request->accesories_name,
-            'accesories_unit' => $request->accesories_unit,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Accesories ' . $request->accesories_no . ' successfully created!');
@@ -99,13 +99,6 @@ class AccesoriesController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Accesories ' . $request->accesories_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
         $accesories = Accesories::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -129,6 +122,13 @@ class AccesoriesController extends Controller
         ]);
 
         $accesories->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Accesories ' . $accesories->accesories_no . ' successfully updated!');
         return redirect('accesories/index');
@@ -141,6 +141,12 @@ class AccesoriesController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Accesories ' . $accesories->accesories_no;
+
+        $accesories->fill([
+            'void' => 'true',
+        ]);
+
+        $accesories->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -148,12 +154,6 @@ class AccesoriesController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $accesories->fill([
-            'void' => 'true',
-        ]);
-
-        $accesories->save();
 
         Alert::success('Void Successfully!', 'Accesories ' . $accesories->accesories_no . ' successfully voided!');
         return redirect('accesories/index');
@@ -165,6 +165,12 @@ class AccesoriesController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Accesories ' . $accesories->accesories_no;
+
+        $accesories->fill([
+            'void' => 'false',
+        ]);
+
+        $accesories->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -172,12 +178,6 @@ class AccesoriesController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $accesories->fill([
-            'void' => 'false',
-        ]);
-
-        $accesories->save();
 
         Alert::success('Restore Successfully!', 'Accesories ' . $accesories->accesories_no . ' successfully restored!');
         return redirect('accesories/index');

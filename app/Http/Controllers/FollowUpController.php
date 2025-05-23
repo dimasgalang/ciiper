@@ -61,6 +61,12 @@ class FollowUpController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Follow Up ' . $request->fu_no;
+
+        FollowUp::create([
+            'fu_no' => $request->fu_no,
+            'fu_name' => $request->fu_name,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -73,12 +79,6 @@ class FollowUpController extends Controller
         ], [
             'models' => 'FollowUp',
             'last_number' => $request->fu_no,
-        ]);
-
-        FollowUp::create([
-            'fu_no' => $request->fu_no,
-            'fu_name' => $request->fu_name,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Follow Up ' . $request->fu_no . ' successfully created!');
@@ -116,13 +116,6 @@ class FollowUpController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Follow Up ' . $request->fu_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
         $followups = FollowUp::findOrFail($request->id);
 
@@ -143,6 +136,13 @@ class FollowUpController extends Controller
         ]);
 
         $followups->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Follow Up ' . $request->fu_no . ' successfully updated!');
         return redirect('followup/index');
@@ -155,6 +155,12 @@ class FollowUpController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Follow Up ' . $followups->fu_no;
+
+        $followups->fill([
+            'void' => 'true',
+        ]);
+
+        $followups->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -162,12 +168,6 @@ class FollowUpController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $followups->fill([
-            'void' => 'true',
-        ]);
-
-        $followups->save();
 
         Alert::success('Void Successfully!', 'Follow Up ' . $followups->fu_no . ' successfully voided!');
         return redirect('followup/index');
@@ -179,6 +179,12 @@ class FollowUpController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Follow Up ' . $followups->fu_no;
+
+        $followups->fill([
+            'void' => 'false',
+        ]);
+
+        $followups->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -186,12 +192,6 @@ class FollowUpController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $followups->fill([
-            'void' => 'false',
-        ]);
-
-        $followups->save();
 
         Alert::success('Restore Successfully!', 'Follow Up ' . $followups->fu_no . ' successfully restored!');
         return redirect('followup/index');

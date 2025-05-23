@@ -61,6 +61,11 @@ class MarketController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Market ' . $request->market_no;
+        Market::create([
+            'market_no' => $request->market_no,
+            'market_name' => $request->market_name,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -73,11 +78,6 @@ class MarketController extends Controller
         ], [
             'models' => 'Market',
             'last_number' => $request->market_no,
-        ]);
-        Market::create([
-            'market_no' => $request->market_no,
-            'market_name' => $request->market_name,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Market ' . $request->market_no . ' successfully created!');
@@ -115,13 +115,6 @@ class MarketController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Market ' . $request->market_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
         $markets = Market::findOrFail($request->id);
 
@@ -142,6 +135,13 @@ class MarketController extends Controller
         ]);
 
         $markets->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Market ' . $request->market_no . ' successfully updated!');
         return redirect('market/index');
@@ -154,6 +154,12 @@ class MarketController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Market ' . $markets->market_no;
+
+        $markets->fill([
+            'void' => 'true',
+        ]);
+
+        $markets->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -161,12 +167,6 @@ class MarketController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $markets->fill([
-            'void' => 'true',
-        ]);
-
-        $markets->save();
 
         Alert::success('Void Successfully!', 'Market ' . $markets->market_no . ' successfully voided!');
         return redirect('market/index');
@@ -178,6 +178,12 @@ class MarketController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Market ' . $markets->market_no;
+
+        $markets->fill([
+            'void' => 'false',
+        ]);
+
+        $markets->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -185,12 +191,6 @@ class MarketController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $markets->fill([
-            'void' => 'false',
-        ]);
-
-        $markets->save();
 
         Alert::success('Restore Successfully!', 'Market ' . $markets->market_no . ' successfully restored!');
         return redirect('market/index');

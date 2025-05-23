@@ -102,7 +102,7 @@
                                 <select class="form-control" id="po_no" name="po_no">
                                     <option></option>
                                     @foreach($pos as $po)
-                                    <option value="{{ $po->po_no }}">{{ $po->po_no }} - {{ $po->po_master }}</option>
+                                    <option value="{{ $po->po_no }}">{{ $po->po_no }} - {{ $po->po_master }} - {{ $po->po_desc }}</option>
                                     @endforeach
                                 </select>
                             </div>

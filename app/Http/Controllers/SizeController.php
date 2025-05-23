@@ -61,6 +61,11 @@ class SizeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Size ' . $request->size_no;
+        Size::create([
+            'size_no' => $request->size_no,
+            'size' => $request->size,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -73,11 +78,6 @@ class SizeController extends Controller
         ], [
             'models' => 'Size',
             'last_number' => $request->size_no,
-        ]);
-        Size::create([
-            'size_no' => $request->size_no,
-            'size' => $request->size,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Size ' . $request->size_no . ' successfully created!');
@@ -115,13 +115,6 @@ class SizeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Size ' . $request->size_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
         $sizes = Size::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -141,6 +134,13 @@ class SizeController extends Controller
         ]);
 
         $sizes->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Size ' . $request->size_no . ' successfully updated!');
         return redirect('size/index');
@@ -153,6 +153,12 @@ class SizeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Size ' . $sizes->size_no;
+
+        $sizes->fill([
+            'void' => 'true',
+        ]);
+
+        $sizes->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -160,12 +166,6 @@ class SizeController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $sizes->fill([
-            'void' => 'true',
-        ]);
-
-        $sizes->save();
 
         Alert::success('Void Successfully!', 'Size ' . $sizes->size_no . ' successfully voided!');
         return redirect('size/index');
@@ -177,6 +177,12 @@ class SizeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Size ' . $sizes->size_no;
+
+        $sizes->fill([
+            'void' => 'false',
+        ]);
+
+        $sizes->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -184,12 +190,6 @@ class SizeController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $sizes->fill([
-            'void' => 'false',
-        ]);
-
-        $sizes->save();
 
         Alert::success('Restore Successfully!', 'Size ' . $sizes->size_no . ' successfully restored!');
         return redirect('size/index');

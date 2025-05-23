@@ -120,19 +120,6 @@ class OrderListController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Order List ' . $request->order_list;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'plus',
-            'color' => 'bg-primary',
-        ]);
-        SetupIncrement::updateOrCreate([
-            'models' => 'OrderList'
-        ], [
-            'models' => 'OrderList',
-            'last_number' => $request->order_list,
-        ]);
         OrderList::create([
             'order_trans' => $request->order_trans,
             'order_list' => $request->order_list,
@@ -150,6 +137,19 @@ class OrderListController extends Controller
             'production_day' => $request->production_day,
             'smv' => $request->smv,
             'void' => 'false'
+        ]);
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
+        SetupIncrement::updateOrCreate([
+            'models' => 'OrderList'
+        ], [
+            'models' => 'OrderList',
+            'last_number' => $request->order_list,
         ]);
 
         Alert::success('Create Successfully!', 'Order List ' . $request->order_list . ' successfully created!');
@@ -213,13 +213,6 @@ class OrderListController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Order List ' . $request->order_list;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
         $orderlists = OrderList::findOrFail($request->id);
 
@@ -266,6 +259,13 @@ class OrderListController extends Controller
         ]);
 
         $orderlists->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Order List ' . $request->order_list . ' successfully updated!');
         return redirect('orderlist/index');
@@ -311,6 +311,12 @@ class OrderListController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Order List ' . $orderlists->order_list;
+
+        $orderlists->fill([
+            'void' => 'true',
+        ]);
+
+        $orderlists->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -318,12 +324,6 @@ class OrderListController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $orderlists->fill([
-            'void' => 'true',
-        ]);
-
-        $orderlists->save();
 
         Alert::success('Void Successfully!', 'Order List ' . $orderlists->order_list . ' successfully voided!');
         return redirect('orderlist/index');
@@ -335,6 +335,12 @@ class OrderListController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Order List ' . $orderlists->order_list;
+
+        $orderlists->fill([
+            'void' => 'false',
+        ]);
+
+        $orderlists->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -342,12 +348,6 @@ class OrderListController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $orderlists->fill([
-            'void' => 'false',
-        ]);
-
-        $orderlists->save();
 
         Alert::success('Restore Successfully!', 'Order List ' . $orderlists->order_list . ' successfully restored!');
         return redirect('orderlist/index');

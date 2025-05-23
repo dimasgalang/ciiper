@@ -105,6 +105,16 @@ class ProPlanAccController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Production Planning Accesories ' . $request->proplan_acc_no;
+        ProPlanAcc::create([
+            'proplan_acc_no' => $request->proplan_acc_no,
+            'order_trans' => $request->order_trans,
+            'order_list' => $request->order_list,
+            'accesories_no' => $request->accesories_no,
+            'category_no' => $request->category_no,
+            'item_date' => $request->item_date,
+            'qty' => $request->qty,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -117,16 +127,6 @@ class ProPlanAccController extends Controller
         ], [
             'models' => 'ProPlanAcc',
             'last_number' => $request->proplan_acc_no,
-        ]);
-        ProPlanAcc::create([
-            'proplan_acc_no' => $request->proplan_acc_no,
-            'order_trans' => $request->order_trans,
-            'order_list' => $request->order_list,
-            'accesories_no' => $request->accesories_no,
-            'category_no' => $request->category_no,
-            'item_date' => $request->item_date,
-            'qty' => $request->qty,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Production Planning Accesories ' . $request->proplan_acc_no . ' successfully created!');
@@ -149,13 +149,6 @@ class ProPlanAccController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated ProPlanAcc ' . $request->proplan_acc_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
         $proplanaccs = ProPlanAcc::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -183,6 +176,13 @@ class ProPlanAccController extends Controller
         ]);
 
         $proplanaccs->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Production Planning Detail ' . $request->proplan_acc_no . ' successfully updated!');
         return redirect('proplanacc/index');
@@ -194,6 +194,12 @@ class ProPlanAccController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Production Planning Accesories ' . $proplanaccs->proplan_acc_no;
+
+        $proplanaccs->fill([
+            'void' => 'true',
+        ]);
+
+        $proplanaccs->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -201,12 +207,6 @@ class ProPlanAccController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $proplanaccs->fill([
-            'void' => 'true',
-        ]);
-
-        $proplanaccs->save();
 
         Alert::success('Void Successfully!', 'Production Planning Accesories ' . $proplanaccs->proplan_acc_no . ' successfully voided!');
         return redirect('proplanacc/index');
@@ -218,6 +218,12 @@ class ProPlanAccController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Production Planning Accesories ' . $proplanaccs->proplan_acc_no;
+
+        $proplanaccs->fill([
+            'void' => 'false',
+        ]);
+
+        $proplanaccs->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -225,12 +231,6 @@ class ProPlanAccController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $proplanaccs->fill([
-            'void' => 'false',
-        ]);
-
-        $proplanaccs->save();
 
         Alert::success('Restore Successfully!', 'Production Planning Accesories ' . $proplanaccs->proplandetail_no . ' successfully restored!');
         return redirect('proplanacc/index');

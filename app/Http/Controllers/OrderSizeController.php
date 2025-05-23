@@ -51,6 +51,14 @@ class OrderSizeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Order Size ' . $request->order_size_no;
+        OrderSize::create([
+            'order_size_no' => $request->order_size_no,
+            'order_list' => $request->order_list,
+            'order_trans' => $request->order_trans,
+            'size_no' => $request->size_no,
+            'qty' => $request->qty,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -63,14 +71,6 @@ class OrderSizeController extends Controller
         ], [
             'models' => 'OrderSize',
             'last_number' => $request->order_size_no,
-        ]);
-        OrderSize::create([
-            'order_size_no' => $request->order_size_no,
-            'order_list' => $request->order_list,
-            'order_trans' => $request->order_trans,
-            'size_no' => $request->size_no,
-            'qty' => $request->qty,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Order Size ' . $request->order_size_no . ' successfully created!');
@@ -109,13 +109,6 @@ class OrderSizeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Order Size ' . $request->order_size_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
         $ordersizes = OrderSize::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -141,6 +134,13 @@ class OrderSizeController extends Controller
         ]);
 
         $ordersizes->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Order Size ' . $request->order_size_no . ' successfully updated!');
         return redirect('ordersize/index');
@@ -172,6 +172,12 @@ class OrderSizeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Order Size ' . $ordersizes->order_size_no;
+
+        $ordersizes->fill([
+            'void' => 'true',
+        ]);
+
+        $ordersizes->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -179,12 +185,6 @@ class OrderSizeController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $ordersizes->fill([
-            'void' => 'true',
-        ]);
-
-        $ordersizes->save();
 
         Alert::success('Void Successfully!', 'Order Size ' . $ordersizes->order_size_no . ' successfully voided!');
         return redirect('ordersize/index');
@@ -196,6 +196,12 @@ class OrderSizeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Order Size ' . $ordersizes->order_size_no;
+
+        $ordersizes->fill([
+            'void' => 'false',
+        ]);
+
+        $ordersizes->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -203,12 +209,6 @@ class OrderSizeController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $ordersizes->fill([
-            'void' => 'false',
-        ]);
-
-        $ordersizes->save();
 
         Alert::success('Restore Successfully!', 'Order Size ' . $ordersizes->order_size_no . ' successfully restored!');
         return redirect('ordersize/index');

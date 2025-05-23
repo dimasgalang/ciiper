@@ -119,11 +119,6 @@
                             </div>
                             <br>
                             <div>
-                                <label>Carton Qty :</label>
-                                <input class="form-control" type="number" id="carton_qty" name="carton_qty" value="{{ $ordermasters->carton_qty }}">
-                            </div>
-                            <br>
-                            <div>
                                 <label>MR / Follow Up :</label>
                                 <select class="form-control" id="fu_no" name="fu_no">
                                     @foreach($followups as $followup)

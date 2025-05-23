@@ -70,7 +70,7 @@
                                 <select class="form-control" id="order_trans" name="order_trans">
                                     <option></option>
                                     @foreach($ordermasters as $ordermaster)
-                                    <option value="{{ $ordermaster->order_trans }}">{{ $ordermaster->order_trans . '-' . $ordermaster->po_master }}</option>
+                                    <option value="{{ $ordermaster->order_trans }}">{{ $ordermaster->order_trans }} - {{ $ordermaster->po_master }} - {{ $ordermaster->remark }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -220,15 +220,18 @@
                                     <div id="accesoriesSew">
                                         <label>Accesories Sewing :</label>
                                         <div class="row">
-                                            <div class="col-xl-5">
+                                            <div class="col-xl-4">
                                                 <select class="form-control accesories_sew" id="accesories_sew" name="accesories_sew[]" >
                                                     @foreach($accesoriessewings as $accesoriessewing)
                                                     <option value="{{ $accesoriessewing->accesories_no }}">{{ $accesoriessewing->accesories_name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-xl-4">
+                                            <div class="col-xl-3">
                                                 <input class="form-control item_date_sew" type="date" id="item_date_sew" name="item_date_sew[]" required>
+                                            </div>
+                                            <div class="col-xl-2">
+                                                <input class="form-control qty_sew" type="number" id="qty_sew" name="qty_sew[]" placeholder="Qty" required>
                                             </div>
                                             <div class="col-xl-3">
                                                 <button type="button" class="btn btn-primary btn-block" onclick="addRecordsAccSewing()">Add</button>
@@ -240,15 +243,18 @@
                                     <div id="accesoriesPack">
                                         <label>Accesories Packing :</label>
                                         <div class="row">
-                                            <div class="col-xl-5">
+                                            <div class="col-xl-4">
                                                 <select class="form-control accesories_pack" id="accesories_pack" name="accesories_pack[]" >
                                                     @foreach($accesoriespackings as $accesoriespacking)
                                                     <option value="{{ $accesoriespacking->accesories_no }}">{{ $accesoriespacking->accesories_name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-xl-4">
+                                            <div class="col-xl-3">
                                                 <input class="form-control item_date_pack" type="date" id="item_date_pack" name="item_date_pack[]" required>
+                                            </div>
+                                            <div class="col-xl-2">
+                                                <input class="form-control qty_pack" type="number" id="qty_pack" name="qty_pack[]" placeholder="Qty" required>
                                             </div>
                                             <div class="col-xl-3">
                                                 <button type="button" class="btn btn-primary btn-block" onclick="addRecordsAccPacking()">Add</button>
@@ -264,74 +270,74 @@
                                 <div class="col-xl-4">
                                     <div>
                                         <label>Fabric :</label>
-                                        <input class="form-control" type="date" id="fab_date" name="fab_date" required>
+                                        <input class="form-control" type="date" id="fab_date" name="fab_date">
                                     </div>
                                     <br>
                                     <div>
                                         <label>Acc :</label>
-                                        <input class="form-control" type="date" id="acc_date" name="acc_date" required>
+                                        <input class="form-control" type="date" id="acc_date" name="acc_date">
                                     </div>
                                     <br>
                                     <div>
                                         <label>Bordir Approve :</label>
-                                        <input class="form-control" type="date" id="bordir_approve" name="bordir_approve" required>
+                                        <input class="form-control" type="date" id="bordir_approve" name="bordir_approve">
                                     </div>
                                     <br>
                                     <div>
                                         <label>Pattern :</label>
-                                        <input class="form-control" type="date" id="pattern_date" name="pattern_date" required>
+                                        <input class="form-control" type="date" id="pattern_date" name="pattern_date">
                                     </div>
                                     <br>
                                     <div>
                                         <label>Sample Test :</label>
-                                        <input class="form-control" type="date" id="sampletest_date" name="sampletest_date" required>
+                                        <input class="form-control" type="date" id="sampletest_date" name="sampletest_date">
                                     </div>
                                 </div>
                                 <div class="col-xl-4">
                                     <div>
                                         <label>Req Marker :</label>
-                                        <input class="form-control" type="date" id="reqmarker_date" name="reqmarker_date" required>
+                                        <input class="form-control" type="date" id="reqmarker_date" name="reqmarker_date">
                                     </div>
                                     <br>
                                     <div>
                                         <label>Marker :</label>
-                                        <input class="form-control" type="date" id="marker_date" name="marker_date" required>
+                                        <input class="form-control" type="date" id="marker_date" name="marker_date">
                                     </div>
                                     <br>
                                     <div>
                                         <label>Pilot Run :</label>
-                                        <input class="form-control" type="date" id="pilotrun_date" name="pilotrun_date" required>
+                                        <input class="form-control" type="date" id="pilotrun_date" name="pilotrun_date">
                                     </div>
                                     <br>
                                     <div>
                                         <label>PPM :</label>
-                                        <input class="form-control" type="date" id="ppm_date" name="ppm_date" required>
+                                        <input class="form-control" type="date" id="ppm_date" name="ppm_date">
                                     </div>
                                     <br>
                                     <div>
                                         <label>Start Cutting :</label>
-                                        <input class="form-control" type="date" id="startcut_date" name="startcut_date" required>
+                                        <input class="form-control" type="date" id="startcut_date" name="startcut_date">
                                     </div>
                                 </div>
                                 <div class="col-xl-4">
                                     <div>
                                         <label>Finish Cutting :</label>
-                                        <input class="form-control" type="date" id="finishcut_date" name="finishcut_date" required>
+                                        <input class="form-control" type="date" id="finishcut_date" name="finishcut_date">
                                     </div>
                                     <br>
                                     <div>
                                         <label>Start Sewing :</label>
-                                        <input class="form-control" type="date" id="startsew_date" name="startsew_date" required>
+                                        <input class="form-control" type="date" id="startsew_date" name="startsew_date">
                                     </div>
                                     <br>
                                     <div>
                                         <label>Finish Sewing :</label>
-                                        <input class="form-control" type="date" id="finishsew_date" name="finishsew_date" required>
+                                        <input class="form-control" type="date" id="finishsew_date" name="finishsew_date">
                                     </div>
                                     <br>
                                     <div>
                                         <label>Finish Packing :</label>
-                                        <input class="form-control" type="date" id="finishpack_date" name="finishpack_date" required>
+                                        <input class="form-control" type="date" id="finishpack_date" name="finishpack_date">
                                     </div>
                                 </div>
                             </div>
@@ -408,7 +414,7 @@
 </script>
 <script type="text/javascript">
     function addRecordsAccSewing() {
-        $("#accesoriesSew").append('<div class="row"><br><br><div class="col-xl-5"><select class="form-control accesories_sew" id="accesories_sew" name="accesories_sew[]">@foreach($accesoriessewings as $accesoriessewing)<option value="{{ $accesoriessewing->accesories_no }}">{{ $accesoriessewing->accesories_name }}</option>@endforeach</select></div><div class="col-xl-4"><input class="form-control item_date_sew" type="date" id="item_date_sew" name="item_date_sew[]" required></div><div class="col-xl-3"><button type="button" class="btn btn-danger btn-block removeThisSewing">Remove</button></div></div>');
+        $("#accesoriesSew").append('<div class="row"><br><br><div class="col-xl-4"><select class="form-control accesories_sew" id="accesories_sew" name="accesories_sew[]">@foreach($accesoriessewings as $accesoriessewing)<option value="{{ $accesoriessewing->accesories_no }}">{{ $accesoriessewing->accesories_name }}</option>@endforeach</select></div><div class="col-xl-3"><input class="form-control item_date_sew" type="date" id="item_date_sew" name="item_date_sew[]" required></div><div class="col-xl-2"><input class="form-control qty_sew" type="number" id="qty_sew" name="qty_sew[]" placeholder="Qty" required></div><div class="col-xl-3"><button type="button" class="btn btn-danger btn-block removeThisSewing">Remove</button></div></div>');
         $('.accesories_sew').select2({
             allowClear: true,
             placeholder: 'Choose Accesories',
@@ -426,7 +432,7 @@
 
     
     function addRecordsAccPacking() {
-        $("#accesoriesPack").append('<div class="row"><br><br><div class="col-xl-5"><select class="form-control accesories_pack" id="accesories_pack" name="accesories_pack[]">@foreach($accesoriespackings as $accesoriespacking)<option value="{{ $accesoriespacking->accesories_no }}">{{ $accesoriespacking->accesories_name }}</option>@endforeach</select></div><div class="col-xl-4"><input class="form-control item_date_pack" type="date" id="item_date_pack" name="item_date_pack[]" required></div><div class="col-xl-3"><button type="button" class="btn btn-danger btn-block removeThisPacking">Remove</button></div></div>');
+        $("#accesoriesPack").append('<div class="row"><br><br><div class="col-xl-4"><select class="form-control accesories_pack" id="accesories_pack" name="accesories_pack[]">@foreach($accesoriespackings as $accesoriespacking)<option value="{{ $accesoriespacking->accesories_no }}">{{ $accesoriespacking->accesories_name }}</option>@endforeach</select></div><div class="col-xl-3"><input class="form-control item_date_pack" type="date" id="item_date_pack" name="item_date_pack[]" required></div><div class="col-xl-2"><input class="form-control qty_pack" type="number" id="qty_pack" name="qty_pack[]" placeholder="Qty" required></div><div class="col-xl-3"><button type="button" class="btn btn-danger btn-block removeThisPacking">Remove</button></div></div>');
         $('.accesories_pack').select2({
             allowClear: true,
             placeholder: 'Choose Accesories',
@@ -441,7 +447,7 @@
         placeholder: 'Choose Accesories',
     });
     $("#submit").click(function() {
-        $(this).hide();
+        // $(this).hide();
     });
 </script>
 </html>

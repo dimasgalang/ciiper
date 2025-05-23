@@ -204,12 +204,6 @@ class RafProductionController extends Controller
         $storeTime = Carbon::now();
         $message = 'Created RAF Production ' . $request->raf_no;
 
-        SetupIncrement::updateOrCreate([
-            'models' => 'RafProduction'
-        ], [
-            'models' => 'RafProduction',
-            'last_number' => $request->raf_no,
-        ]);
         RafProduction::create([
             'order_trans' => $request->order_trans,
             'order_list' => $request->order_list,
@@ -229,6 +223,12 @@ class RafProductionController extends Controller
             'time' => $storeTime->toDateTimeString(),
             'icon' => 'plus',
             'color' => 'bg-primary',
+        ]);
+        SetupIncrement::updateOrCreate([
+            'models' => 'RafProduction'
+        ], [
+            'models' => 'RafProduction',
+            'last_number' => $request->raf_no,
         ]);
 
         Alert::success('Create Successfully!', 'RAF Production ' . $request->raf_no . ' successfully created!');
@@ -263,6 +263,12 @@ class RafProductionController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void RAF Production ' . $rafproductions->raf_no;
+
+        $rafproductions->fill([
+            'void' => 'true',
+        ]);
+
+        $rafproductions->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -270,12 +276,6 @@ class RafProductionController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $rafproductions->fill([
-            'void' => 'true',
-        ]);
-
-        $rafproductions->save();
 
         Alert::success('Void Successfully!', 'RAF Production ' . $rafproductions->raf_no . ' successfully voided!');
         return redirect('rafproduction/index');
@@ -287,6 +287,12 @@ class RafProductionController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore RAF Production ' . $rafproductions->raf_no;
+
+        $rafproductions->fill([
+            'void' => 'false',
+        ]);
+
+        $rafproductions->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -294,12 +300,6 @@ class RafProductionController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $rafproductions->fill([
-            'void' => 'false',
-        ]);
-
-        $rafproductions->save();
 
         Alert::success('Restore Successfully!', 'RAF Production ' . $rafproductions->raf_no . ' successfully restored!');
         return redirect('rafproduction/index');

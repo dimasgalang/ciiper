@@ -91,32 +91,6 @@ class ProductionPlanningController extends Controller
         $storeTime = Carbon::now();
         $message = 'Created Production Planning ' . $request->plan_no;
         $messageOrder = 'Created Order List ' . $request->order_list;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'plus',
-            'color' => 'bg-primary',
-        ]);
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $messageOrder,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'plus',
-            'color' => 'bg-primary',
-        ]);
-        SetupIncrement::updateOrCreate([
-            'models' => 'ProductionPlanning'
-        ], [
-            'models' => 'ProductionPlanning',
-            'last_number' => $request->plan_no,
-        ]);
-        SetupIncrement::updateOrCreate([
-            'models' => 'OrderList'
-        ], [
-            'models' => 'OrderList',
-            'last_number' => $request->order_list,
-        ]);
         ProductionPlanning::create([
             'plan_no' => $request->plan_no,
             'order_trans' => $request->order_trans,
@@ -163,8 +137,9 @@ class ProductionPlanningController extends Controller
 
         for ($i = 0; $i < count($request->accesories_sew); $i++) {
             $getLastPPAcc = SetupIncrement::all()->where('models', '=', 'ProPlanAcc')->last();
-            if (count($getLastPPAcc[0]) == 0) {
-                $new_number = 'PPA' . str_pad(intval(substr($getLastPPAcc[0]->last_number, 3, 9)) + 1, 9, '0', STR_PAD_LEFT);
+            // dd($getLastPPAcc->last_number);
+            if (isset($getLastPPAcc)) {
+                $new_number = 'PPA' . str_pad(intval(substr($getLastPPAcc->last_number, 3, 9)) + 1, 9, '0', STR_PAD_LEFT);
             } else {
                 $new_number = 'PPA' . str_pad(1, 9, '0', STR_PAD_LEFT);
             }
@@ -175,6 +150,7 @@ class ProductionPlanningController extends Controller
             $item->category_no = 'CAT000000006';
             $item->accesories_no = $request->accesories_sew[$i];
             $item->item_date = $request->item_date_sew[$i];
+            $item->qty = $request->qty_sew[$i];
             $item->void = 'false';
             $item->save();
 
@@ -188,8 +164,8 @@ class ProductionPlanningController extends Controller
 
         for ($i = 0; $i < count($request->accesories_pack); $i++) {
             $getLastPPAcc = SetupIncrement::all()->where('models', '=', 'ProPlanAcc')->last();
-            if (count($getLastPPAcc[0]) == 0) {
-                $new_number = 'PPA' . str_pad(intval(substr($getLastPPAcc[0]->last_number, 3, 9)) + 1, 9, '0', STR_PAD_LEFT);
+            if (isset($getLastPPAcc)) {
+                $new_number = 'PPA' . str_pad(intval(substr($getLastPPAcc->last_number, 3, 9)) + 1, 9, '0', STR_PAD_LEFT);
             } else {
                 $new_number = 'PPA' . str_pad(1, 9, '0', STR_PAD_LEFT);
             }
@@ -200,6 +176,7 @@ class ProductionPlanningController extends Controller
             $item->category_no = 'CAT000000005';
             $item->accesories_no = $request->accesories_pack[$i];
             $item->item_date = $request->item_date_pack[$i];
+            $item->qty = $request->qty_pack[$i];
             $item->void = 'false';
             $item->save();
 
@@ -210,6 +187,32 @@ class ProductionPlanningController extends Controller
                 'last_number' => $new_number,
             ]);
         }
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $messageOrder,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'plus',
+            'color' => 'bg-primary',
+        ]);
+        SetupIncrement::updateOrCreate([
+            'models' => 'ProductionPlanning'
+        ], [
+            'models' => 'ProductionPlanning',
+            'last_number' => $request->plan_no,
+        ]);
+        SetupIncrement::updateOrCreate([
+            'models' => 'OrderList'
+        ], [
+            'models' => 'OrderList',
+            'last_number' => $request->order_list,
+        ]);
 
         Alert::success('Create Successfully!', 'Production Planning ' . $request->plan_no . ' successfully created!');
         return redirect()
@@ -261,13 +264,6 @@ class ProductionPlanningController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Production Planning ' . $request->plan_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
         $productionplannings = ProductionPlanning::findOrFail($request->id);
         $orderlists = OrderList::findOrFail($request->idorder);
@@ -348,6 +344,13 @@ class ProductionPlanningController extends Controller
 
         $productionplannings->save();
         $orderlists->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Production Planning ' . $request->plan_no . ' successfully updated!');
         return redirect('productionplanning/index');
@@ -360,6 +363,12 @@ class ProductionPlanningController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Production Planning ' . $productionplannings->plan_no;
+
+        $productionplannings->fill([
+            'void' => 'true',
+        ]);
+
+        $productionplannings->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -367,12 +376,6 @@ class ProductionPlanningController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $productionplannings->fill([
-            'void' => 'true',
-        ]);
-
-        $productionplannings->save();
 
         Alert::success('Void Successfully!', 'Production Planning ' . $productionplannings->plan_no . ' successfully voided!');
         return redirect('productionplanning/index');
@@ -384,6 +387,12 @@ class ProductionPlanningController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Production Planning ' . $productionplannings->plan_no;
+
+        $productionplannings->fill([
+            'void' => 'false',
+        ]);
+
+        $productionplannings->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -391,12 +400,6 @@ class ProductionPlanningController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $productionplannings->fill([
-            'void' => 'false',
-        ]);
-
-        $productionplannings->save();
 
         Alert::success('Restore Successfully!', 'Production Planning ' . $productionplannings->plan_no . ' successfully restored!');
         return redirect('productionplanning/index');
@@ -409,13 +412,6 @@ class ProductionPlanningController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Update Sample ' . $productionplannings->plan_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
         if ($request->update_has_sample == "Yes") {
             $productionplannings->fill([
@@ -431,6 +427,13 @@ class ProductionPlanningController extends Controller
         }
 
         $productionplannings->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Sample Production Planning ' . $productionplannings->plan_no . ' successfully updated!');
         return redirect('productionplanning/index');
@@ -442,13 +445,6 @@ class ProductionPlanningController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Update MI ' . $productionplannings->plan_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
         if ($request->update_has_mi == "Yes") {
             $productionplannings->fill([
@@ -464,6 +460,13 @@ class ProductionPlanningController extends Controller
         }
 
         $productionplannings->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Sample Production Planning ' . $productionplannings->plan_no . ' successfully updated!');
         return redirect('productionplanning/index');
@@ -475,13 +478,6 @@ class ProductionPlanningController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Update Fab Cart ' . $productionplannings->plan_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
         if ($request->update_has_fab == "Yes") {
             $productionplannings->fill([
@@ -497,6 +493,13 @@ class ProductionPlanningController extends Controller
         }
 
         $productionplannings->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Fabric Production Planning ' . $productionplannings->plan_no . ' successfully updated!');
         return redirect('productionplanning/index');
@@ -508,13 +511,6 @@ class ProductionPlanningController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Update Acc Cart ' . $productionplannings->plan_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
         if ($request->update_has_acc == "Yes") {
             $productionplannings->fill([
@@ -530,6 +526,13 @@ class ProductionPlanningController extends Controller
         }
 
         $productionplannings->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Accesories Production Planning ' . $productionplannings->plan_no . ' successfully updated!');
         return redirect('productionplanning/index');

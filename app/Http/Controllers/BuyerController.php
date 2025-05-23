@@ -61,6 +61,13 @@ class BuyerController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Buyer ' . $request->buyer_no;
+        Buyer::create([
+            'buyer_no' => $request->buyer_no,
+            'buyer_name' => $request->buyer_name,
+            'buyer_address' => $request->buyer_address,
+            'buyer_contact' => $request->buyer_contact,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -74,13 +81,6 @@ class BuyerController extends Controller
         ], [
             'models' => 'Buyer',
             'last_number' => $request->buyer_no,
-        ]);
-        Buyer::create([
-            'buyer_no' => $request->buyer_no,
-            'buyer_name' => $request->buyer_name,
-            'buyer_address' => $request->buyer_address,
-            'buyer_contact' => $request->buyer_contact,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Buyer ' . $request->buyer_no . ' successfully created!');
@@ -119,13 +119,6 @@ class BuyerController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Buyer ' . $request->buyer_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
         $buyers = Buyer::findOrFail($request->id);
 
@@ -148,6 +141,13 @@ class BuyerController extends Controller
         ]);
 
         $buyers->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Buyer ' . $request->buyer_no . ' successfully updated!');
         return redirect()->intended('buyer/index');
@@ -160,6 +160,12 @@ class BuyerController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Buyer ' . $buyers->buyer_no;
+
+        $buyers->fill([
+            'void' => 'true',
+        ]);
+
+        $buyers->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -167,12 +173,6 @@ class BuyerController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $buyers->fill([
-            'void' => 'true',
-        ]);
-
-        $buyers->save();
 
         Alert::success('Void Successfully!', 'Buyer ' . $buyers->buyer_no . ' successfully voided!');
         return redirect('buyer/index');
@@ -184,6 +184,12 @@ class BuyerController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Buyer ' . $buyers->buyer_no;
+
+        $buyers->fill([
+            'void' => 'false',
+        ]);
+
+        $buyers->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -191,12 +197,6 @@ class BuyerController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $buyers->fill([
-            'void' => 'false',
-        ]);
-
-        $buyers->save();
 
         Alert::success('Restore Successfully!', 'Buyer ' . $buyers->buyer_no . ' successfully restored!');
         return redirect('buyer/index');

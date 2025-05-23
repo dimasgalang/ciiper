@@ -41,6 +41,11 @@ class CategoryController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Category ' . $request->category_no;
+        Category::create([
+            'category_no' => $request->category_no,
+            'category_name' => $request->category_name,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -53,11 +58,6 @@ class CategoryController extends Controller
         ], [
             'models' => 'Category',
             'last_number' => $request->category_no,
-        ]);
-        Category::create([
-            'category_no' => $request->category_no,
-            'category_name' => $request->category_name,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Category ' . $request->category_no . ' successfully created!');
@@ -95,13 +95,6 @@ class CategoryController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Category ' . $request->category_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
         $categories = Category::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -121,6 +114,13 @@ class CategoryController extends Controller
         ]);
 
         $categories->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Category ' . $categories->category_no . ' successfully updated!');
         return redirect('category/index');
@@ -133,6 +133,12 @@ class CategoryController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Category ' . $categories->category_no;
+
+        $categories->fill([
+            'void' => 'true',
+        ]);
+
+        $categories->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -140,12 +146,6 @@ class CategoryController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $categories->fill([
-            'void' => 'true',
-        ]);
-
-        $categories->save();
 
         Alert::success('Void Successfully!', 'Category ' . $categories->category_no . ' successfully voided!');
         return redirect('category/index');
@@ -157,6 +157,12 @@ class CategoryController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Category ' . $categories->category_no;
+
+        $categories->fill([
+            'void' => 'false',
+        ]);
+
+        $categories->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -164,12 +170,6 @@ class CategoryController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $categories->fill([
-            'void' => 'false',
-        ]);
-
-        $categories->save();
 
         Alert::success('Restore Successfully!', 'Category ' . $categories->category_no . ' successfully restored!');
         return redirect('category/index');

@@ -61,6 +61,11 @@ class WashTypeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Wash Type ' . $request->wash_no;
+        WashType::create([
+            'wash_no' => $request->wash_no,
+            'wash_type' => $request->wash_type,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -73,11 +78,6 @@ class WashTypeController extends Controller
         ], [
             'models' => 'WashType',
             'last_number' => $request->wash_no,
-        ]);
-        WashType::create([
-            'wash_no' => $request->wash_no,
-            'wash_type' => $request->wash_type,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Wash Type ' . $request->wash_no . ' successfully created!');
@@ -115,13 +115,6 @@ class WashTypeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Wash Type ' . $request->wash_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
         $washtypes = WashType::findOrFail($request->id);
 
         $validator = Validator::make($request->all(), [
@@ -141,6 +134,13 @@ class WashTypeController extends Controller
         ]);
 
         $washtypes->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Wash Type ' . $request->wash_no . ' successfully updated!');
         return redirect('washtype/index');
@@ -153,6 +153,12 @@ class WashTypeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Wash Type ' . $washtypes->wash_no;
+
+        $washtypes->fill([
+            'void' => 'true',
+        ]);
+
+        $washtypes->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -160,12 +166,6 @@ class WashTypeController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $washtypes->fill([
-            'void' => 'true',
-        ]);
-
-        $washtypes->save();
 
         Alert::success('Void Successfully!', 'Wash Type ' . $washtypes->wash_no . ' successfully voided!');
         return redirect('washtype/index');
@@ -177,6 +177,12 @@ class WashTypeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Wash Type ' . $washtypes->wash_no;
+
+        $washtypes->fill([
+            'void' => 'false',
+        ]);
+
+        $washtypes->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -184,12 +190,6 @@ class WashTypeController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $washtypes->fill([
-            'void' => 'false',
-        ]);
-
-        $washtypes->save();
 
         Alert::success('Restore Successfully!', 'Wash Type ' . $washtypes->wash_no . ' successfully restored!');
         return redirect('washtype/index');

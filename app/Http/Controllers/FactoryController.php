@@ -61,6 +61,11 @@ class FactoryController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Factory ' . $request->factory_no;
+        Factory::create([
+            'factory_no' => $request->factory_no,
+            'factory_name' => $request->factory_name,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -73,11 +78,6 @@ class FactoryController extends Controller
         ], [
             'models' => 'Factory',
             'last_number' => $request->factory_no,
-        ]);
-        Factory::create([
-            'factory_no' => $request->factory_no,
-            'factory_name' => $request->factory_name,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Factory ' . $request->factory_no . ' successfully created!');
@@ -115,24 +115,6 @@ class FactoryController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Factory ' . $request->factory_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
-
-        $username = Auth::user()->name;
-        $storeTime = Carbon::now();
-        $message = 'Created Factory ' . $request->factory_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'plus',
-            'color' => 'bg-primary',
-        ]);
 
         $factorys = Factory::findOrFail($request->id);
 
@@ -153,6 +135,13 @@ class FactoryController extends Controller
         ]);
 
         $factorys->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Factory ' . $request->factory_no . ' successfully updated!');
         return redirect('factory/index');
@@ -165,6 +154,12 @@ class FactoryController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Factory ' . $factorys->factory_no;
+
+        $factorys->fill([
+            'void' => 'true',
+        ]);
+
+        $factorys->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -172,12 +167,6 @@ class FactoryController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $factorys->fill([
-            'void' => 'true',
-        ]);
-
-        $factorys->save();
 
         Alert::success('Void Successfully!', 'Factory ' . $factorys->factory_no . ' successfully voided!');
         return redirect('factory/index');
@@ -189,6 +178,12 @@ class FactoryController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Factory ' . $factorys->factory_no;
+
+        $factorys->fill([
+            'void' => 'false',
+        ]);
+
+        $factorys->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -196,12 +191,6 @@ class FactoryController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $factorys->fill([
-            'void' => 'false',
-        ]);
-
-        $factorys->save();
 
         Alert::success('Restore Successfully!', 'Factory ' . $factorys->factory_no . ' successfully restored!');
         return redirect('factory/index');

@@ -61,6 +61,11 @@ class ShipModeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Ship Mode ' . $request->shipmode_no;
+        ShipMode::create([
+            'shipmode_no' => $request->shipmode_no,
+            'shipmode_name' => $request->shipmode_name,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -74,11 +79,6 @@ class ShipModeController extends Controller
         ], [
             'models' => 'ShipMode',
             'last_number' => $request->shipmode_no,
-        ]);
-        ShipMode::create([
-            'shipmode_no' => $request->shipmode_no,
-            'shipmode_name' => $request->shipmode_name,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Ship Mode ' . $request->shipmode_no . ' successfully created!');
@@ -117,13 +117,6 @@ class ShipModeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Ship Mode ' . $request->shipmode_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
         $shipmodes = ShipMode::findOrFail($request->id);
 
@@ -144,6 +137,13 @@ class ShipModeController extends Controller
         ]);
 
         $shipmodes->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Ship Mode ' . $request->shipmode_no . ' successfully updated!');
         return redirect('shipmode/index');
@@ -156,6 +156,12 @@ class ShipModeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Ship Mode ' . $shipmodes->shipmode_no;
+
+        $shipmodes->fill([
+            'void' => 'true',
+        ]);
+
+        $shipmodes->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -163,12 +169,6 @@ class ShipModeController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $shipmodes->fill([
-            'void' => 'true',
-        ]);
-
-        $shipmodes->save();
 
         Alert::success('Void Successfully!', 'Ship Mode ' . $shipmodes->shipmode_no . ' successfully voided!');
         return redirect('shipmode/index');
@@ -180,6 +180,12 @@ class ShipModeController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Ship Mode ' . $shipmodes->shipmode_no;
+
+        $shipmodes->fill([
+            'void' => 'false',
+        ]);
+
+        $shipmodes->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -187,12 +193,6 @@ class ShipModeController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $shipmodes->fill([
-            'void' => 'false',
-        ]);
-
-        $shipmodes->save();
 
         Alert::success('Restore Successfully!', 'Ship Mode ' . $shipmodes->shipmode_no . ' successfully restored!');
         return redirect('shipmode/index');

@@ -66,6 +66,13 @@ class BrandController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Brand ' . $request->brand_no;
+        Brand::create([
+            'buyer_no' => $request->buyer_no,
+            'brand_no' => $request->brand_no,
+            'brand_name' => $request->brand_name,
+            'brand_gender' => $request->brand_gender,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -78,13 +85,6 @@ class BrandController extends Controller
         ], [
             'models' => 'Brand',
             'last_number' => $request->brand_no,
-        ]);
-        Brand::create([
-            'buyer_no' => $request->buyer_no,
-            'brand_no' => $request->brand_no,
-            'brand_name' => $request->brand_name,
-            'brand_gender' => $request->brand_gender,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Brand ' . $request->brand_no . ' successfully created!');
@@ -123,13 +123,6 @@ class BrandController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Brand ' . $request->brand_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
         $brands = Brand::findOrFail($request->id);
 
@@ -154,6 +147,13 @@ class BrandController extends Controller
         ]);
 
         $brands->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Brand ' . $request->brand_no . ' successfully updated!');
         return redirect()->intended('brand/index');
@@ -165,6 +165,12 @@ class BrandController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Brand ' . $brands->brand_no;
+
+        $brands->fill([
+            'void' => 'true',
+        ]);
+
+        $brands->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -172,12 +178,6 @@ class BrandController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $brands->fill([
-            'void' => 'true',
-        ]);
-
-        $brands->save();
 
         Alert::success('Void Successfully!', 'Brand ' . $brands->brand_no . ' successfully voided!');
         return redirect('brand/index');
@@ -189,6 +189,12 @@ class BrandController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Restore Brand ' . $brands->brand_no;
+
+        $brands->fill([
+            'void' => 'false',
+        ]);
+
+        $brands->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -196,12 +202,6 @@ class BrandController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $brands->fill([
-            'void' => 'false',
-        ]);
-
-        $brands->save();
 
         Alert::success('Restore Successfully!', 'Brand ' . $brands->brand_no . ' successfully restored!');
         return redirect('brand/index');

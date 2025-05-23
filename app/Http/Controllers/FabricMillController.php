@@ -61,6 +61,11 @@ class FabricMillController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Created Fabric Mill ' . $request->fabmill_no;
+        FabricMill::create([
+            'fabmill_no' => $request->fabmill_no,
+            'fabmill_name' => $request->fabmill_name,
+            'void' => 'false'
+        ]);
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -74,11 +79,6 @@ class FabricMillController extends Controller
         ], [
             'models' => 'FabricMill',
             'last_number' => $request->fabmill_no,
-        ]);
-        FabricMill::create([
-            'fabmill_no' => $request->fabmill_no,
-            'fabmill_name' => $request->fabmill_name,
-            'void' => 'false'
         ]);
 
         Alert::success('Create Successfully!', 'Fabric Mill ' . $request->fabmill_no . ' successfully created!');
@@ -116,13 +116,6 @@ class FabricMillController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Updated Fabric Mill ' . $request->fabmill_no;
-        LogCiiper::create([
-            'username' => $username,
-            'activity' => $message,
-            'time' => $storeTime->toDateTimeString(),
-            'icon' => 'edit',
-            'color' => 'bg-warning',
-        ]);
 
         $fabricmills = FabricMill::findOrFail($request->id);
 
@@ -143,6 +136,13 @@ class FabricMillController extends Controller
         ]);
 
         $fabricmills->save();
+        LogCiiper::create([
+            'username' => $username,
+            'activity' => $message,
+            'time' => $storeTime->toDateTimeString(),
+            'icon' => 'edit',
+            'color' => 'bg-warning',
+        ]);
 
         Alert::success('Update Successfully!', 'Fabric Mill ' . $request->fabmill_no . ' successfully updated!');
         return redirect('fabricmill/index');
@@ -155,6 +155,12 @@ class FabricMillController extends Controller
         $username = Auth::user()->name;
         $storeTime = Carbon::now();
         $message = 'Void Fabric Mill ' . $fabricmills->fabmill_no;
+
+        $fabricmills->fill([
+            'void' => 'true',
+        ]);
+
+        $fabricmills->save();
         LogCiiper::create([
             'username' => $username,
             'activity' => $message,
@@ -162,12 +168,6 @@ class FabricMillController extends Controller
             'icon' => 'edit',
             'color' => 'bg-warning',
         ]);
-
-        $fabricmills->fill([
-            'void' => 'true',
-        ]);
-
-        $fabricmills->save();
 
         Alert::success('Void Successfully!', 'Fabric Mill ' . $fabricmills->fabmill_no . ' successfully voided!');
         return redirect('fabricmill/index');

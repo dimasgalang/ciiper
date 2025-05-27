@@ -148,10 +148,20 @@ class OrderSizeController extends Controller
 
     public function fetchdcpoleft($order_list)
     {
-        $ordersizes = OrderList::select('order_list.dcpo_qty', DB::raw('ifnull(sum(order_size.qty),0) as sum_qty'), DB::raw('ifnull((order_list.dcpo_qty-ifnull(sum(order_size.qty),0)),0) as dcpo_left'))
+        // $ordersizes = OrderList::select('order_list.dcpo_qty', DB::raw('ifnull(sum(order_size.qty),0) as sum_qty'), DB::raw('ifnull((order_list.dcpo_qty-ifnull(sum(order_size.qty),0)),0) as dcpo_left'))
+        //     ->leftJoin('order_size', 'order_size.order_list', '=', 'order_list.order_list')
+        //     ->where('order_list.order_list', '=', $order_list)
+        //     ->where('order_size.void', '=', 'false')
+        //     ->groupBy('order_list.dcpo_qty')
+        //     ->get();
+
+        $ordersizes = OrderList::select(
+            'order_list.dcpo_qty',
+            DB::raw('ifnull(sum(CASE WHEN order_size.void = "false" THEN order_size.qty ELSE 0 END), 0) as sum_qty'),
+            DB::raw('ifnull((order_list.dcpo_qty - ifnull(sum(CASE WHEN order_size.void = "false" THEN order_size.qty ELSE 0 END), 0)), 0) as dcpo_left')
+        )
             ->leftJoin('order_size', 'order_size.order_list', '=', 'order_list.order_list')
             ->where('order_list.order_list', '=', $order_list)
-            ->where('order_size.void', '=', 'false')
             ->groupBy('order_list.dcpo_qty')
             ->get();
         return response()->json($ordersizes);

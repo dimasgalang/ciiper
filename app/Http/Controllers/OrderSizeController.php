@@ -151,6 +151,7 @@ class OrderSizeController extends Controller
         $ordersizes = OrderList::select('order_list.dcpo_qty', DB::raw('ifnull(sum(order_size.qty),0) as sum_qty'), DB::raw('ifnull((order_list.dcpo_qty-ifnull(sum(order_size.qty),0)),0) as dcpo_left'))
             ->leftJoin('order_size', 'order_size.order_list', '=', 'order_list.order_list')
             ->where('order_list.order_list', '=', $order_list)
+            ->where('order_size.void', '=', 'false')
             ->groupBy('order_list.dcpo_qty')
             ->get();
         return response()->json($ordersizes);
